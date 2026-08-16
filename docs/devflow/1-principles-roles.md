@@ -5,8 +5,9 @@
 **Product first.** Client-facing product development is prioritized over a
 sufficient dev stack. A "pure" dev stack — no dedicated test stand, no QA team,
 manual deploys — is an acceptable state for a young product. Process weight
-scales with the system; the flows below describe the full ceremony, and §9
-defines what a stripped-down version may and may not drop.
+scales with the system: the flows below describe the full ceremony, §9 defines
+what a stripped-down version may and may not drop, and §10 is the smallest
+flow that is still a flow — one pass, one person, for work that must land now.
 
 **Some things are never skipped**, whatever the stack maturity:
 
@@ -54,3 +55,4 @@ person holds several hats — the *gates still happen*, they just happen faster.
 | Security auditor | `security-auditor` | security design & implementation approval, security docs |
 | DevOps | `devops` | infra audit, releases, runbooks, observability |
 | Orchestrator | `dev-team` | drives the flow end-to-end, holds the gates |
+| Fullstack (asap) | `asap` | small urgent work end-to-end in one pass — every hat at once, under the §10 floor and its escalation triggers |

@@ -28,15 +28,18 @@ docs/
   devflow/           In what order: the full feature/migration flow with its
                      gates (scope → design → architecture → security & devops
                      audits → development → testing → docs → review → release),
-                     the fast bug/hotfix flow, required artifacts, the
-                     never-skip list (observability, secret handling, release
-                     speed), git rules, and how to scale the process down.
+                     the fast bug/hotfix flow, the asap one-pass flow, required
+                     artifacts, the never-skip list (observability, secret
+                     handling, release speed), git rules, and how to scale the
+                     process down.
 
 agents/              Agent definitions (Claude Code subagent format —
                      markdown with YAML frontmatter):
   project-manager.md       operator-facing entry point: intake, tracking,
                            delegated approvals, result validation
   dev-team.md              orchestrator: runs the DEVFLOW end-to-end
+  asap.md                  one agent, whole task, now — small urgent work
+                           without orchestration or gate rounds
   product-designer.md      scope, UX flows, acceptance criteria, product review
   architecture-designer.md implementation plans, API contracts, migration plans
   golang-developer.md      Go backend implementation + tests
@@ -45,6 +48,12 @@ agents/              Agent definitions (Claude Code subagent format —
   ai-engineer.md           prompts, tool schemas, LLM evals, cost, AI safety
   security-auditor.md      design & implementation security reviews
   devops.md                infra audits, releases, observability, runbooks
+
+commands/            Claude Code slash commands:
+  pm.md              /pm         deliver through the full team (gated flow)
+  asap.md            /asap       deliver now via the asap agent (one pass)
+  status.md          /status     tasks, agents in flight, estimate, session
+  llmcheats.md       /llmcheats  work on this repo under its own conventions
 
 skills/
   webapp-guide/      A Claude Code skill that routes to the right doc file.
@@ -70,6 +79,7 @@ Where things land (global mode):
 | Tool | What | Where |
 |---|---|---|
 | Claude Code | agents | `~/.claude/agents/` |
+| Claude Code | commands | `~/.claude/commands/` |
 | Claude Code | skill | `~/.claude/skills/webapp-guide/` |
 | Claude Code | docs | `~/.claude/llmcheats/docs/` |
 | Codex | docs | `~/.codex/llmcheats/docs/` |
@@ -82,11 +92,22 @@ and is replaced in place on update — the rest of your `AGENTS.md` is untouched
 
 ## Use
 
-- **Claude Code**: ask for the team — *"use the project-manager agent to
-  deliver &lt;feature&gt;"* (single point of contact) or *"use the dev-team
-  agent"* (direct flow) — or invoke a specialist directly (*"have
-  security-auditor review this diff"*). The `webapp-guide` skill surfaces the
-  docs to any task that touches web-app work.
+- **Claude Code**: the commands are the front door —
+
+  ```
+  /pm     add order cancellation to the API     # full team, gates, tracking
+  /asap   add a --dry-run flag to deploy.sh     # one agent, one pass, now
+  /status                                       # where the work stands
+  ```
+
+  Or ask by agent name: *"use the project-manager agent to deliver
+  &lt;feature&gt;"* (single point of contact), *"use the dev-team agent"*
+  (direct flow), or a specialist directly (*"have security-auditor review this
+  diff"*). The `webapp-guide` skill surfaces the docs to any task that touches
+  web-app work.
+
+  Slash commands are read at startup — **restart Claude Code after installing**
+  or they will not appear in the `/` menu.
 - **Codex**: the `AGENTS.md` block points the model at the docs; reference
   a file explicitly for best results (*"follow `webapp/2a-backend-layers.md`"*).
 - **Humans**: the docs stand alone — read them from

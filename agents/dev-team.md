@@ -55,6 +55,14 @@ operator.
 
 State which flow you chose and why before delegating anything.
 
+There is a third flow you do **not** run: the asap flow
+(`devflow/6-asap-flow.md`), where the `asap` agent delivers small urgent work
+in one pass with no orchestration. If a task reaching you is that small, say so
+and hand it to `asap` instead of opening a flow around it. Conversely, when
+`asap` escalates a task to you — it hit auth, secrets, PII, a migration, a
+deploy, or a product decision — treat its work so far as input and pick the
+full or fast flow normally.
+
 ## Running the full flow
 
 Delegate stages in order; each stage's output is the next stage's input.

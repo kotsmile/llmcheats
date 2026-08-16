@@ -16,6 +16,7 @@ Default target is "all"; default scope is global (~/.claude, ~/.codex).
 
 What goes where (global):
   Claude Code:  ~/.claude/agents/<name>.md
+                ~/.claude/commands/<name>.md
                 ~/.claude/skills/webapp-guide/SKILL.md
                 ~/.claude/llmcheats/docs/{INDEX.md,webapp/,devflow/}
   Codex:        ~/.codex/llmcheats/docs/{INDEX.md,webapp/,devflow/}
@@ -26,9 +27,10 @@ Project mode (--project <dir>) replaces the prefixes with:
   Codex:        <dir>/.llmcheats/docs, managed block in <dir>/AGENTS.md
                 (note: this edits <dir>/AGENTS.md in place)
 
-An existing agent file with the same name that llmcheats did not install
-is backed up to <name>.md.bak-llmcheats before being replaced, with a
-warning. Everything in AGENTS.md outside the managed block is preserved.
+An existing agent or command file with the same name that llmcheats did
+not install is backed up to <name>.md.bak-llmcheats before being
+replaced, with a warning. Everything in AGENTS.md outside the managed
+block is preserved.
 EOF
 }
 
@@ -160,66 +162,76 @@ claude_base() {
   if [ -n "$project_dir" ]; then echo "$project_dir/.claude"; else echo "$HOME/.claude"; fi
 }
 
-install_claude() {
-  local base agents_dir skills_dir docs_dir manifest name dest
-  base="$(claude_base)"
-  agents_dir="$base/agents"
-  skills_dir="$base/skills/webapp-guide"
-  docs_dir="$base/llmcheats/docs"
-  manifest="$base/llmcheats/agents.list"
+# Mirror a repo directory of *.md into a Claude Code directory. The manifest
+# records what we wrote, so a later run can drop what left the repo and
+# uninstall knows exactly what is ours.
+sync_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest, $4 = label
+  local src="$1" dest="$2" manifest="$3" label="$4" prev="" name f
+  mkdir -p "$dest" "$(dirname -- "$manifest")"
+  [ -f "$manifest" ] && prev="$(cat "$manifest")"
 
-  mkdir -p "$agents_dir" "$skills_dir" "$base/llmcheats"
-
-  # Drop agents a previous llmcheats install put here that no longer exist
-  # in the repo, so removed agents don't linger and keep catching delegation.
-  if [ -f "$manifest" ]; then
-    while IFS= read -r name; do
-      [ -n "$name" ] || continue
-      if [ ! -f "$SRC_DIR/agents/$name" ] && [ -f "$agents_dir/$name" ]; then
-        rm -f "$agents_dir/$name"
-        echo "claude: removed stale agent $agents_dir/$name"
-      fi
-    done <"$manifest"
-  fi
+  # Files a previous install put here that no longer exist in the repo would
+  # otherwise linger and keep catching delegation.
+  while IFS= read -r name; do
+    [ -n "$name" ] || continue
+    if [ ! -f "$src/$name" ] && [ -f "$dest/$name" ]; then
+      rm -f "$dest/$name"
+      echo "claude: removed stale $label $dest/$name"
+    fi
+  done <<<"$prev"
 
   : >"$manifest"
-  for f in "$SRC_DIR"/agents/*.md; do
+  for f in "$src"/*.md; do
     name="$(basename -- "$f")"
-    dest="$agents_dir/$name"
-    # A same-named file we did not install (no llmcheats reference in it)
-    # is the user's own agent: back it up instead of silently replacing it.
-    if [ -e "$dest" ] && ! cmp -s "$f" "$dest" && ! grep -q "llmcheats" "$dest"; then
-      cp -p -- "$dest" "$dest.bak-llmcheats"
-      echo "warning: $dest existed and was not installed by llmcheats — backed up to $dest.bak-llmcheats" >&2
+    # No llmcheats reference in it: either the user's own file or their edit of
+    # ours. Either way it is not reproducible from the repo — back it up.
+    # Every file we ship mentions llmcheats, which is what makes this work.
+    if [ -e "$dest/$name" ] && ! cmp -s "$f" "$dest/$name" &&
+       ! grep -q "llmcheats" "$dest/$name"; then
+      cp -p -- "$dest/$name" "$dest/$name.bak-llmcheats"
+      echo "warning: $dest/$name existed and was not installed by llmcheats — backed up to $dest/$name.bak-llmcheats" >&2
     fi
-    cp -f -- "$f" "$dest"
+    cp -f -- "$f" "$dest/$name"
     echo "$name" >>"$manifest"
   done
+}
+
+remove_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest
+  local src="$1" dest="$2" manifest="$3" name f
+  if [ -f "$manifest" ]; then
+    while IFS= read -r name; do
+      [ -n "$name" ] && rm -f "$dest/$name"
+    done <"$manifest"
+  else
+    for f in "$src"/*.md; do rm -f "$dest/$(basename -- "$f")"; done
+  fi
+}
+
+install_claude() {
+  local base skills_dir docs_dir
+  base="$(claude_base)"
+  skills_dir="$base/skills/webapp-guide"
+  docs_dir="$base/llmcheats/docs"
+
+  mkdir -p "$skills_dir" "$base/llmcheats"
+  sync_md_dir "$SRC_DIR/agents" "$base/agents" "$base/llmcheats/agents.list" "agent"
+  sync_md_dir "$SRC_DIR/commands" "$base/commands" "$base/llmcheats/commands.list" "command"
   cp -f "$SRC_DIR/skills/webapp-guide/SKILL.md" "$skills_dir/SKILL.md"
   copy_docs "$docs_dir"
 
-  echo "claude: agents -> $agents_dir"
-  echo "claude: skill  -> $skills_dir"
-  echo "claude: docs   -> $docs_dir"
+  echo "claude: agents   -> $base/agents"
+  echo "claude: commands -> $base/commands"
+  echo "claude: skill    -> $skills_dir"
+  echo "claude: docs     -> $docs_dir"
 }
 
 uninstall_claude() {
-  local base agents_dir manifest name
+  local base
   base="$(claude_base)"
-  agents_dir="$base/agents"
-  manifest="$base/llmcheats/agents.list"
-
-  if [ -f "$manifest" ]; then
-    while IFS= read -r name; do
-      [ -n "$name" ] && rm -f "$agents_dir/$name"
-    done <"$manifest"
-  else
-    for f in "$SRC_DIR"/agents/*.md; do
-      rm -f "$agents_dir/$(basename -- "$f")"
-    done
-  fi
+  remove_md_dir "$SRC_DIR/agents" "$base/agents" "$base/llmcheats/agents.list"
+  remove_md_dir "$SRC_DIR/commands" "$base/commands" "$base/llmcheats/commands.list"
   rm -rf "$base/skills/webapp-guide" "$base/llmcheats"
-  echo "claude: removed agents, skill and docs under $base"
+  echo "claude: removed agents, commands, skill and docs under $base"
 }
 
 codex_paths() { # sets docs_dir, agents_md, docs_ref

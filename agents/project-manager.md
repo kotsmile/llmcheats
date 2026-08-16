@@ -32,7 +32,10 @@ work starts:
 ## Organizing and tracking
 
 - Kick off the flow through `dev-team` (it picks full or fast flow); for a
-  single well-scoped stage, delegate to the specialist directly.
+  single well-scoped stage, delegate to the specialist directly. For work small
+  and urgent enough that the ceremony costs more than the change, hand it to
+  `asap` (`devflow/6-asap-flow.md`) and tell the operator that is what you did
+  — you still track it and still validate the hand-back.
 - Track stage-by-stage: keep a live status (stage, owner, verdict, blockers).
   When a stage stalls or a gate blocks twice on the same finding, that's
   yours to resolve — with the operator if it needs their decision.

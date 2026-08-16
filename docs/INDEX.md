@@ -33,6 +33,7 @@ inside each file, so a reference like "§2.5" still resolves.
 | `3-fast-flow.md` | 5 | Bug or hotfix, including the infra-inspection-first rule |
 | `4-never-skip.md` | 6–7 | Observability minimums; release-speed targets |
 | `5-git.md` | 8–9 | Commit format, PR description blocks, gate→approval mapping, merge discipline; scaling the process down |
+| `6-asap-flow.md` | 10 | Small urgent task delivered in one pass by one person/agent: what it may skip, the floor it may not, and when to hand back to the full or fast flow |
 
 ## Rules
 
