@@ -5,50 +5,26 @@ description: Reference guide for building production web applications (Go/Python
 
 # Web application guide
 
-This skill points at two reference documents installed alongside it. Locate
-them — check in order, use the first directory that exists:
+The reference is split into per-topic files so you load only what the task
+needs. Find the docs directory — first one that exists:
 
-1. `<project>/.claude/llmcheats/docs/` (project install)
-2. `~/.claude/llmcheats/docs/` (global install)
-3. `~/.codex/llmcheats/docs/` (codex install)
+1. `<project>/.claude/llmcheats/docs/`
+2. `~/.claude/llmcheats/docs/`
+3. `~/.codex/llmcheats/docs/`
 
-If none exist, say so explicitly and proceed on general best practice — do
-not invent the documents' contents.
-
-## The documents
-
-**`WEBAPP_DOC.md`** — how to build:
-- §1 System shape (one-origin SPA + API, single binary with subcommands)
-- §2 Backend DDD: entity/service/infra/transport layers, invariant entities,
-  ports, transactions, errors, config, startup/shutdown; §2.9 Python mapping
-- §3 React SPA: Vite/TS/Tailwind, FSD, routing, TanStack Query, Zustand,
-  auth, tokens/styling, forms, React 19 rules
-- §4 Testing: philosophy, fakes over mocks, DB/handler/e2e/frontend tests, CI
-- §5 Security: authn (JWT/OIDC/machine tokens), layered authz, validation,
-  SQLi, secrets, audit logging, HTTP hardening, frontend security
-- §6 Performance: DB, deadline budgets, concurrency, caching, frontend
-- §7 Infrastructure: runtime-agnostic contract, build/ship, proxy topology,
-  migrations, secrets, observability, CI/CD
-- §8 New-application checklist
-- §9 AI features: prompts as code, LLM provider as a port, tool executors as
-  transport, two-level evaluation, deadlines, cost
-
-**`DEVFLOW.md`** — in what order, with which gates:
-- Principles and the never-skip list; roles
-- Full flow (feature/migration): scope → design → architecture → security &
-  devops design approvals → operator plan approval (when not watching live) →
-  development → testing → implementation approvals → docs → product review →
-  release
-- Fast flow (bug/hotfix), including the infra-inspection-first rule
-- Required artifacts after every feature/release
-- Observability minimums and release-speed targets
-- Git rules: commit format and hygiene, PR description blocks, gate-to-approval
-  mapping, merge discipline
+If none exist, say so explicitly and proceed on general best practice — do not
+invent the documents' contents.
 
 ## How to use
 
-Read the section relevant to the task before acting — don't work from memory
-of it. When implementing, follow the §8 checklist. When running a delivery
-process, follow DEVFLOW and its gates (the `dev-team` agent orchestrates this
-if agents are installed). Deviations from the guide are allowed with a written
-reason; silent deviations are not.
+Read `INDEX.md` from that directory. It is a routing table: one row per file
+saying what is in it and when to read it. Pick the one or two files your task
+actually needs and read only those — `webapp/` for how to build, `devflow/`
+for the process and its gates.
+
+Do not read the whole tree. If you already know the topic maps to a specific
+file (e.g. a React screen → `webapp/3-frontend.md`, a hotfix →
+`devflow/3-fast-flow.md`), read that file directly and skip `INDEX.md`.
+
+Read before acting — don't work from memory of the guide. Deviations are
+allowed with a written reason; silent deviations are not.

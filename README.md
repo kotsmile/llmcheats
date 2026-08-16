@@ -12,22 +12,25 @@ generalized. Nothing is theoretical; every pattern has shipped.
 
 ## What's inside
 
-The two documents are readable directly: **[docs/WEBAPP_DOC.md](docs/WEBAPP_DOC.md)**
-and **[docs/DEVFLOW.md](docs/DEVFLOW.md)**.
+Start at **[docs/INDEX.md](docs/INDEX.md)** — it maps every file to what is in
+it, for humans and agents alike.
 
 ```
 docs/
-  WEBAPP_DOC.md      How to build: system shape, backend DDD (4 layers,
-                     invariant entities, ports, transactions, errors, config),
-                     React SPA (FSD, TanStack Query, Zustand, auth), testing,
-                     security, performance, infrastructure, AI features, and
-                     a new-application checklist.
-  DEVFLOW.md         In what order: the full feature/migration flow with its
+  INDEX.md           Routing table: which file answers which question.
+  webapp/            How to build, one file per topic:
+                     system shape; backend DDD (four layers, invariant
+                     entities, ports, transactions) split into domain and
+                     transport halves plus a Python mapping; React SPA (FSD,
+                     TanStack Query, Zustand, auth); testing; security;
+                     performance; infrastructure; AI features; and a
+                     new-application checklist.
+  devflow/           In what order: the full feature/migration flow with its
                      gates (scope → design → architecture → security & devops
                      audits → development → testing → docs → review → release),
                      the fast bug/hotfix flow, required artifacts, the
                      never-skip list (observability, secret handling, release
-                     speed), and how to scale the process down.
+                     speed), git rules, and how to scale the process down.
 
 agents/              Agent definitions (Claude Code subagent format —
                      markdown with YAML frontmatter):
@@ -44,7 +47,7 @@ agents/              Agent definitions (Claude Code subagent format —
   devops.md                infra audits, releases, observability, runbooks
 
 skills/
-  webapp-guide/      A Claude Code skill that loads the docs on demand.
+  webapp-guide/      A Claude Code skill that routes to the right doc file.
 
 install.sh           Installer/updater for both tools (macOS/Linux).
 ```
@@ -85,10 +88,28 @@ and is replaced in place on update — the rest of your `AGENTS.md` is untouched
   security-auditor review this diff"*). The `webapp-guide` skill surfaces the
   docs to any task that touches web-app work.
 - **Codex**: the `AGENTS.md` block points the model at the docs; reference
-  them explicitly for best results (*"follow WEBAPP_DOC.md §2 layering"*).
-- **Humans**: the docs stand alone. `WEBAPP_DOC.md` §8 is the checklist for
+  a file explicitly for best results (*"follow `webapp/2a-backend-layers.md`"*).
+- **Humans**: the docs stand alone — read them from
+  [docs/INDEX.md](docs/INDEX.md). `webapp/8-checklist.md` is the checklist for
   standing up a new app (its Security block doubles as a review checklist);
-  `DEVFLOW.md` §5 is a usable hotfix protocol.
+  `devflow/3-fast-flow.md` is a usable hotfix protocol.
+
+## Token budget
+
+`Read` loads whole files, so a monolithic reference costs its full size every
+time any agent consults it — and a full flow consults it from a dozen fresh
+contexts. The docs are therefore split per topic, and each agent names the one
+or two files it needs rather than the tree. A full-flow feature run pulls
+roughly 145KB of reference instead of 955KB.
+
+If you add to the docs, keep it that way:
+
+- One topic per file; split anything past ~15KB.
+- List every new file in `docs/INDEX.md` with a "read it when" line.
+- Point agents at **files**, never at the tree or at `INDEX.md` when the file
+  is already known.
+- Cross-reference by filename (`webapp/5-security.md`), not by section number
+  alone — a bare "§5" gives an agent nothing to open.
 
 ## Goal
 

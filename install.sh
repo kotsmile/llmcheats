@@ -17,8 +17,8 @@ Default target is "all"; default scope is global (~/.claude, ~/.codex).
 What goes where (global):
   Claude Code:  ~/.claude/agents/<name>.md
                 ~/.claude/skills/webapp-guide/SKILL.md
-                ~/.claude/llmcheats/docs/{WEBAPP_DOC.md,DEVFLOW.md}
-  Codex:        ~/.codex/llmcheats/docs/{WEBAPP_DOC.md,DEVFLOW.md}
+                ~/.claude/llmcheats/docs/{INDEX.md,webapp/,devflow/}
+  Codex:        ~/.codex/llmcheats/docs/{INDEX.md,webapp/,devflow/}
                 ~/.codex/AGENTS.md  <- a managed block is appended/updated
 
 Project mode (--project <dir>) replaces the prefixes with:
@@ -75,8 +75,14 @@ done
 target="${target:-all}"
 
 copy_docs() { # $1 = destination docs dir
+  # The reference is split per topic so an agent reads only the file it needs.
+  # Stale files from an older install would still be readable, so replace the
+  # subdirectories wholesale rather than merging into them.
   mkdir -p "$1"
-  cp -f "$SRC_DIR/docs/WEBAPP_DOC.md" "$SRC_DIR/docs/DEVFLOW.md" "$1/"
+  rm -rf "$1/webapp" "$1/devflow"
+  rm -f "$1/WEBAPP_DOC.md" "$1/DEVFLOW.md" # layout before the split
+  cp -f "$SRC_DIR/docs/INDEX.md" "$1/"
+  cp -R "$SRC_DIR/docs/webapp" "$SRC_DIR/docs/devflow" "$1/"
 }
 
 # Refuse to touch an AGENTS.md whose managed block is damaged: a half-present
@@ -123,16 +129,16 @@ upsert_block() { # $1 = file, $2 = docs path to reference
     echo "$MARK_BEGIN"
     echo "## Web application engineering reference (llmcheats)"
     echo ""
-    echo "Reference docs for building and operating web applications live in"
-    echo "\`$docs\`:"
+    echo "When designing, implementing, reviewing, or operating a web"
+    echo "application, consult \`$docs\`. It is split per topic:"
+    echo "\`webapp/\` (how to build) and \`devflow/\` (the delivery process and"
+    echo "its gates)."
     echo ""
-    echo "- \`WEBAPP_DOC.md\` — architecture (backend DDD layers, React SPA/FSD),"
-    echo "  testing, security, performance, infrastructure, and a new-app checklist."
-    echo "- \`DEVFLOW.md\` — the delivery process: full feature flow, fast"
-    echo "  bug/hotfix flow, gates, required artifacts, observability minimums."
-    echo ""
-    echo "When designing, implementing, reviewing, or operating a web application,"
-    echo "read the relevant section there before acting; follow the checklists."
+    echo "Read \`INDEX.md\` there to pick the file, then read **only** that"
+    echo "file — one or two, never the whole tree. Filenames are self-"
+    echo "describing, so skip \`INDEX.md\` when the topic is obvious"
+    echo "(\`webapp/3-frontend.md\`, \`webapp/5-security.md\`,"
+    echo "\`devflow/3-fast-flow.md\`). Read before acting, not from memory."
     echo "$MARK_END"
   } >>"$TMPF"
   mv "$TMPF" "$file"
