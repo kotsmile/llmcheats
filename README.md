@@ -53,13 +53,21 @@ commands/            Claude Code slash commands:
   pm.md              /pm         deliver through the full team (gated flow)
   asap.md            /asap       deliver now via the asap agent (one pass)
   status.md          /status     tasks, agents in flight, estimate, session
-  llmcheats.md       /llmcheats  work on this repo under its own conventions
 
 skills/
   webapp-guide/      A Claude Code skill that routes to the right doc file.
 
 install.sh           Installer/updater for both tools (macOS/Linux).
+
+.claude/             This repo's own tooling — never installed anywhere:
+  agents/llmcheats.md    maintainer agent: the invariants, the per-change
+                         checklists, the install contract
+  commands/llmcheats.md  /llmcheats  change this repo through that agent
 ```
+
+Everything above `.claude/` is the payload `install.sh` ships. `.claude/` is
+only for working on llmcheats itself, so it stays out of `agents/` and
+`commands/` and no user of llmcheats ever receives it.
 
 ## Install
 
