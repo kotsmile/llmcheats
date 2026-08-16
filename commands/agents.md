@@ -30,6 +30,7 @@ fi
 # Resolve the query to one or more agent ids.
 hits=""
 for m in "$sub"/*.meta.json; do
+  [ -f "$m" ] || continue   # empty dir: keep the unexpanded glob out of $hits
   id="$(basename "$m" .meta.json)"; short="${id#agent-}"
   if [ -z "$q" ]; then hits="$hits $id"; continue; fi
   hit=0
@@ -39,18 +40,22 @@ for m in "$sub"/*.meta.json; do
   [ "$hit" = 1 ] && hits="$hits $id"
 done
 n="$(echo $hits | wc -w | tr -d ' ')"
+if [ -z "$q" ] && [ "$n" = 0 ]; then echo "no agents under $sub"; exit 0; fi
 
 if [ -z "$q" ] || [ "$n" -gt 1 ]; then
   [ -n "$q" ] && echo "MATCHES $n for \"$q\" — narrow it, or use an id prefix:"
-  for m in "$sub"/*.meta.json; do
-    id="$(basename "$m" .meta.json)"; j="$sub/$id.jsonl"; [ -f "$j" ] || continue
+  for id in $hits; do
+    m="$sub/$id.meta.json"; j="$sub/$id.jsonl"; [ -f "$j" ] || continue
     jq -rs --slurpfile M "$m" --arg id "${id#agent-}" '
       def ep: sub("\\.[0-9]+Z$";"Z") | fromdateiso8601;
       (map(select(.timestamp)) | sort_by(.timestamp)) as $e
       | ($e[-1]) as $L
+      | ([ $L.message.content[]? | select(.type=="text") | .text ] | join(" ")) as $txt
       | [ ($M[0].spawnDepth // 1), $id[0:8], ($M[0].agentType // "?"),
           ($M[0].description // "-"),
-          (if $L.type=="assistant"
+          (if ($M[0].stoppedByUser // false)
+              or ($txt | test("\\[Request interrupted")) then "STOP"
+           elif $L.type=="assistant"
               and ([ $L.message.content[]? | select(.type=="tool_use") ] | length)==0
            then "done" else "RUN" end),
           (((now - ($L.timestamp | ep)) / 60) | floor),
@@ -67,13 +72,16 @@ fi
 if [ "$n" = 0 ]; then echo "no agent matches \"$q\" — run /llmcheats:agents with no argument to list them"; exit 0; fi
 
 # Exactly one match: its timeline.
-id="$(echo $hits)"; m="$sub/$id.meta.json"; j="$sub/$id.jsonl"
+id="${hits# }"; m="$sub/$id.meta.json"; j="$sub/$id.jsonl"
 jq -r '"AGENT \(.agentType)  \(.description // "-")  depth \(.spawnDepth // 1)  parent \(.parentAgentId // "top level")"' "$m"
-jq -rs '
+jq -rs --slurpfile M "$m" '
   def ep: sub("\\.[0-9]+Z$";"Z") | fromdateiso8601;
   def clip($n): tostring | gsub("[\n\t]"; " ") | gsub("  +"; " ") | .[0:$n];
   (map(select(.timestamp)) | sort_by(.timestamp)) as $e
-  | ($e[0].timestamp | ep) as $t0
+  | if ($e | length) == 0 then
+      "NO EVENTS — launched but never ran; report a launch failure, not work in progress"
+    else
+  ($e[0].timestamp | ep) as $t0
   | ($e[-1]) as $L
   | [ $e[]
       | (.timestamp | ep) as $ts
@@ -87,19 +95,28 @@ jq -rs '
           then "+\((.value.ts - $calls[.key-1].ts)|floor)s" else "" end
           | . + "        " | .[0:7])  \(.value.name)  \(.value.arg)" ),
     "",
-    (if $L.type=="assistant"
+    (if ($M[0].stoppedByUser // false)
+        or (([ $L.message.content[]? | select(.type=="text") | .text ] | join(" "))
+            | test("\\[Request interrupted"))
+     then "STOPPED BY THE OPERATOR \(((now - ($L.timestamp|ep))/60)|floor)m ago — it did not finish and nothing will resume it"
+     elif $L.type=="assistant"
         and ([ $L.message.content[]? | select(.type=="tool_use") ] | length)==0
      then "HAND-BACK (idle \(((now - ($L.timestamp|ep))/60)|floor)m — was this ever reported?)\n"
           + ([ $L.message.content[]? | select(.type=="text") | .text ] | join("\n"))
      else "STILL RUNNING — last event is \($L.type), \(((now - ($L.timestamp|ep))/60)|floor)m ago"
      end)
+  end
 ' "$j"
 ```
 
 ## 2. Report
 
 - **Lead with the verdict on this agent**: finished and reported, finished and
-  never reported, running, or idle-inside-a-tool. One sentence.
+  never reported, running, idle-inside-a-tool, or stopped by the operator. One
+  sentence.
+- **`STOP` / `STOPPED BY THE OPERATOR` is not a failure of the agent.** Say
+  which tool call it was in when it was stopped and what part of its stage is
+  therefore missing; never describe it as still working.
 - **When it finished, the hand-back is the answer** — quote it, do not
   summarize it into something shorter than the operator needs. If it holds a
   `BLOCKED` verdict or a question for the operator, that is the headline.

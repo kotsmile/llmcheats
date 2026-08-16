@@ -198,14 +198,22 @@ sync_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest, $4 = label
 
 # Before v2 the commands installed flat as /status; they now live in a
 # commands/llmcheats/ subdir so Claude Code namespaces them as /llmcheats:status.
-# Without this both copies would exist and both would answer.
-drop_flat_commands() { # $1 = base
-  local base="$1" f name
-  for f in "$SRC_DIR"/commands/*.md; do
-    name="$(basename -- "$f")"
+# Without this both copies would exist and both would answer. The previous
+# manifest is read too: a command can leave the payload in the same release that
+# moves it (llmcheats.md did), and that copy has to go as well.
+drop_flat_commands() { # $1 = base, $2 = manifest written by the previous install
+  local base="$1" manifest="$2" f name
+  # Installing into the llmcheats checkout itself would aim this at the repo's
+  # own .claude/commands/, which llmcheats never installed.
+  case "$base/" in "$SRC_DIR"/*) return 0 ;; esac
+  {
+    if [ -f "$manifest" ]; then cat "$manifest"; fi
+    for f in "$SRC_DIR"/commands/*.md; do basename -- "$f"; done
+  } | sort -u | while IFS= read -r name; do
+    [ -n "$name" ] || continue
     if [ -f "$base/commands/$name" ] && grep -q "llmcheats" "$base/commands/$name"; then
       rm -f "$base/commands/$name"
-      echo "claude: moved $name out of $base/commands (now /llmcheats:${name%.md})"
+      echo "claude: removed flat $base/commands/$name (commands are /llmcheats:<name> now)"
     fi
   done
 }
@@ -228,7 +236,7 @@ install_claude() {
 
   mkdir -p "$skills_dir" "$base/llmcheats"
   sync_md_dir "$SRC_DIR/agents" "$base/agents" "$base/llmcheats/agents.list" "agent"
-  drop_flat_commands "$base"
+  drop_flat_commands "$base" "$base/llmcheats/commands.list"
   sync_md_dir "$SRC_DIR/commands" "$base/commands/llmcheats" "$base/llmcheats/commands.list" "command"
   cp -f "$SRC_DIR/skills/webapp-guide/SKILL.md" "$skills_dir/SKILL.md"
   copy_docs "$docs_dir"
@@ -243,8 +251,8 @@ uninstall_claude() {
   local base
   base="$(claude_base)"
   remove_md_dir "$SRC_DIR/agents" "$base/agents" "$base/llmcheats/agents.list"
+  drop_flat_commands "$base" "$base/llmcheats/commands.list"
   remove_md_dir "$SRC_DIR/commands" "$base/commands/llmcheats" "$base/llmcheats/commands.list"
-  drop_flat_commands "$base"
   rmdir "$base/commands/llmcheats" 2>/dev/null || true
   rm -rf "$base/skills/webapp-guide" "$base/llmcheats"
   echo "claude: removed agents, commands, skill and docs under $base"

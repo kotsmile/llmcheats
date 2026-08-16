@@ -76,7 +76,8 @@ findings become one line and a verdict — but you may not defer.
 The state is on disk. Under
 `~/.claude/projects/<cwd-slug>/<session-id>/subagents/`, every agent — at any
 nesting depth — writes a live `agent-<id>.jsonl` and an `agent-<id>.meta.json`
-carrying its type, description, `spawnDepth`, and `parentAgentId`.
+carrying its type, description, `spawnDepth`, `parentAgentId`, and
+`stoppedByUser`.
 
 That is what `/llmcheats:status` and `/llmcheats:agents` read. Reach for them
 before theorizing about a quiet flow: they answer *did it finish*, *what did it
@@ -85,4 +86,10 @@ observation rather than inference.
 
 An agent's last event tells you its state: an assistant message with no tool
 call means it finished, and that message **is** its hand-back. Anything else
-means it is mid-turn.
+means it is mid-turn — unless its meta carries `stoppedByUser` or its last event
+is an interrupt, which mean the operator stopped it and nothing will resume it.
+A stopped agent looks exactly like a slow one otherwise.
+
+**This subsection describes Claude Code.** Codex has no subagent sidecars and
+no `/llmcheats:` commands: under it, 11.1–11.4 *are* the mechanism, because
+nothing else records that the work is progressing.

@@ -121,6 +121,9 @@ and is replaced in place on update — the rest of your `AGENTS.md` is untouched
   or they will not appear in the `/` menu.
 - **Codex**: the `AGENTS.md` block points the model at the docs; reference
   a file explicitly for best results (*"follow `webapp/2a-backend-layers.md`"*).
+  Only the docs ship there — the agents and the `/llmcheats:` commands are
+  Claude Code's, so under Codex the reporting cadence in
+  `devflow/7-flow-visibility.md` is what keeps a long run visible.
 - **Humans**: the docs stand alone — read them from
   [docs/INDEX.md](docs/INDEX.md). `webapp/8-checklist.md` is the checklist for
   standing up a new app (its Security block doubles as a review checklist);

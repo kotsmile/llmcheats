@@ -61,7 +61,9 @@ else
             $id[0:8],
             ($M[0].agentType // "?"),
             ($M[0].description // "-"),
-            (if $L.type=="assistant"
+            (if ($M[0].stoppedByUser // false)
+                or ($txt | test("\\[Request interrupted")) then "STOP"
+             elif $L.type=="assistant"
                 and ([ $L.message.content[]? | select(.type=="tool_use") ] | length)==0
              then "done" else "RUN" end),
             (((now - ($L.timestamp | ep)) / 60) | floor),
@@ -70,11 +72,12 @@ else
           ] | @tsv' "$j"
     done | sort -t"$(printf '\t')" -k1,1n -k6,6nr | awk -F'\t' '
       { ind = ""; for (i = 1; i < $1; i++) ind = ind "   "
-        printf "%s  %-4s %-21s %-30s idle %sm  last:%s\n", ind, $5, $3, substr($4,1,30), $6, $7
+        printf "%s  %-4s %-9s %-20s %-28s idle %sm  last:%s\n",
+               ind, $5, $2, $3, substr($4,1,28), $6, $7
         if ($8 != "") printf "%s       > %s\n", ind, $8
         seen[$3]++ }
       END { for (a in seen) if (seen[a] >= 3)
-              printf "  ! %s ran %d times — check for a gate loop\n", a, seen[a] }'
+              printf "  ! %s ran %d times — gate loop, or parallel fan-out; compare their descriptions\n", a, seen[a] }'
   fi
 fi
 echo "GIT $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'not a repo')"
@@ -95,8 +98,9 @@ Agent state comes from `<transcript>/subagents/`, where every agent — includin
 ones nested three levels deep — writes a live `agent-<id>.jsonl` and an
 `agent-<id>.meta.json`. That is the only honest source: the main transcript's
 tool results say nothing about a background agent beyond "launched". Indentation
-is `spawnDepth`, not parentage; when two orchestrators run at the same depth,
-`/llmcheats:agents` attributes their children.
+is `spawnDepth`, not parentage; the second column is the agent id — pass it to
+`/llmcheats:agents`, which reads `parentAgentId` and attributes children when
+two orchestrators run at the same depth.
 
 ## 2. Report
 
@@ -111,13 +115,14 @@ TASKS        3/7 done
   ...
 
 AGENTS       17 total, 3 deep
-  done  project-manager   Finish backend migration       idle 12m  last:Agent
+  done  a1b2c3d4  project-manager   Finish backend migration   idle 12m  last:Agent
         > Summary: Phase 3 landed green   <- FINISHED, NEVER REPORTED
-     RUN   dev-team        Phase 4 supply service        idle 11m  last:Agent
-        done  security-auditor  Security re-gate 2       idle 14m  last:Bash
+     RUN   e5f6a7b8  dev-team        Phase 4 supply service    idle 11m  last:Agent
+        done  9c8d7e6f  security-auditor  Security re-gate 2   idle 14m  last:Bash
               > VERDICT: BLOCKED One MAJOR: amendment A1 …
-        RUN   architecture-designer  Phase 4 plan        idle 0m   last:Bash
-  ! security-auditor ran 3 times — gate loop, past the two-round bound
+        RUN   1a2b3c4d  architecture-designer  Phase 4 plan    idle 0m   last:Bash
+        STOP  5e6f7a8b  golang-developer  Phase 4 handlers     idle 22m  last:Edit
+  ! security-auditor ran 3 times — gate loop, or parallel fan-out
 
 ESTIMATE     ~N min to finish  (basis: <what you derived it from>)
              blockers: <what would move it, or "none">
@@ -140,10 +145,20 @@ Rules for composing it:
 - **`RUN` is not "working" — report the idle minutes.** Under 5m, it is
   progressing; past that, say "idle Nm inside `<last tool>`" and let the
   operator judge. Never smooth a long idle into "in progress".
-- **A repeated `agentType` is a gate loop.** The `!` line counts them. Three
-  runs of one gate on one stage means the two-round escalation bound in
-  `dev-team.md` was passed without an escalation — report it as a finding, with
-  each round's verdict.
+- **`STOP` means the operator stopped that agent** — `stoppedByUser` in its
+  sidecar, or an interrupt as its last event. Nothing will resume it: say what
+  stage it was in and whether it needs relaunching, and never report it as
+  running. **A `STOP` line with a `>` under it still finished something** — an
+  agent that handed back, was resumed, then stopped keeps its hand-back, and
+  that hand-back is unread until you say otherwise. Read it before concluding
+  the stage was lost.
+- **A repeated `agentType` is a gate loop *or* parallel fan-out** — the `!`
+  line only counts, it cannot tell them apart. Read the three descriptions
+  before you call it: same stage repeated means the two-round escalation bound
+  in `dev-team.md` was passed without an escalation, and that is a finding with
+  each round's verdict; three different task descriptions is one specialist
+  used three times, which is normal. Never report the count as a loop
+  unchecked.
 - **Never call an agent "returned" on the strength of a tool result.** A
   background agent's result arrives in seconds and means "launched". Only the
   sidecar transcript says whether it finished.
