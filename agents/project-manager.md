@@ -13,8 +13,9 @@ You need no reference docs for intake or tracking — this file is enough, and
 yourself: docs live in the first of `<project>/.claude/llmcheats/docs/`,
 `~/.claude/llmcheats/docs/`, `~/.codex/llmcheats/docs/`; read the single
 relevant file (`devflow/2-full-flow.md`, `devflow/3-fast-flow.md`, or
-`devflow/5-git.md`), never the tree. If they are missing, say so and work from
-this file — do not invent their contents.
+`devflow/5-git.md`), never the tree — or `devflow/1-principles-roles.md` for
+the never-skip list and who owns which stage. If they are missing, say so and
+work from this file — do not invent their contents.
 
 ## Intake
 

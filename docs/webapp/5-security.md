@@ -78,7 +78,8 @@ Layered, from coarse to fine:
    sufficient when a POST can be semantically a read (see audited reads).
 3. **Operation-level permission checks in entities** (`actor.CheckPerm(...)`),
    for rules that depend on both actor and target state.
-4. **Field-level response filtering** by viewer role (§2.5).
+4. **Field-level response filtering** by viewer role (§2.5,
+   `webapp/2b-backend-transport.md`).
 
 Patterns that generalize:
 
@@ -107,7 +108,8 @@ Defense in depth, three gates:
 
 1. **Transport**: one `ReadJSON` chokepoint — body-size cap (1MB default),
    `DisallowUnknownFields`, single-JSON-value check, struct-tag validation
-   (§2.5). Set a smaller cap where the domain justifies it.
+   (§2.5, `webapp/2b-backend-transport.md`). Set a smaller cap where the
+   domain justifies it.
 2. **Entity**: value-object constructors re-validate domain rules.
 3. **Any tool/automation input** (LLM function calls, webhook payloads): its
    own explicit parser with enum and bounds checks. Never trust structured
@@ -130,7 +132,7 @@ for `%`/`_`.
 
 - **Delivery**: secret manager → deployment secret → env var → `${VAR}` in the
   config file. The app never fetches secrets itself and never reads env vars
-  directly (§2.7).
+  directly (§2.7, `webapp/2b-backend-transport.md`).
 - **Never log the config.** Also: expose the list of secret *values* to a
   response-redaction middleware that replaces any occurrence in a JSON
   response with `[REDACTED]` — with a minimum-length floor (~12 chars) so a
@@ -143,7 +145,8 @@ for `%`/`_`.
   (16/24/32 bytes), not first use.
 - Secret-bearing responses set `Cache-Control: no-store, max-age=0`.
 - On the client: revealed secret values live in component state and die with
-  it — never in the query cache, never in any storage (§3.4).
+  it — never in the query cache, never in any storage (§3.4,
+  `webapp/3-frontend.md`).
 
 ## 5.6 Audit logging
 
@@ -190,12 +193,13 @@ matters:
 
 - same origin (proxy), so no cross-origin XHR reaches the API with cookies;
 - `SameSite=Lax` on every cookie;
-- all state-changing routes are non-GET, and the backend **rejects any
-  request whose `Content-Type` is not `application/json` (415, enforced in
-  `ReadJSON` — §2.5)**. This leg only holds if it is enforced: without the
-  415, a cross-site `<form enctype="text/plain">` posts without any preflight
-  and can be shaped into valid JSON. With it, a cross-site sender must use
-  JSON — which is not a "simple request", so it gets preflighted and blocked;
+- all state-changing routes are non-GET, and the backend **rejects any request
+  whose `Content-Type` is not `application/json` (415, enforced in `ReadJSON`
+  — §2.5, `webapp/2b-backend-transport.md`)**. This leg only holds if it is
+  enforced: without the 415, a cross-site `<form enctype="text/plain">` posts
+  without any preflight and can be shaped into valid JSON. With it, a
+  cross-site sender must use JSON — which is not a "simple request", so it
+  gets preflighted and blocked;
 - checking `Origin` / `Sec-Fetch-Site` in middleware is a cheap additional
   leg worth adding;
 - **therefore: never make a GET route state-changing.** `SameSite=Lax` still
@@ -228,11 +232,12 @@ public route.
 - React's default escaping; **no `dangerouslySetInnerHTML`** (if you must
   render rich text, sanitize server-side and isolate the surface).
 - `encodeURIComponent` every interpolated URL parameter.
-- Client-side route guards are UX; the server is the authority (§3.3).
+- Client-side route guards are UX; the server is the authority (§3.3,
+  `webapp/3-frontend.md`).
 - For the API, keep JSON as JSON — HTML-escaping inside JSON is not an XSS
   control; the controls are `nosniff`, correct `Content-Type`, and CSP.
-- Server-side field filtering (§2.5) is the real "don't ship data the viewer
-  shouldn't see" control for data-heavy UIs.
+- Server-side field filtering (§2.5, `webapp/2b-backend-transport.md`) is the
+  real "don't ship data the viewer shouldn't see" control for data-heavy UIs.
 
 ---
 

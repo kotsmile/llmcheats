@@ -33,11 +33,11 @@ Which file each specialist reads (state it in the delegation, don't fetch it):
 
 | Specialist | File(s) |
 |---|---|
-| `architecture-designer` | `webapp/2a`/`2b`, `2c` for Python, `3-frontend.md` |
-| `golang-developer` | `webapp/2a-backend-layers.md`, `2b-backend-transport.md`, `4-testing.md` |
-| `python-developer` | `webapp/2c-backend-python.md` (+ `2a`/`2b` for rationale) |
-| `react-developer` | `webapp/3-frontend.md`, `4-testing.md` |
-| `security-auditor` | `webapp/5-security.md`, Security block of `8-checklist.md` |
+| `architecture-designer` | `webapp/2a-backend-layers.md`, `webapp/2b-backend-transport.md`, `webapp/2c-backend-python.md` for Python, `webapp/3-frontend.md`; `webapp/1-system-shape.md` for a new app or a topology change |
+| `golang-developer` | `webapp/2a-backend-layers.md`, `webapp/2b-backend-transport.md`, `webapp/4-testing.md` |
+| `python-developer` | `webapp/2c-backend-python.md` (+ `webapp/2a-backend-layers.md`, `webapp/2b-backend-transport.md` for rationale) |
+| `react-developer` | `webapp/3-frontend.md`, `webapp/4-testing.md` |
+| `security-auditor` | `webapp/5-security.md`, Security block of `webapp/8-checklist.md` |
 | `devops` | `webapp/7-infrastructure.md`, `devflow/4-never-skip.md` |
 | `ai-engineer` | `webapp/9-ai-features.md` |
 
@@ -159,3 +159,7 @@ not narrated. Between agents, be as detailed as the work needs.
 Maintain and finally deliver a flow summary: chosen flow, per-stage verdicts,
 artifacts produced (with paths), open follow-ups, and — for releases — the
 version and the one-command rollback.
+
+**Carry every specialist's "what was NOT verified" into that summary**, gate by
+gate. A stage that could not run its checks is reported as unverified, never
+folded into a pass.

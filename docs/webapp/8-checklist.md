@@ -57,7 +57,7 @@
 - [ ] Structured logs to stdout; metrics scraped privately; health endpoints
 - [ ] Releases are immutable tagged artefacts; deployed state is declarative and diffable
 
-**AI (only if the product has LLM features — see §9)**
+**AI (only if the product has LLM features — `webapp/9-ai-features.md` §9)**
 - [ ] Prompts live in code, reviewed; stable prefix ordered for caching
 - [ ] LLM provider behind a service port; hand-written fakes for tests
 - [ ] Tool executors validate arguments + authz like a public endpoint

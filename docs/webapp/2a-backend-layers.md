@@ -1,6 +1,7 @@
 # 2. Backend: Domain-Driven Design
 
-The reference implementation below is Go. §2.9 maps every layer onto Python.
+The reference implementation below is Go. `webapp/2c-backend-python.md` (§2.9)
+maps every layer onto Python.
 
 ## 2.1 The four layers
 
@@ -160,7 +161,8 @@ from a handler.
 ### Sentinel errors
 
 One `var (...)` block per entity file. Each sentinel carries a **generic
-user-facing message** plus internal detail attached separately (see §2.6):
+user-facing message** plus internal detail attached separately (see §2.6,
+`webapp/2b-backend-transport.md`):
 
 ```go
 var (
@@ -360,7 +362,8 @@ whose affected-row count is the verdict.
   by a migration tool that supports up-migrations in SQL (e.g. goose).
 - Embedded into the binary (`//go:embed migrations/*.sql`) and applied by the
   **`migrate` subcommand** — never on `serve` boot. In an orchestrated
-  deployment this runs as a pre-deploy job or init container (§7.4).
+  deployment this runs as a pre-deploy job or init container (§7.4,
+  `webapp/7-infrastructure.md`).
 - Migrations carry justification comments: why this index, what locks the DDL
   takes, what the operator should know. `CREATE INDEX CONCURRENTLY` goes in a
   no-transaction migration.

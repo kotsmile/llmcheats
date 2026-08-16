@@ -20,6 +20,8 @@ first**, then read only what the feature touches:
   a Python developer a plan written in Go vocabulary
 - frontend → `webapp/3-frontend.md`
 - LLM surface → `webapp/9-ai-features.md`
+- a new application, or a change to process/deploy topology →
+  `webapp/1-system-shape.md`
 
 Not the whole tree, and not `INDEX.md`. If the docs are missing everywhere, say
 so and work from the rules in this file — do not invent their contents.
@@ -79,3 +81,13 @@ for handler tests) and what the reviewers should scrutinize.
 - **AI features**: co-design with `ai-engineer` — tool
   schemas, prompt placement, and the evaluation plan are sections of this
   design document, not an afterthought.
+
+## Hand-back (what you return to the orchestrator)
+
+The plan document itself, plus:
+
+- Product decisions you bounced back instead of deciding, and to whom.
+- Deviations from the reference architecture, each with its written reason.
+- **What was NOT verified** — a module you could not read, an external
+  contract you assumed rather than confirmed, a migration cost you estimated.
+  Stated explicitly; an unverified assumption is never presented as a fact.

@@ -14,23 +14,26 @@ as any other user input. What changes is where the risks concentrate.
   reordering it silently destroys the hit rate.
 - **The LLM provider is a port**: declared as an interface in `service/`,
   implemented in `infra/` (one package per provider). Business logic is then
-  testable with hand-written fakes (§4.3) — no network, deterministic
-  responses, scriptable tool calls.
+  testable with hand-written fakes (§4.3, `webapp/4-testing.md`) — no network,
+  deterministic responses, scriptable tool calls.
 - **Tool/function-call executors are a transport layer for an untrusted
   client.** The model is a client: every argument is validated server-side
   (bounds, enums, authz for the acting user) exactly like a public endpoint
-  (§5.3), and a tool call must never authorize more than the user could do
-  directly. Retrieved or user-supplied content entering the context is data,
-  not instructions — delimit it explicitly.
-- **Conversation data is sensitive by default**: encrypted at rest (§5.5),
-  access audited (§5.6), never plaintext in logs or traces.
+  (§5.3, `webapp/5-security.md`), and a tool call must never authorize more
+  than the user could do directly. Retrieved or user-supplied content entering
+  the context is data, not instructions — delimit it explicitly.
+- **Conversation data is sensitive by default**: encrypted at rest (§5.5,
+  `webapp/5-security.md`), access audited (§5.6, `webapp/5-security.md`),
+  never plaintext in logs or traces.
 
 **Deadlines and side effects:** a synchronous LLM round gets a justified
-carve-out in the timeout budget (§6.2); streaming responses run outside the
-timeout group. The trailing database write after a slow LLM call runs on a
-context that survives cancellation (`context.WithoutCancel` + its own short
-timeout, §6.3) — otherwise the write fails on the already-cancelled request
-context and the client retries the whole generation into duplicates.
+carve-out in the timeout budget (§6.2, `webapp/6-performance.md`); streaming
+responses run outside the timeout group. The trailing database write after a
+slow LLM call runs on a context that survives cancellation
+(`context.WithoutCancel` + its own short timeout, §6.3 in
+`webapp/6-performance.md`) — otherwise the write fails on the
+already-cancelled request context and the client retries the whole generation
+into duplicates.
 
 **Safety is layered**: deterministic pre-LLM input gates (pattern or
 classifier checks that cannot be talked out of), prompt-level constraints,

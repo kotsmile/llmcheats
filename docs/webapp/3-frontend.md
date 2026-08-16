@@ -303,8 +303,8 @@ Sign-out order: mark signed out in the store → cancel in-flight queries →
 ### OIDC via the backend (staff/console apps)
 
 The SPA never talks to the identity provider and never holds a token. The
-backend terminates OIDC (§5.1) and sets its own session cookie; the frontend
-contributes:
+backend terminates OIDC (§5.1, `webapp/5-security.md`) and sets its own
+session cookie; the frontend contributes:
 
 - a `/login` page rendered **before the app shell mounts** (the shell's first
   act is an authenticated call — exactly the one that just bounced);

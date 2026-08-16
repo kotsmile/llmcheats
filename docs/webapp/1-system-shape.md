@@ -25,10 +25,11 @@ server (Vite) proxies *the same paths* to a local backend. Consequences:
 
 **One binary, subcommands.** The backend ships as a single binary with
 subcommands: `serve` runs the HTTP service, `migrate` applies database
-migrations and exits. Migrations never run implicitly on service boot
-(see §7.4).
+migrations and exits. Migrations never run implicitly on service boot (see
+§7.4, `webapp/7-infrastructure.md`).
 
 **Configuration is a file, secrets are env vars.** The process reads one YAML
-config file passed via `--config`. Secrets reach it as `${VAR}` placeholders in
-that file, resolved from the environment at parse time. The service itself never
-calls `os.Getenv` for its own settings (see §2.7).
+config file passed via `--config`. Secrets reach it as `${VAR}` placeholders
+in that file, resolved from the environment at parse time. The service itself
+never calls `os.Getenv` for its own settings (see §2.7,
+`webapp/2b-backend-transport.md`).

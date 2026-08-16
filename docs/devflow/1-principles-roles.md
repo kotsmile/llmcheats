@@ -3,11 +3,12 @@
 ## 1. Principles
 
 **Product first.** Client-facing product development is prioritized over a
-sufficient dev stack. A "pure" dev stack — no dedicated test stand, no QA team,
-manual deploys — is an acceptable state for a young product. Process weight
-scales with the system: the flows below describe the full ceremony, §9 defines
-what a stripped-down version may and may not drop, and §10 is the smallest
-flow that is still a flow — one pass, one person, for work that must land now.
+sufficient dev stack. A "pure" dev stack — no dedicated test stand, no QA
+team, manual deploys — is an acceptable state for a young product. Process
+weight scales with the system: the flows below describe the full ceremony, §9
+(`devflow/5-git.md`) defines what a stripped-down version may and may not
+drop, and §10 (`devflow/6-asap-flow.md`) is the smallest flow that is still a
+flow — one pass, one person, for work that must land now.
 
 **Some things are never skipped**, whatever the stack maturity:
 
@@ -16,9 +17,10 @@ flow that is still a flow — one pass, one person, for work that must land now.
 2. **Security practices for client secrets** — credential handling, encryption
    at rest, audit of access to sensitive data (`webapp/5-security.md`). A young product
    is exactly the one that cannot survive a leak.
-3. **System observability** — you cannot operate what you cannot see (§6 below).
+3. **System observability** — you cannot operate what you cannot see (§6,
+   `devflow/4-never-skip.md`).
 4. **Release speed** — the ability to deliver a fix fast is itself a safety
-   property (§7 below).
+   property (§7, `devflow/4-never-skip.md`).
 
 **Write for the reader.** Anything addressed to a human — an approval request,
 a status update, a comment, a plan summary — is **one or two sentences,
@@ -55,4 +57,4 @@ person holds several hats — the *gates still happen*, they just happen faster.
 | Security auditor | `security-auditor` | security design & implementation approval, security docs |
 | DevOps | `devops` | infra audit, releases, runbooks, observability |
 | Orchestrator | `dev-team` | drives the flow end-to-end, holds the gates |
-| Fullstack (asap) | `asap` | small urgent work end-to-end in one pass — every hat at once, under the §10 floor and its escalation triggers |
+| Fullstack (asap) | `asap` | small urgent work end-to-end in one pass — every hat at once, under the §10 floor (`devflow/6-asap-flow.md`) and its escalation triggers |

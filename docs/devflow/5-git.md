@@ -109,5 +109,7 @@ collapsed:
   could someone else implement/operate from what's written?
 - The test stand may be a locally composed stack (`docker compose up`). Fine.
   What's not fine is releasing what was never run composed.
-- What never collapses: the §1 never-skip list, the F3 reproduction test, the
-  release record, and the rule that docs updated in §3.11 tell the truth.
+- What never collapses: the §1 never-skip list
+  (`devflow/1-principles-roles.md`), the F3 reproduction test, the release
+  record, and the rule that docs updated in §3.11 (`devflow/2-full-flow.md`)
+  tell the truth.

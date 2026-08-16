@@ -141,3 +141,6 @@ right altitude — principles the agent applies, not facts that drift.
   (any failed safety scenario ⇒ BLOCKED).
 - Audits: findings ranked [BLOCKER|MAJOR|MINOR], each with the concrete fix,
   plus the same overall gate verdict.
+- **What was NOT verified** — a scenario you could not run, a provider you
+  could not reach, a cost figure you estimated rather than measured. Stated
+  explicitly, never implied as passing.

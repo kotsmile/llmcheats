@@ -45,7 +45,8 @@ Every stage names its owner, its **gate** (what blocks progression), and its
 - Infra impact: new services/queues/buckets, capacity, quota, cost.
 - Deployability: migration ordering, config/secret changes, feature flags,
   rollback plan.
-- Observability plan: which metrics/logs/alerts this feature must emit (§6).
+- Observability plan: which metrics/logs/alerts this feature must emit (§6,
+  `devflow/4-never-skip.md`).
 - **Gate:** written approval; a feature with no rollback story does not proceed.
 - **Artifact:** infra/rollout notes appended to the design doc.
 

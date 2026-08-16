@@ -2,17 +2,19 @@
 
 ## 10. Asap flow — one person, now
 
-The third flow, and the smallest. §3 designs before it builds; §5 fixes an
-agreed-broken behavior; the **asap flow delivers a small piece of work in a
-single pass**, with one person — or one agent, `asap` — holding every hat.
+The third flow, and the smallest. §3 (`devflow/2-full-flow.md`) designs before
+it builds; §5 (`devflow/3-fast-flow.md`) fixes an agreed-broken behavior; the
+**asap flow delivers a small piece of work in a single pass**, with one person
+— or one agent, `asap` — holding every hat.
 
 Target duration: **minutes**. Work that cannot plausibly finish in one sitting
 is not asap work; it is a feature wearing a hurry.
 
-This flow is a deliberate trade, and it is written down so the trade is visible:
-you give up the design artifact, the independent product review, and the
-separate security and devops gates. You do **not** give up §1's never-skip
-list, and you do not give up knowing what you did not verify.
+This flow is a deliberate trade, and it is written down so the trade is
+visible: you give up the design artifact, the independent product review, and
+the separate security and devops gates. You do **not** give up §1's
+(`devflow/1-principles-roles.md`) never-skip list, and you do not give up
+knowing what you did not verify.
 
 ### 10.1 When it applies
 
@@ -22,14 +24,15 @@ list, and you do not give up knowing what you did not verify.
 - Spikes, prototypes, internal tooling, developer experience.
 - Anything where a wrong answer is cheap and instantly visible.
 
-### 10.2 When it does not — hand to §3 or §5 instead
+### 10.2 When it does not — hand to the full or fast flow instead
 
 - Auth, sessions, tokens, crypto, secrets, payments, PII.
 - Schema migrations, data backfills, anything irreversible on real data.
 - Production deploys, infra topology, anything needing a rollback story.
 - Public product surface, or any task where *what correct means* is still open
   — that is a product decision, and it is not the implementer's to make.
-- Anything whose diff outgrows what a reviewer reads in one sitting (§8).
+- Anything whose diff outgrows what a reviewer reads in one sitting (§8,
+  `devflow/5-git.md`).
 
 The trigger list is checked **at intake and again mid-task**: an asap task that
 grows into one of these stops and is re-flowed. That is a normal outcome, not
@@ -55,7 +58,8 @@ them, not an approval round-trip.
 
 - Build, lint, and the tests around the change — run, not assumed.
 - Fixing a defect under this flow still means the **reproduction test is
-  written first** and fails before the fix (§5's F3 rule; it does not collapse).
+  written first** and fails before the fix (§5's F3 rule in
+  `devflow/3-fast-flow.md`; it does not collapse).
 - New behavior gets a test when the behavior is worth protecting. Skip the test
   for a spike or a throwaway script, and *say* you skipped it.
 - Whatever you could not run is named. An unrun path is never reported as
@@ -86,12 +90,14 @@ Speed buys the ceremony, never these:
   go-ahead: no drop, truncate, mass delete, force-push, or deploy.
 
 A task that cannot be done without breaking one of these is an escalation, not
-a judgment call. This is §1's never-skip list at asap scale — the ceremony
-scales down, the floor does not.
+a judgment call. This is the §1 never-skip list of
+`devflow/1-principles-roles.md` at asap scale — the ceremony scales down, the
+floor does not.
 
 ### 10.8 Git
 
-`hotfix:`-style single-line commits per §8, one logical change, green before
-commit. An asap change still arrives via a PR when the repo requires one; what
-it may skip is the *gate approvals* (§8 rule 4) that its scope does not
-trigger — and if it triggers them, it was never an asap task.
+`hotfix:`-style single-line commits per §8 (`devflow/5-git.md`), one logical
+change, green before commit. An asap change still arrives via a PR when the
+repo requires one; what it may skip is the *gate approvals* (§8 rule 4,
+`devflow/5-git.md`) that its scope does not trigger — and if it triggers them,
+it was never an asap task.

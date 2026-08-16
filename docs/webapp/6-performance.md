@@ -10,7 +10,8 @@ db.SetConnMaxIdleTime(5 * time.Minute)
 ```
 
 Bounded lifetime/idle-time matters behind managed poolers that recycle
-connections; the `BEGIN` retry (§2.4) absorbs the recycling moment.
+connections; the `BEGIN` retry (§2.4, `webapp/2a-backend-layers.md`) absorbs
+the recycling moment.
 
 **Indexes**: composite, ordered to match the query — a feed reading
 `order by at desc, id desc` gets `(resource, at desc, id desc)` (the
@@ -60,8 +61,9 @@ calls cloud APIs that hang.
 
 ## 6.3 Concurrency
 
-- **errgroup as process supervisor** (§2.8) and as a fan-out primitive for
-  parallel independent work (calling three providers, composing panels).
+- **errgroup as process supervisor** (§2.8, `webapp/2b-backend-transport.md`)
+  and as a fan-out primitive for parallel independent work (calling three
+  providers, composing panels).
 - **Cross-replica distribution is the database** (`SKIP LOCKED`), not an
   in-process queue — replicas then need no coordination.
 - `context.WithoutCancel` for work that must outlive its trigger: post-commit
@@ -85,7 +87,8 @@ calls cloud APIs that hang.
   as metric labels.
 - **Don't cache**: high-cardinality cheap queries (search results), and
   **never** revealed secrets — on either side of the wire.
-- Frontend caching is TanStack Query's `staleTime` tiers (§3.4).
+- Frontend caching is TanStack Query's `staleTime` tiers (§3.4,
+  `webapp/3-frontend.md`).
 
 ## 6.5 Frontend
 
@@ -97,5 +100,5 @@ calls cloud APIs that hang.
   presents as a perf bug.
 - `refetchOnWindowFocus: false`, `retry: 1` as defaults; `staleTime` by
   volatility; mutation → targeted invalidation, not refetch-all.
-- No hand memoization (§3.9); if lists get large, virtualize; fix data shape
-  before adding `memo`.
+- No hand memoization (§3.9, `webapp/3-frontend.md`); if lists get large,
+  virtualize; fix data shape before adding `memo`.

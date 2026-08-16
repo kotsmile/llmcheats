@@ -1,0 +1,5 @@
+# Artifacts of `./install.sh --project .` — copies of docs/ and agents/ that
+# would drift from the source of truth in this repo.
+/.claude/
+/.llmcheats/
+/AGENTS.md

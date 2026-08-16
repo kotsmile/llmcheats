@@ -3,7 +3,7 @@
 ## 5. Fast flow — bugs and hotfixes
 
 The full flow compressed to what a defect actually needs. Target duration:
-**minutes to hours, not days** (§7).
+**minutes to hours, not days** (§7, `devflow/4-never-skip.md`).
 
 ### F1. Scope — *whoever caught it*
 - Reproduction, blast radius (who is affected, is data at risk), severity.
@@ -18,7 +18,8 @@ The full flow compressed to what a defect actually needs. Target duration:
 
 ### F3. Development — *developer*
 - If a human operator is not watching live: post the fix plan in **one
-  sentence** and get an ack before coding (same rule as §3.6, compressed).
+  sentence** and get an ack before coding (same rule as §3.6 in
+  `devflow/2-full-flow.md`, compressed).
 - The smallest change that fixes the defect. No opportunistic refactoring in
   a hotfix — that's a follow-up ticket.
 - **A test that reproduces the bug is written first** and fails before the fix,

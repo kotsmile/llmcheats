@@ -52,7 +52,7 @@ const defaultMaxBodySize = 1 << 20 // 1MB
 
 func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
     if ct, _, _ := mime.ParseMediaType(r.Header.Get("Content-Type")); ct != "application/json" {
-        return ErrUnsupportedMediaType // 415 — also a load-bearing CSRF leg, see §5.7
+        return ErrUnsupportedMediaType // 415 — a load-bearing CSRF leg (webapp/5-security.md §5.7)
     }
     r.Body = http.MaxBytesReader(w, r.Body, defaultMaxBodySize) // w lets the server drop the conn
     dec := json.NewDecoder(r.Body)
@@ -104,9 +104,9 @@ Every route that needs more gets an explicitly justified carve-out group.
 ### Authentication middleware and guards
 
 Auth is **per-route**, not global. The middleware extracts the credential
-(cookie first, then `Authorization: Bearer` — see §5.1), validates it, and
-injects claims into the request context. Route access is expressed as
-composable **guards**:
+(cookie first, then `Authorization: Bearer` — see §5.1,
+`webapp/5-security.md`), validates it, and injects claims into the request
+context. Route access is expressed as composable **guards**:
 
 ```go
 type Guard interface {
@@ -119,9 +119,9 @@ r.Post("/orders", auth.Auth(h.CreateOrder, ut.UserGuard))
 ```
 
 Guards (route-level, coarse: "is this class of user allowed here") are a
-**different layer** from permissions (`entity.Perm.Check(role)`, operation-level,
-checked inside entity/service methods). Both exist; neither substitutes for the
-other. See §5.2.
+**different layer** from permissions (`entity.Perm.Check(role)`,
+operation-level, checked inside entity/service methods). Both exist; neither
+substitutes for the other. See §5.2 in `webapp/5-security.md`.
 
 ### Error → status mapping happens once
 
@@ -240,10 +240,11 @@ Sharp edges to document for your team:
 - The committed dev config must contain **no** placeholders — assert it with a
   test that parses the committed file (this test also guarantees `serve` works
   on a fresh clone).
-- **The config is never logged**, in full or in part: it holds credentials, and
-  a service that prints its configuration at startup puts them in the log
-  aggregator. Additionally expose `cfg.Secrets() []string` — the list of secret
-  values — and feed it to a response-redaction middleware (§5.5).
+- **The config is never logged**, in full or in part: it holds credentials,
+  and a service that prints its configuration at startup puts them in the log
+  aggregator. Additionally expose `cfg.Secrets() []string` — the list of
+  secret values — and feed it to a response-redaction middleware (§5.5,
+  `webapp/5-security.md`).
 
 ## 2.8 Startup and shutdown
 
@@ -278,9 +279,9 @@ func run() error {
         Addr: cfg.Server.Address, Handler: handler,
         // ReadTimeout stays 0: it bounds the ENTIRE body and would kill slow
         // uploads. Slowloris is ReadHeaderTimeout's job; upload routes set
-        // their own body deadlines (§6.2).
+        // their own body deadlines (webapp/6-performance.md §6.2).
         ReadHeaderTimeout: 15 * time.Second,
-        WriteTimeout:      75 * time.Second, // ≥ the longest route carve-out (§6.2)
+        WriteTimeout:      75 * time.Second, // ≥ longest route carve-out (webapp/6-performance.md §6.2)
         IdleTimeout:       60 * time.Second,
     }
 
@@ -313,4 +314,5 @@ Rules baked into that shape:
   `nil` on cancellation so a normal SIGTERM isn't an error.
 - The **drain window equals `WriteTimeout`** — a shorter drain drops exactly
   the requests your slow-route carve-outs promised to allow.
-- Metrics are a **separate listener** (`:9090`) with no public route (§5.7).
+- Metrics are a **separate listener** (`:9090`) with no public route (§5.7,
+  `webapp/5-security.md`).

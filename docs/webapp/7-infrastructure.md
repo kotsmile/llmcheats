@@ -32,15 +32,16 @@ mount) without a code change.
 - One image per service; the migrate entrypoint is the same binary
   (subcommand), so shipping one artefact ships both.
 - SPA: build once; environment specifics arrive at runtime via the overlaid
-  `config.js` (§3.1) — **one artefact serves every environment**.
+  `config.js` (§3.1, `webapp/3-frontend.md`) — **one artefact serves every
+  environment**.
 - Daemonless builders (kaniko/buildah) if CI runners are unprivileged;
   describe the image declaratively enough that swapping builders is a CI
   change, not a per-project change.
 
 ## 7.3 Reverse proxy topology
 
-One proxy in front (§1): nginx/caddy as a systemd service, a Compose sidecar,
-or an Ingress — same three rules everywhere:
+One proxy in front (§1, `webapp/1-system-shape.md`): nginx/caddy as a systemd
+service, a Compose sidecar, or an Ingress — same three rules everywhere:
 
 - static SPA files with long-cache hashed assets and no-cache `index.html` +
   `config.js`;
