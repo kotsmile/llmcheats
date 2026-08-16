@@ -4,8 +4,8 @@ argument-hint: (no arguments)
 ---
 
 Report where the current work stands. This is the operator's window into a
-running llmcheats `/pm` flow, so it reports **observed state only** — never a
-guess dressed as a fact.
+running llmcheats `/llmcheats:pm` flow, so it reports **observed state only**
+— never a guess dressed as a fact.
 
 ## 1. Collect
 
@@ -96,7 +96,7 @@ ones nested three levels deep — writes a live `agent-<id>.jsonl` and an
 `agent-<id>.meta.json`. That is the only honest source: the main transcript's
 tool results say nothing about a background agent beyond "launched". Indentation
 is `spawnDepth`, not parentage; when two orchestrators run at the same depth,
-`/agents` attributes their children.
+`/llmcheats:agents` attributes their children.
 
 ## 2. Report
 

@@ -15,7 +15,7 @@ one pass, no design doc, no separate security or devops gate.
    this command is for.
 3. If it escalates — auth, secrets, payments, PII, a migration, a production
    deploy, or a task that turns out to need a product decision — relay the
-   escalation to the operator in one sentence and offer `/pm`. Do not push past
+   escalation to the operator in one sentence and offer `/llmcheats:pm`. Do not push past
    it, and do not re-launch it with the trigger removed from the prompt.
 4. Report exactly what it hands back: files changed, what was run and what it
    said, **what was not verified**, and the follow-ups it deliberately skipped.

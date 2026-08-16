@@ -30,8 +30,8 @@ docs/
                      audits → development → testing → docs → review → release),
                      the fast bug/hotfix flow, the asap one-pass flow, required
                      artifacts, the never-skip list (observability, secret
-                     handling, release speed), git rules, and how to scale the
-                     process down.
+                     handling, release speed), git rules, how to scale the
+                     process down, and how to keep a running flow visible.
 
 agents/              Agent definitions (Claude Code subagent format —
                      markdown with YAML frontmatter):
@@ -49,10 +49,12 @@ agents/              Agent definitions (Claude Code subagent format —
   security-auditor.md      design & implementation security reviews
   devops.md                infra audits, releases, observability, runbooks
 
-commands/            Claude Code slash commands:
-  pm.md              /pm         deliver through the full team (gated flow)
-  asap.md            /asap       deliver now via the asap agent (one pass)
-  status.md          /status     tasks, agents in flight, estimate, session
+commands/            Claude Code slash commands, installed under the
+                     llmcheats: namespace:
+  pm.md              /llmcheats:pm      deliver through the full team (gated)
+  asap.md            /llmcheats:asap    deliver now via the asap agent
+  status.md          /llmcheats:status  tasks, agent tree, estimate, session
+  agents.md          /llmcheats:agents  one agent's timeline and hand-back
 
 skills/
   webapp-guide/      A Claude Code skill that routes to the right doc file.
@@ -87,7 +89,7 @@ Where things land (global mode):
 | Tool | What | Where |
 |---|---|---|
 | Claude Code | agents | `~/.claude/agents/` |
-| Claude Code | commands | `~/.claude/commands/` |
+| Claude Code | commands | `~/.claude/commands/llmcheats/` |
 | Claude Code | skill | `~/.claude/skills/webapp-guide/` |
 | Claude Code | docs | `~/.claude/llmcheats/docs/` |
 | Codex | docs | `~/.codex/llmcheats/docs/` |
@@ -103,9 +105,10 @@ and is replaced in place on update — the rest of your `AGENTS.md` is untouched
 - **Claude Code**: the commands are the front door —
 
   ```
-  /pm     add order cancellation to the API     # full team, gates, tracking
-  /asap   add a --dry-run flag to deploy.sh     # one agent, one pass, now
-  /status                                       # where the work stands
+  /llmcheats:pm      add order cancellation to the API   # full team, gates
+  /llmcheats:asap    add a --dry-run flag to deploy.sh   # one agent, one pass
+  /llmcheats:status                                      # where the work stands
+  /llmcheats:agents  security-auditor                    # what one agent did
   ```
 
   Or ask by agent name: *"use the project-manager agent to deliver

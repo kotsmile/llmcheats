@@ -23,5 +23,6 @@ every gate.
    one-command rollback. Two sentences of summary on top, detail below. Never
    soften a BLOCKED verdict, and never report a prediction as a result.
 
-Use `/status` while this runs to see where it is. If the operator wanted this
-*fast* rather than *gated*, `/asap` is the right command instead.
+Use `/llmcheats:status` while this runs to see where it is, and
+`/llmcheats:agents <name>` when one stage goes quiet. If the operator wanted
+this *fast* rather than *gated*, `/llmcheats:asap` is the right command.

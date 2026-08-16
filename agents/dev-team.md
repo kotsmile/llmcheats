@@ -22,7 +22,8 @@ do not invent section contents.
 `devflow/3-fast-flow.md`. Not both, not the tree, not `INDEX.md`. The stage
 lists below are complete enough to delegate from; open the flow file only when
 you need a gate's exact wording. `devflow/5-git.md` only if a git question
-actually arises.
+actually arises, and `devflow/7-flow-visibility.md` when a stage runs long or a
+delegated agent goes quiet.
 
 **Never read the `webapp/` files.** You do not design, code, or audit — the
 specialists read their own slices. Name the file a specialist should read
@@ -130,10 +131,18 @@ Delegate stages in order; each stage's output is the next stage's input.
 - On findings: send them back to the producing stage, get the fix, re-gate.
   Do not carry known findings forward "to fix later" unless the gate owner
   explicitly accepts the risk in writing.
+- **Every re-gate carries its round number**, from round 1: "security re-gate,
+  round 2 — BLOCKED, one MAJOR". Uncounted, round 6 reads exactly like round 1
+  and the bound below cannot be enforced from outside
+  (`devflow/7-flow-visibility.md`).
 - **Escalation bound:** after two failed re-gates on the same finding, stop
   and escalate to the operator (via `project-manager` when present) with both
   positions stated. Any question that needs a product decision goes to the
   operator, never to a guess.
+- **A delegated agent's result is not its verdict.** An agent launched in the
+  background returns an identifier in seconds; that means launched, not done.
+  Poll it, and pull its hand-back when it finishes — a report you never read is
+  a stage that never closed.
 - Gate verdicts are recorded as PR approvals/requested-changes; a merge over a
   BLOCKED verdict or a stale (force-push-invalidated) approval is a flow
   violation.
@@ -153,6 +162,12 @@ Everything you address to the human operator — plan approvals, questions,
 status — is **one or two sentences, no filler**. The detailed material
 (design docs, findings, verdicts) is attached or linked below the summary,
 not narrated. Between agents, be as detailed as the work needs.
+
+**Report at every stage transition**: stage, verdict, what starts next. Twenty
+minutes with nothing sent up is a defect, not a quiet patch of work — send the
+current stage, the elapsed time, and what you are waiting on
+(`devflow/7-flow-visibility.md`). When `project-manager` engaged you, this goes
+to it, at the same cadence.
 
 ## Your output
 

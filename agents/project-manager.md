@@ -14,8 +14,10 @@ yourself: docs live in the first of `<project>/.claude/llmcheats/docs/`,
 `~/.claude/llmcheats/docs/`, `~/.codex/llmcheats/docs/`; read the single
 relevant file (`devflow/2-full-flow.md`, `devflow/3-fast-flow.md`, or
 `devflow/5-git.md`), never the tree — or `devflow/1-principles-roles.md` for
-the never-skip list and who owns which stage. If they are missing, say so and
-work from this file — do not invent their contents.
+the never-skip list and who owns which stage, or
+`devflow/7-flow-visibility.md` when the flow goes quiet and you need to find
+out what is actually happening. If they are missing, say so and work from this
+file — do not invent their contents.
 
 ## Intake
 
@@ -40,6 +42,14 @@ work starts:
 - Track stage-by-stage: keep a live status (stage, owner, verdict, blockers).
   When a stage stalls or a gate blocks twice on the same finding, that's
   yours to resolve — with the operator if it needs their decision.
+- **A stage you delegated in the background is not done when its result
+  returns** — that result is an identifier, delivered in seconds. Poll it, and
+  pull the hand-back yourself when it finishes. An agent that finished and was
+  never read looks exactly like an agent that is still working, and it is the
+  usual reason a flow appears frozen (`devflow/7-flow-visibility.md`).
+- **Twenty minutes of silence toward the operator is a defect**, whatever is
+  happening underneath. Send stage, elapsed time, and what you are waiting on —
+  two sentences. Never let a quiet stretch stand in for a status.
 - **Plan approval:** when the operator is watching live, the
   stage is skipped. When they are reachable, relay the developer's 1–2
   sentence plan and wait for their ack. When they granted autonomy for this

@@ -16,7 +16,7 @@ Default target is "all"; default scope is global (~/.claude, ~/.codex).
 
 What goes where (global):
   Claude Code:  ~/.claude/agents/<name>.md
-                ~/.claude/commands/<name>.md
+                ~/.claude/commands/llmcheats/<name>.md   (as /llmcheats:<name>)
                 ~/.claude/skills/webapp-guide/SKILL.md
                 ~/.claude/llmcheats/docs/{INDEX.md,webapp/,devflow/}
   Codex:        ~/.codex/llmcheats/docs/{INDEX.md,webapp/,devflow/}
@@ -196,6 +196,19 @@ sync_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest, $4 = label
   done
 }
 
+# Before v2 the commands installed flat as /status; they now live in a
+# commands/llmcheats/ subdir so Claude Code namespaces them as /llmcheats:status.
+# Without this both copies would exist and both would answer.
+drop_flat_commands() { # $1 = base
+  local base="$1" f name
+  for f in "$SRC_DIR"/commands/*.md; do
+    name="$(basename -- "$f")"
+    if [ -f "$base/commands/$name" ] && grep -q "llmcheats" "$base/commands/$name"; then
+      rm -f "$base/commands/$name"
+      echo "claude: moved $name out of $base/commands (now /llmcheats:${name%.md})"
+    fi
+  done
+}
 remove_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest
   local src="$1" dest="$2" manifest="$3" name f
   if [ -f "$manifest" ]; then
@@ -215,12 +228,13 @@ install_claude() {
 
   mkdir -p "$skills_dir" "$base/llmcheats"
   sync_md_dir "$SRC_DIR/agents" "$base/agents" "$base/llmcheats/agents.list" "agent"
-  sync_md_dir "$SRC_DIR/commands" "$base/commands" "$base/llmcheats/commands.list" "command"
+  drop_flat_commands "$base"
+  sync_md_dir "$SRC_DIR/commands" "$base/commands/llmcheats" "$base/llmcheats/commands.list" "command"
   cp -f "$SRC_DIR/skills/webapp-guide/SKILL.md" "$skills_dir/SKILL.md"
   copy_docs "$docs_dir"
 
   echo "claude: agents   -> $base/agents"
-  echo "claude: commands -> $base/commands"
+  echo "claude: commands -> $base/commands/llmcheats  (as /llmcheats:<name>)"
   echo "claude: skill    -> $skills_dir"
   echo "claude: docs     -> $docs_dir"
 }
@@ -229,7 +243,9 @@ uninstall_claude() {
   local base
   base="$(claude_base)"
   remove_md_dir "$SRC_DIR/agents" "$base/agents" "$base/llmcheats/agents.list"
-  remove_md_dir "$SRC_DIR/commands" "$base/commands" "$base/llmcheats/commands.list"
+  remove_md_dir "$SRC_DIR/commands" "$base/commands/llmcheats" "$base/llmcheats/commands.list"
+  drop_flat_commands "$base"
+  rmdir "$base/commands/llmcheats" 2>/dev/null || true
   rm -rf "$base/skills/webapp-guide" "$base/llmcheats"
   echo "claude: removed agents, commands, skill and docs under $base"
 }
