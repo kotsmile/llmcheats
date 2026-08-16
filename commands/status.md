@@ -42,15 +42,40 @@ else
       "cache_read\t\($u | map(.cache_read_input_tokens // 0) | add // 0)"
   ' "$f"
   start="$(jq -rs 'map(select(.timestamp))|sort_by(.timestamp)|.[0].timestamp' "$f")"
-  echo "AGENTS"
-  jq -rs '
-    [ .[] | select(.message.content? | type=="array") | .message.content[] ] as $c
-    | ([ $c[] | select(.type=="tool_result") | .tool_use_id ] | unique) as $done
-    | [ $c[] | select(.type=="tool_use" and (.name=="Task" or .name=="Agent")) ] as $t
-    | if ($t|length)==0 then "  none launched in this transcript"
-      else $t[] | "  \(if ([.id] - $done | length)==0 then "returned" else "RUNNING " end)  \(.input.subagent_type // "?")  —  \(.input.description // "-")"
-      end
-  ' "$f"
+  sub="${f%.jsonl}/subagents"
+  if [ ! -d "$sub" ]; then
+    echo "AGENTS  no subagents/ dir — none launched in this session"
+  else
+    echo "AGENTS  $(ls "$sub"/*.meta.json 2>/dev/null | wc -l | tr -d ' ') total, from sidecar transcripts"
+    for m in "$sub"/*.meta.json; do
+      id="$(basename "$m" .meta.json)"; j="$sub/$id.jsonl"
+      [ -f "$j" ] || continue
+      jq -rs --slurpfile M "$m" --arg id "${id#agent-}" '
+        def ep: sub("\\.[0-9]+Z$";"Z") | fromdateiso8601;
+        (map(select(.timestamp)) | sort_by(.timestamp)) as $e
+        | ($e[-1]) as $L
+        | ([ $e[] | select(.message.content? | type=="array")
+             | .message.content[] | select(.type=="tool_use") ] | last) as $tc
+        | ([ $L.message.content[]? | select(.type=="text") | .text ] | join(" ")) as $txt
+        | [ ($M[0].spawnDepth // 1),
+            $id[0:8],
+            ($M[0].agentType // "?"),
+            ($M[0].description // "-"),
+            (if $L.type=="assistant"
+                and ([ $L.message.content[]? | select(.type=="tool_use") ] | length)==0
+             then "done" else "RUN" end),
+            (((now - ($L.timestamp | ep)) / 60) | floor),
+            ($tc.name // "-"),
+            ($txt | gsub("[*#\n]"; " ") | gsub("  +"; " ") | sub("^ +"; "") | .[0:70])
+          ] | @tsv' "$j"
+    done | sort -t"$(printf '\t')" -k1,1n -k6,6nr | awk -F'\t' '
+      { ind = ""; for (i = 1; i < $1; i++) ind = ind "   "
+        printf "%s  %-4s %-21s %-30s idle %sm  last:%s\n", ind, $5, $3, substr($4,1,30), $6, $7
+        if ($8 != "") printf "%s       > %s\n", ind, $8
+        seen[$3]++ }
+      END { for (a in seen) if (seen[a] >= 3)
+              printf "  ! %s ran %d times — check for a gate loop\n", a, seen[a] }'
+  fi
 fi
 echo "GIT $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'not a repo')"
 if git rev-parse --git-dir >/dev/null 2>&1; then
@@ -66,6 +91,13 @@ The script reports the **newest transcript for this working directory**. When
 it says "newest of N", N > 1 means other sessions exist for this project — say
 so, because the numbers could belong to a different window.
 
+Agent state comes from `<transcript>/subagents/`, where every agent — including
+ones nested three levels deep — writes a live `agent-<id>.jsonl` and an
+`agent-<id>.meta.json`. That is the only honest source: the main transcript's
+tool results say nothing about a background agent beyond "launched". Indentation
+is `spawnDepth`, not parentage; when two orchestrators run at the same depth,
+`/agents` attributes their children.
+
 ## 2. Report
 
 ```
@@ -78,10 +110,14 @@ TASKS        3/7 done
   [ ] 4  <subject>            (blocked by 3)
   ...
 
-AGENTS
-  RUNNING   dev-team          architecture stage, ~6 min in
-  returned  security-auditor  APPROVED_WITH_FINDINGS (2 MINOR)
-  idle      devops            not yet engaged
+AGENTS       17 total, 3 deep
+  done  project-manager   Finish backend migration       idle 12m  last:Agent
+        > Summary: Phase 3 landed green   <- FINISHED, NEVER REPORTED
+     RUN   dev-team        Phase 4 supply service        idle 11m  last:Agent
+        done  security-auditor  Security re-gate 2       idle 14m  last:Bash
+              > VERDICT: BLOCKED One MAJOR: amendment A1 …
+        RUN   architecture-designer  Phase 4 plan        idle 0m   last:Bash
+  ! security-auditor ran 3 times — gate loop, past the two-round bound
 
 ESTIMATE     ~N min to finish  (basis: <what you derived it from>)
              blockers: <what would move it, or "none">
@@ -96,11 +132,23 @@ Rules for composing it:
 
 - **Task status comes from `TaskList`, not from your memory of what you did.**
   A task is done when it is marked done, not when you believe it is.
-- **For each agent, say what it is doing, not just that it runs.** Combine the
-  script's RUNNING/returned lines with what the agent last reported in this
-  conversation. An agent that returned gets its verdict; a gate verdict is
-  quoted as-is (`APPROVED` / `APPROVED_WITH_FINDINGS` / `BLOCKED`), never
-  paraphrased into something softer.
+- **An agent that is `done` but never reported in this conversation is the
+  first thing you say.** Its `>` line is the hand-back it wrote and nobody
+  read; quote it and pull the rest of that transcript before anything else.
+  Work stalled behind an undelivered report is the most common cause of a flow
+  that looks frozen.
+- **`RUN` is not "working" — report the idle minutes.** Under 5m, it is
+  progressing; past that, say "idle Nm inside `<last tool>`" and let the
+  operator judge. Never smooth a long idle into "in progress".
+- **A repeated `agentType` is a gate loop.** The `!` line counts them. Three
+  runs of one gate on one stage means the two-round escalation bound in
+  `dev-team.md` was passed without an escalation — report it as a finding, with
+  each round's verdict.
+- **Never call an agent "returned" on the strength of a tool result.** A
+  background agent's result arrives in seconds and means "launched". Only the
+  sidecar transcript says whether it finished.
+- Gate verdicts are quoted as-is (`APPROVED` / `APPROVED_WITH_FINDINGS` /
+  `BLOCKED`), never paraphrased into something softer.
 - **The estimate must name its basis** — e.g. "4 of 7 tasks done in 40 min, 3
   remain of similar size". If there is no basis, write `ESTIMATE unknown` and
   say what would make it knowable. Never produce a number you cannot derive.
