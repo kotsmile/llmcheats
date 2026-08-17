@@ -34,7 +34,9 @@ inside each file, so a reference like "§2.5" still resolves.
 | `4-never-skip.md` | 6–7 | Observability minimums; release-speed targets |
 | `5-git.md` | 8–9 | Commit format, PR description blocks, gate→approval mapping, merge discipline; scaling the process down |
 | `6-asap-flow.md` | 10 | Small urgent task delivered in one pass by one person/agent: what it may skip, the floor it may not, and when to hand back to the full or fast flow |
-| `7-flow-visibility.md` | 11 | A flow runs long, an agent goes quiet, or you cannot tell whether work is progressing: reporting cadence, counting gate rounds, background agents, reading agent state off disk |
+| `7-flow-visibility.md` | 11 | A flow runs long, an agent goes quiet, or you cannot tell whether work is progressing: reporting cadence, counting gate rounds, background agents, reading agent state off disk, orchestrating at a depth the operator can see |
+| `8-resuming.md` | 12 | Picking up work that was stopped, ran out of context, or is half-written: plans as files, the resume inventory, counting re-planning rounds, why an orchestrator never finishes the work itself |
+| `9-agent-io.md` | 13 | A single agent pass takes too long: batching independent reads into one block, what is out of bounds to read (vendor source, live data), sizing the output to the scope, budgeting the pass |
 
 ## Rules
 

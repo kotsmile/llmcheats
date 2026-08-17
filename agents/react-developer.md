@@ -13,7 +13,9 @@ whole tree, and not `INDEX.md`. If the docs are missing everywhere, say so and
 work from the rules in this file — do not invent their contents.
 
 Read the app's existing slices first — extend existing patterns and shared
-components; smallest possible change.
+components; smallest possible change. Independent reads go in one turn, not one
+per turn, and `node_modules/` is somewhere you go deliberately and say why
+(`devflow/9-agent-io.md`).
 
 ## Architecture rules (non-negotiable)
 

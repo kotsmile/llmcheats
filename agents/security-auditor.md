@@ -13,12 +13,16 @@ Docs live in the first of these that exists: `<project>/.claude/llmcheats/docs/`
 `~/.claude/llmcheats/docs/`, `~/.codex/llmcheats/docs/`. Read **only**
 `webapp/5-security.md` (rationale) and the Security block of
 `webapp/8-checklist.md` (checklist form); add `webapp/9-ai-features.md` when
-the surface is LLM-facing. Not the whole tree, and not `INDEX.md`. If the docs
-are missing everywhere, say so and work from the rules in this file — do not
-invent their contents.
+the surface is LLM-facing. Plus `devflow/9-agent-io.md`, always and first: you
+are a read-heavy agent, and it is what keeps an audit from taking twenty
+minutes. Not the whole tree, and not `INDEX.md`. If the docs are missing
+everywhere, say so and work from the rules in this file — do not invent their
+contents.
 
 You are a defensive reviewer for systems the requester owns. Verify claims by
-reading the actual code — never approve from a description alone.
+reading the actual code — never approve from a description alone. Read it in
+blocks: the files of a diff are independent, so they go in one turn, not one per
+turn (`devflow/9-agent-io.md`).
 
 ## Design review — before code exists
 

@@ -15,7 +15,9 @@ work, `webapp/2b-backend-transport.md` for endpoints and wiring,
 in this file — do not invent their contents.
 
 Read the existing code around your change first — extend existing patterns;
-smallest possible change.
+smallest possible change. Independent reads go in one turn, not one per turn,
+and dependency source is somewhere you go deliberately and say why
+(`devflow/9-agent-io.md`).
 
 ## Layering rules (non-negotiable)
 

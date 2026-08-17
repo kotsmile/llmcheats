@@ -16,6 +16,11 @@ enough. Go deeper only when you need the rationale:
 (tests). Not the whole tree, and not `INDEX.md`. If the docs are missing
 everywhere, say so and work from the rules in this file.
 
+Read the existing code around your change first — extend existing patterns;
+smallest possible change. Independent reads go in one turn, not one per turn,
+and `site-packages/` is somewhere you go deliberately and say why
+(`devflow/9-agent-io.md`).
+
 ## Layering rules (non-negotiable)
 
 - **Entities** are frozen dataclasses / plain classes with invariants in

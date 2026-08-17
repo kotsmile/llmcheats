@@ -73,6 +73,15 @@ findings become one line and a verdict — but you may not defer.
 
 ### 11.5 Reading the state instead of guessing at it
 
+**The running-agent indicator under the input names only agents the session
+launched itself.** Everything deeper collapses into a `(+N)` counter:
+`project-manager (+2)` means two descendants are live, with no name, agent
+type, task or state for either. An orchestrator that delegates everything
+therefore shows up as a single line — in the run this section comes from, five
+`project-manager` entries were top level and thirty-one nested agents were only
+ever a number. One name in the UI is not evidence that one agent is running,
+and `(+N)` is not evidence that the flow is progressing.
+
 The state is on disk. Under
 `~/.claude/projects/<cwd-slug>/<session-id>/subagents/`, every agent — at any
 nesting depth — writes a live `agent-<id>.jsonl` and an `agent-<id>.meta.json`
@@ -93,3 +102,25 @@ A stopped agent looks exactly like a slow one otherwise.
 **This subsection describes Claude Code.** Codex has no subagent sidecars and
 no `/llmcheats:` commands: under it, 11.1–11.4 *are* the mechanism, because
 nothing else records that the work is progressing.
+
+### 11.6 Orchestrate at the depth the operator can see
+
+Since the indicator only names what the session launched itself (§11.5), every
+nesting level costs a name. In the run this section comes from, the sidecar
+metas read `project-manager` at spawnDepth 1, `dev-team` at 2, and
+`architecture-designer`, `golang-developer`, `security-auditor` and `devops` all
+at 3 — so the five agents doing the actual work were, to the operator, the `+N`
+after one name.
+
+**The stage owner belongs at depth 1.** An orchestrator that only picks the next
+stage and holds its gate is not worth a level of nesting: fold that
+sequencing into the layer above it and launch the specialists directly, in the
+background, so each one is named in the indicator and each completion fires a
+notification. That is what `/llmcheats:pm` does — the main session holds intake,
+flow choice, gates and validation, and every specialist runs at depth 1.
+
+The trade is real and one-directional: the orchestrating context now carries the
+whole flow instead of delegating it away, and it holds Write and Edit. So the
+rule in `devflow/8-resuming.md` §12.5 — the orchestrator never finishes the work
+itself — stops being advice and needs a hard stop: no editing project files while a flow is open, and
+a per-stage line naming who did the work and where the artifact landed.

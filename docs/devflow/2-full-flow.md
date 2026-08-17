@@ -31,7 +31,10 @@ Every stage names its owner, its **gate** (what blocks progression), and its
   part of the design document (`webapp/9-ai-features.md`), and the §3.4/§3.5 gates review
   them with the rest.
 - **Gate:** a developer who wasn't in the discussion could implement from the plan.
-- **Artifact:** design document (architecture plan) linked from the ticket.
+- **Artifact:** design document (architecture plan) linked from the ticket —
+  written to a path in the repo, not left as a message, so a resumed or
+  re-delegated flow implements it instead of designing it again
+  (`devflow/8-resuming.md`).
 
 ### 3.4 Security audit — design approval — *security auditor*
 - Reviews the *design*: authn/authz model for the new surface, data

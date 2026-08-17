@@ -31,13 +31,18 @@ docs/
                      the fast bug/hotfix flow, the asap one-pass flow, required
                      artifacts, the never-skip list (observability, secret
                      handling, release speed), git rules, how to scale the
-                     process down, and how to keep a running flow visible.
+                     process down, how to keep a running flow visible, how
+                     to resume an interrupted one without re-planning it, and
+                     what a single agent pass may cost (batched reads, read
+                     bounds, output sized to the scope).
 
 agents/              Agent definitions (Claude Code subagent format —
                      markdown with YAML frontmatter):
   project-manager.md       operator-facing entry point: intake, tracking,
-                           delegated approvals, result validation
-  dev-team.md              orchestrator: runs the DEVFLOW end-to-end
+                           delegated approvals, result validation — invoked by
+                           name; /llmcheats:pm runs the role in-session instead
+  dev-team.md              orchestrator: runs the DEVFLOW end-to-end — invoked
+                           by name; /llmcheats:pm sequences the stages itself
   asap.md                  one agent, whole task, now — small urgent work
                            without orchestration or gate rounds
   product-designer.md      scope, UX flows, acceptance criteria, product review
@@ -51,7 +56,9 @@ agents/              Agent definitions (Claude Code subagent format —
 
 commands/            Claude Code slash commands, installed under the
                      llmcheats: namespace:
-  pm.md              /llmcheats:pm      deliver through the full team (gated)
+  pm.md              /llmcheats:pm      deliver through the full team (gated) —
+                                        the session itself is the manager and
+                                        launches each specialist directly
   asap.md            /llmcheats:asap    deliver now via the asap agent
   status.md          /llmcheats:status  tasks, agent tree, estimate, session
   agents.md          /llmcheats:agents  one agent's timeline and hand-back
@@ -111,11 +118,16 @@ and is replaced in place on update — the rest of your `AGENTS.md` is untouched
   /llmcheats:agents  security-auditor                    # what one agent did
   ```
 
+  `/llmcheats:pm` makes the session itself the project manager — it holds
+  intake, the gates and validation, and launches every specialist directly, so
+  the running-agent indicator names `golang-developer` rather than collapsing
+  it into a `(+N)` under an orchestrator (`devflow/7-flow-visibility.md`).
+
   Or ask by agent name: *"use the project-manager agent to deliver
   &lt;feature&gt;"* (single point of contact), *"use the dev-team agent"*
   (direct flow), or a specialist directly (*"have security-auditor review this
-  diff"*). The `webapp-guide` skill surfaces the docs to any task that touches
-  web-app work.
+  diff"*). Those nest one or two levels deeper than the command does. The
+  `webapp-guide` skill surfaces the docs to any task that touches web-app work.
 
   Slash commands are read at startup — **restart Claude Code after installing**
   or they will not appear in the `/` menu.
@@ -135,7 +147,10 @@ and is replaced in place on update — the rest of your `AGENTS.md` is untouched
 time any agent consults it — and a full flow consults it from a dozen fresh
 contexts. The docs are therefore split per topic, and each agent names the one
 or two files it needs rather than the tree. A full-flow feature run pulls
-roughly 145KB of reference instead of 955KB.
+roughly 145KB of reference instead of 955KB — measured on the nested
+`project-manager` → `dev-team` → specialist topology; under `/llmcheats:pm` the
+same slices are read, one fewer context reads a flow file, and the session
+itself carries the flow for the whole run.
 
 If you add to the docs, keep it that way:
 

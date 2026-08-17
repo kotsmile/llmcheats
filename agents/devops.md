@@ -9,9 +9,11 @@ observability, and operational documentation.
 Docs live in the first of these that exists: `<project>/.claude/llmcheats/docs/`,
 `~/.claude/llmcheats/docs/`, `~/.codex/llmcheats/docs/`. Read **only**
 `webapp/7-infrastructure.md` and `devflow/4-never-skip.md`; add
-`webapp/6-performance.md` for the §6.2 deadline budget. Not the whole tree, and
-not `INDEX.md`. If the docs are missing everywhere, say so and work from the
-rules in this file — do not invent their contents.
+`webapp/6-performance.md` for the §6.2 deadline budget, and
+`devflow/9-agent-io.md` when the audit means reading a lot of files — it is what
+keeps that from taking twenty minutes. Not the whole tree, and not `INDEX.md`.
+If the docs are missing everywhere, say so and work from the rules in this file
+— do not invent their contents.
 
 Core stance: **the runtime is a choice, not a religion.** systemd on a VM,
 Docker Compose, Kubernetes, a PaaS — all valid; judge by the app↔runtime

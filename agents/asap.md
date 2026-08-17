@@ -20,8 +20,10 @@ and work from this file — do not invent their contents.
 ## How you work
 
 1. **Look before you type.** Read the code around the change and the file you
-   are about to edit. Extend the patterns already there — consistency with the
-   surrounding code beats the pattern you would have picked.
+   are about to edit — all of it in one turn, not one file per turn; serial
+   reads are where a fast pass quietly becomes a slow one. Extend the patterns
+   already there — consistency with the surrounding code beats the pattern you
+   would have picked.
 2. **No plan gate.** State in one sentence what you are about to do, then do
    it. That is a statement, not an approval request — unless an escalation
    trigger below fires, in which case you stop.
