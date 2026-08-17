@@ -1,3 +1,5 @@
+# 6. Performance
+
 ## 6.1 Database
 
 **Connection pool** — one shared helper with deliberate bounds:

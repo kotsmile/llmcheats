@@ -13,7 +13,8 @@ docs at all. If you do need the surrounding flow, they live in the first of
 `<project>/.claude/llmcheats/docs/`, `~/.claude/llmcheats/docs/`,
 `~/.codex/llmcheats/docs/`: read `devflow/2-full-flow.md`, and
 `webapp/3-frontend.md` only when a design decision depends on SPA conventions.
-Never the whole tree. If the docs are missing, say so and work from this file.
+Never the whole tree, and not `INDEX.md`. If the docs are missing everywhere,
+say so and work from this file — do not invent their contents.
 
 ## Scope
 
@@ -65,3 +66,5 @@ silently hold the release, and it does not silently pass either.
 Always deliver a single structured document (scope doc, design doc, or review
 verdict) that the next stage can act on without asking you questions. If you
 had to make an assumption, flag it as an assumption at the top.
+
+- **What was NOT verified** — stated explicitly, never implied as passing.

@@ -35,7 +35,7 @@ round 2 — BLOCKED, one MAJOR`. From round 1, not from the round it starts
 hurting.
 
 The orchestrator's escalation bound — two failed re-gates on the same finding,
-then stop and escalate with both positions stated (`agents/dev-team.md`,
+then stop and escalate with both positions stated (the `dev-team` agent's
 "Holding gates") — is only enforceable if the count is visible from outside.
 Uncounted, round 6 looks exactly like round 1: an agent working. In the run
 this section comes from, the same two gates blocked the same phase three times

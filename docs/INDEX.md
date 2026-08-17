@@ -37,6 +37,7 @@ inside each file, so a reference like "§2.5" still resolves.
 | `7-flow-visibility.md` | 11 | A flow runs long, an agent goes quiet, or you cannot tell whether work is progressing: reporting cadence, counting gate rounds, background agents, reading agent state off disk, orchestrating at a depth the operator can see |
 | `8-resuming.md` | 12 | Picking up work that was stopped, ran out of context, or is half-written: plans as files, the resume inventory, counting re-planning rounds, why an orchestrator never finishes the work itself |
 | `9-agent-io.md` | 13 | A single agent pass takes too long: batching independent reads into one block, what is out of bounds to read (vendor source, live data), sizing the output to the scope, budgeting the pass |
+| `10-flow-cost.md` | 14 | A flow costs more than it should: choosing the cheapest flow that clears the gates, tiering the model per stage, hand-backs as summaries, cache-stable prefixes, when parallel is worth it, the loops that burn stages |
 
 ## Rules
 

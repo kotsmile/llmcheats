@@ -1,6 +1,7 @@
 ---
 description: Deliver a small task now — the llmcheats asap flow, one agent, no design docs, no gate rounds
 argument-hint: <what to do>
+disable-model-invocation: true
 ---
 
 Deliver the task below on the asap flow (`devflow/6-asap-flow.md`): one agent,
@@ -24,3 +25,9 @@ one pass, no design doc, no separate security or devops gate.
 The floor still applies at this speed: no committed secrets, no weakened
 authz, no test deleted to make a build green, nothing destructive against
 shared state without an explicit go-ahead.
+
+This is one context against the full flow's thirteen, which is most of why it
+exists (`devflow/10-flow-cost.md`). Keep it that way: do not add a review pass,
+a second opinion, or a design step to make the result feel safer. A task that
+needs those needs `/llmcheats:pm`, and a one-pass flow wearing extra stages is
+the most expensive way to deliver either one.

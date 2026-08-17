@@ -238,7 +238,3 @@ public route.
   control; the controls are `nosniff`, correct `Content-Type`, and CSP.
 - Server-side field filtering (§2.5, `webapp/2b-backend-transport.md`) is the
   real "don't ship data the viewer shouldn't see" control for data-heavy UIs.
-
----
-
-# 6. Performance

@@ -155,10 +155,10 @@ Rules for composing it:
 - **A repeated `agentType` is a gate loop *or* parallel fan-out** — the `!`
   line only counts, it cannot tell them apart. Read the three descriptions
   before you call it: same stage repeated means the two-round escalation bound
-  in `dev-team.md` was passed without an escalation, and that is a finding with
-  each round's verdict; three different task descriptions is one specialist
-  used three times, which is normal. Never report the count as a loop
-  unchecked.
+  the `dev-team` agent holds was passed without an escalation, and that is a
+  finding with each round's verdict; three different task descriptions is one
+  specialist used three times, which is normal. Never report the count as a
+  loop unchecked.
 - **Never call an agent "returned" on the strength of a tool result.** A
   background agent's result arrives in seconds and means "launched". Only the
   sidecar transcript says whether it finished.

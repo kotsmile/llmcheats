@@ -127,7 +127,7 @@ Two proven options:
 **Generated client (product apps).** Generate a typed fetch client from the
 backend's OpenAPI spec (e.g. `@hey-api/openapi-ts`) — read the spec from the
 backend's own build output so it cannot drift. Generated code is never
-hand-edited. Wrap `fetch` once for auth/refresh (see §3.6).
+hand-edited. Wrap `fetch` once for auth/refresh (§3.6 below, `webapp/3-frontend.md`).
 
 **Hand-written client (small apps).** ~40 lines is enough:
 

@@ -17,7 +17,7 @@ Default target is "all"; default scope is global (~/.claude, ~/.codex).
 What goes where (global):
   Claude Code:  ~/.claude/agents/<name>.md
                 ~/.claude/commands/llmcheats/<name>.md   (as /llmcheats:<name>)
-                ~/.claude/skills/webapp-guide/SKILL.md
+                ~/.claude/skills/<name>/
                 ~/.claude/llmcheats/docs/{INDEX.md,webapp/,devflow/}
   Codex:        ~/.codex/llmcheats/docs/{INDEX.md,webapp/,devflow/}
                 ~/.codex/AGENTS.md  <- a managed block is appended/updated
@@ -27,10 +27,10 @@ Project mode (--project <dir>) replaces the prefixes with:
   Codex:        <dir>/.llmcheats/docs, managed block in <dir>/AGENTS.md
                 (note: this edits <dir>/AGENTS.md in place)
 
-An existing agent or command file with the same name that llmcheats did
-not install is backed up to <name>.md.bak-llmcheats before being
-replaced, with a warning. Everything in AGENTS.md outside the managed
-block is preserved.
+An existing agent, command or skill with the same name that llmcheats did
+not install is backed up to a .bak-llmcheats copy before being replaced,
+with a warning, and uninstall leaves behind anything edited since it was
+installed. Everything in AGENTS.md outside the managed block is preserved.
 EOF
 }
 
@@ -67,6 +67,7 @@ while [ $# -gt 0 ]; do
     --project)
       shift
       [ $# -gt 0 ] || { echo "error: --project needs a directory" >&2; exit 1; }
+      [ -d "$1" ] || { echo "error: --project directory does not exist: $1" >&2; exit 1; }
       project_dir="$(cd -- "$1" >/dev/null && pwd)"
       ;;
     -h|--help) usage; exit 0 ;;
@@ -124,7 +125,10 @@ upsert_block() { # $1 = file, $2 = docs path to reference
   mkdir -p "$(dirname -- "$file")"
   touch "$file"
   check_markers "$file" || return 1
-  TMPF="$(mktemp)"
+  # Temp next to the target and seeded from it: the rewrite stays atomic and
+  # the user's AGENTS.md keeps its own mode instead of mktemp's 0600.
+  TMPF="$(mktemp -- "$file.llmcheats.XXXXXX")"
+  cp -p -- "$file" "$TMPF"
   strip_block "$file" "$TMPF"
   {
     [ -s "$TMPF" ] && echo ""
@@ -151,11 +155,17 @@ remove_block() { # $1 = file
   local file="$1"
   [ -f "$file" ] || return 0
   check_markers "$file" || return 1
-  TMPF="$(mktemp)"
+  TMPF="$(mktemp -- "$file.llmcheats.XXXXXX")"
+  cp -p -- "$file" "$TMPF"
   strip_block "$file" "$TMPF"
   mv "$TMPF" "$file"
   TMPF=""
   echo "removed llmcheats block from $file"
+  # Nothing left means the block was the whole file, so llmcheats created it.
+  if [ ! -s "$file" ]; then
+    rm -f -- "$file"
+    echo "removed $file (empty once the block was gone)"
+  fi
 }
 
 claude_base() {
@@ -166,7 +176,7 @@ claude_base() {
 # records what we wrote, so a later run can drop what left the repo and
 # uninstall knows exactly what is ours.
 sync_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest, $4 = label
-  local src="$1" dest="$2" manifest="$3" label="$4" prev="" name f
+  local src="$1" dest="$2" manifest="$3" label="$4" prev="" name f tmp
   mkdir -p "$dest" "$(dirname -- "$manifest")"
   [ -f "$manifest" ] && prev="$(cat "$manifest")"
 
@@ -180,7 +190,11 @@ sync_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest, $4 = label
     fi
   done <<<"$prev"
 
-  : >"$manifest"
+  # Build the list aside and move it into place: a copy that fails midway must
+  # not leave the manifest shorter than what is actually installed, because
+  # anything missing from it can never be updated or uninstalled again.
+  tmp="$manifest.tmp$$"
+  : >"$tmp"
   for f in "$src"/*.md; do
     name="$(basename -- "$f")"
     # No llmcheats reference in it: either the user's own file or their edit of
@@ -192,8 +206,60 @@ sync_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest, $4 = label
       echo "warning: $dest/$name existed and was not installed by llmcheats — backed up to $dest/$name.bak-llmcheats" >&2
     fi
     cp -f -- "$f" "$dest/$name"
-    echo "$name" >>"$manifest"
+    echo "$name" >>"$tmp"
   done
+  mv -f -- "$tmp" "$manifest"
+}
+
+# Skills install as whole directories so a skill can grow reference files
+# alongside its SKILL.md, and are manifested like agents and commands.
+sync_skills() { # $1 = base
+  local base="$1" manifest prev="" name d dest tmp
+  manifest="$base/llmcheats/skills.list"
+  mkdir -p "$base/skills" "$base/llmcheats"
+  [ -f "$manifest" ] && prev="$(cat "$manifest")"
+
+  while IFS= read -r name; do
+    [ -n "$name" ] || continue
+    if [ ! -d "$SRC_DIR/skills/$name" ] && [ -d "$base/skills/$name" ]; then
+      rm -rf "$base/skills/$name"
+      echo "claude: removed stale skill $base/skills/$name"
+    fi
+  done <<<"$prev"
+
+  tmp="$manifest.tmp$$"
+  : >"$tmp"
+  for d in "$SRC_DIR"/skills/*/; do
+    name="$(basename -- "$d")"
+    dest="$base/skills/$name"
+    mkdir -p "$dest"
+    # The backup goes beside the skill, not inside it: uninstall removes the
+    # skill directory wholesale and would take the backup with it. A loose file
+    # in skills/ is not a skill, so it stays invisible to the agent.
+    if [ -e "$dest/SKILL.md" ] && ! cmp -s "$d/SKILL.md" "$dest/SKILL.md" &&
+       ! grep -q "llmcheats" "$dest/SKILL.md"; then
+      cp -p -- "$dest/SKILL.md" "$base/skills/$name.SKILL.md.bak-llmcheats"
+      echo "warning: $dest/SKILL.md existed and was not installed by llmcheats — backed up to $base/skills/$name.SKILL.md.bak-llmcheats" >&2
+    fi
+    cp -Rf -- "$d." "$dest/"
+    echo "$name" >>"$tmp"
+  done
+  mv -f -- "$tmp" "$manifest"
+}
+
+remove_skills() { # $1 = base
+  local base="$1" manifest name
+  manifest="$base/llmcheats/skills.list"
+  [ -f "$manifest" ] || return 0
+  while IFS= read -r name; do
+    [ -n "$name" ] || continue
+    if [ -f "$base/skills/$name/SKILL.md" ] &&
+       ! grep -q "llmcheats" "$base/skills/$name/SKILL.md"; then
+      echo "kept $base/skills/$name — edited since install, remove it by hand" >&2
+      continue
+    fi
+    rm -rf "$base/skills/$name"
+  done <"$manifest"
 }
 
 # Before v2 the commands installed flat as /status; they now live in a
@@ -221,7 +287,13 @@ remove_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest
   local src="$1" dest="$2" manifest="$3" name f
   if [ -f "$manifest" ]; then
     while IFS= read -r name; do
-      [ -n "$name" ] && rm -f "$dest/$name"
+      [ -n "$name" ] || continue
+      # Edited since we installed it: it is the user's file now, not ours.
+      if [ -f "$dest/$name" ] && ! grep -q "llmcheats" "$dest/$name"; then
+        echo "kept $dest/$name — edited since install, remove it by hand" >&2
+        continue
+      fi
+      rm -f "$dest/$name"
     done <"$manifest"
   else
     for f in "$src"/*.md; do rm -f "$dest/$(basename -- "$f")"; done
@@ -229,21 +301,20 @@ remove_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest
 }
 
 install_claude() {
-  local base skills_dir docs_dir
+  local base docs_dir
   base="$(claude_base)"
-  skills_dir="$base/skills/webapp-guide"
   docs_dir="$base/llmcheats/docs"
 
-  mkdir -p "$skills_dir" "$base/llmcheats"
+  mkdir -p "$base/llmcheats"
   sync_md_dir "$SRC_DIR/agents" "$base/agents" "$base/llmcheats/agents.list" "agent"
   drop_flat_commands "$base" "$base/llmcheats/commands.list"
   sync_md_dir "$SRC_DIR/commands" "$base/commands/llmcheats" "$base/llmcheats/commands.list" "command"
-  cp -f "$SRC_DIR/skills/webapp-guide/SKILL.md" "$skills_dir/SKILL.md"
+  sync_skills "$base"
   copy_docs "$docs_dir"
 
   echo "claude: agents   -> $base/agents"
   echo "claude: commands -> $base/commands/llmcheats  (as /llmcheats:<name>)"
-  echo "claude: skill    -> $skills_dir"
+  echo "claude: skills   -> $base/skills"
   echo "claude: docs     -> $docs_dir"
 }
 
@@ -254,8 +325,10 @@ uninstall_claude() {
   drop_flat_commands "$base" "$base/llmcheats/commands.list"
   remove_md_dir "$SRC_DIR/commands" "$base/commands/llmcheats" "$base/llmcheats/commands.list"
   rmdir "$base/commands/llmcheats" 2>/dev/null || true
-  rm -rf "$base/skills/webapp-guide" "$base/llmcheats"
-  echo "claude: removed agents, commands, skill and docs under $base"
+  remove_skills "$base"
+  rmdir "$base/skills" 2>/dev/null || true
+  rm -rf "$base/llmcheats"
+  echo "claude: removed agents, commands, skills and docs under $base"
 }
 
 codex_paths() { # sets docs_dir, agents_md, docs_ref
@@ -273,6 +346,11 @@ codex_paths() { # sets docs_dir, agents_md, docs_ref
 install_codex() {
   local docs_dir agents_md docs_ref
   codex_paths
+  # Check the pointer file before writing anything: aborting on damaged markers
+  # after the copy would leave docs on disk with nothing pointing at them.
+  mkdir -p "$(dirname -- "$agents_md")"
+  touch "$agents_md"
+  check_markers "$agents_md"
   copy_docs "$docs_dir"
   upsert_block "$agents_md" "$docs_ref"
   echo "codex: docs    -> $docs_dir"
@@ -282,8 +360,10 @@ install_codex() {
 uninstall_codex() {
   local docs_dir agents_md docs_ref
   codex_paths
-  rm -rf "$(dirname -- "$docs_dir")"
+  # Same order as install: refuse on damaged markers before deleting the docs
+  # the surviving block would still point at.
   remove_block "$agents_md"
+  rm -rf "$(dirname -- "$docs_dir")"
   echo "codex: removed docs and pointer"
 }
 

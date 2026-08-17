@@ -32,9 +32,11 @@ docs/
                      artifacts, the never-skip list (observability, secret
                      handling, release speed), git rules, how to scale the
                      process down, how to keep a running flow visible, how
-                     to resume an interrupted one without re-planning it, and
+                     to resume an interrupted one without re-planning it,
                      what a single agent pass may cost (batched reads, read
-                     bounds, output sized to the scope).
+                     bounds, output sized to the scope), and what a whole
+                     flow costs (cheapest flow that clears the gates, model
+                     tiering per stage, cache-stable prefixes).
 
 agents/              Agent definitions (Claude Code subagent format —
                      markdown with YAML frontmatter):
@@ -67,16 +69,33 @@ skills/
   webapp-guide/      A Claude Code skill that routes to the right doc file.
 
 install.sh           Installer/updater for both tools (macOS/Linux).
+LICENSE              MIT.
 
 .claude/             This repo's own tooling — never installed anywhere:
-  agents/llmcheats.md    maintainer agent: the invariants, the per-change
-                         checklists, the install contract
-  commands/llmcheats.md  /llmcheats  change this repo through that agent
+  agents/
+    llmcheats.md              maintainer + orchestrator: the invariants, the
+                              per-change checklists, the install contract, and
+                              the change / check / observe paths below
+    bestpractice-searcher.md  primary sources for a claim from outside the repo
+    invariant-checker.md      index rows, filename cross-refs, stable sections
+    contradiction-checker.md  do the citers of a changed doc still agree with it
+    drift-detector.md         have the copies of a repeated paragraph diverged
+    support-checker.md        Claude/Codex split, frontmatter, marker, manifests
+    cost-optimizer.md         bytes, contexts, cache prefix, model tiering
+    install-verifier.md       the install round trip, for real, in /tmp
+    routing-prober.md         which agent a description actually wins
+    observer.md               what a run did, and what nobody checked
+  commands/llmcheats.md  /llmcheats  change or check this repo through that agent
 ```
 
-Everything above `.claude/` is the payload `install.sh` ships. `.claude/` is
-only for working on llmcheats itself, so it stays out of `agents/` and
-`commands/` and no user of llmcheats ever receives it.
+The nine specialists are each *read a lot, hand back a little* — a round trip's
+stdout, a grep across forty files, a fetched page — so they run as their own
+contexts and return a verdict instead of the evidence. Every one is conditional
+on what the change touched: a doc-only edit opens three of them, not nine.
+
+`docs/`, `agents/`, `commands/` and `skills/` are the payload `install.sh`
+ships. `.claude/` is only for working on llmcheats itself, so it stays out of
+`agents/` and `commands/` and no user of llmcheats ever receives it.
 
 ## Install
 
@@ -160,6 +179,15 @@ If you add to the docs, keep it that way:
   is already known.
 - Cross-reference by filename (`webapp/5-security.md`), not by section number
   alone — a bare "§5" gives an agent nothing to open.
+
+The reference is only half the bill. The other half is how many contexts a run
+opens at all: the full flow is 13 fresh contexts, the fast flow seven, the asap
+flow one. `devflow/10-flow-cost.md` is the rule set for that half — pick the
+cheapest flow that still clears the gates the change actually triggers, tier the
+model per stage rather than per agent, and keep hand-backs to verdicts and
+artifact paths instead of the files the specialist read. The two orchestrator
+agents ship pinned to a cheaper model because they route and gate rather than
+produce; every specialist leaves `model` unset and inherits your choice.
 
 ## Goal
 
