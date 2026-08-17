@@ -1,10 +1,21 @@
 # Artifacts of `./install.sh --project .` — copies of docs/ and agents/ that
 # would drift from the source of truth in this repo. `.claude/` is tracked: it
-# holds this repo's own maintenance agent and command, which are never installed.
+# holds this repo's own maintenance agents and command, which are never
+# installed. Each one is un-ignored by name, so a payload copy landing here can
+# never be committed by accident.
 /.llmcheats/
 /AGENTS.md
 /.claude/agents/*
 !/.claude/agents/llmcheats.md
+!/.claude/agents/bestpractice-searcher.md
+!/.claude/agents/contradiction-checker.md
+!/.claude/agents/cost-optimizer.md
+!/.claude/agents/drift-detector.md
+!/.claude/agents/install-verifier.md
+!/.claude/agents/invariant-checker.md
+!/.claude/agents/observer.md
+!/.claude/agents/routing-prober.md
+!/.claude/agents/support-checker.md
 /.claude/commands/*
 !/.claude/commands/llmcheats.md
 /.claude/skills/
