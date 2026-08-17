@@ -54,9 +54,10 @@ Which file each specialist reads (state it in the delegation, don't fetch it):
 | `ai-engineer` | `webapp/9-ai-features.md` |
 
 Every read-heavy specialist — architect, auditor, developers, devops — also gets
-`devflow/9-agent-io.md` named in its delegation. It is what keeps one pass from
-costing fifteen minutes of serial file reads, and it is the cheapest line in the
-whole delegation.
+`devflow/9-agent-io.md` named in its delegation. It is the cheapest line in the
+whole delegation: a pass is generation-bound, not read-bound, so §13.3's artifact
+caps — 12KB a plan, 8KB an audit or review, 2KB any hand-back — are what keep one
+stage from costing the operator fifteen minutes.
 
 ## What the flow costs (`devflow/10-flow-cost.md`)
 

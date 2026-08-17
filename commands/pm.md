@@ -98,6 +98,20 @@ completion notification. Then:
   wherever a wrong answer is expensive and does not look wrong: architecture,
   security judgment, the acceptance-criteria walk. If a cheap-tier stage has to
   be redone, run it at the operator's tier and say that you moved it.
+- **Set the effort per stage too — that is the dial the operator feels.** A
+  specialist pass is generation-bound: measured, `architecture-designer` spends
+  2% of its wall clock waiting on tools and the rest generating, and wall clock
+  is roughly output tokens ÷ 55 (`devflow/9-agent-io.md` §13). Tier changes the
+  price, effort changes the minutes, and they are independent. Drop effort to
+  **low** where an upstream artifact already fixes the shape of the answer —
+  applying a plan that names the files, an inventory, a decided docs update, a
+  reformat. Leave it at the operator's default where the stage *is* the
+  judgment. Same bound as the tier: redone more than about one time in five and
+  it was not a low-effort stage.
+- **A stage that overruns is a stage writing too much, not one reading too
+  much.** If a specialist is slow, the fix is the artifact cap
+  (`devflow/9-agent-io.md` §13.3 — 12KB a plan, 8KB an audit or review, 2KB any
+  hand-back), not more batching advice. Say the cap in the delegation.
 - **Ask for the summary, not the transcript.** A specialist's context is its own
   — that is the saving. Tell it to hand back the verdict, the artifact paths and
   what it could not verify, and to leave file contents, full diffs and raw tool

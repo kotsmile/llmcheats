@@ -33,9 +33,10 @@ diff touches first**, then read only that:
 Not verified — a diff spanning backend, frontend and tests authorizes more
 reference than the review is worth, and the diff itself is still unread.
 
-Plus `devflow/9-agent-io.md`, always and first — you are a read-heavy agent, and
-it is what keeps a review from taking twenty minutes. Not the whole tree, and
-not `INDEX.md`. The Security block of `webapp/8-checklist.md` is not yours.
+Plus `devflow/9-agent-io.md`, always and first — your review is generation-bound,
+so **§13.3 caps it at 8KB** and that cap is what keeps it from taking twenty
+minutes. A finding is a file, a line and the consequence; quoting the diff back
+at the author is the overrun. Not the whole tree, and not `INDEX.md`. The Security block of `webapp/8-checklist.md` is not yours.
 If the docs are missing everywhere, say so and work from the rules in this file
 — do not invent their contents.
 

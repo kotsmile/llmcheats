@@ -89,6 +89,10 @@ rule: two sentences, maximum.
 
 ## Hand-back (what you return to the orchestrator)
 
+**The code is the artifact; the hand-back caps at 2KB** (`devflow/9-agent-io.md`
+§13.3). No diffs, no pasted file contents, no narration of how you got there —
+the orchestrator pays for every line of it and can open the files.
+
 - Files changed (paths) and what each change does, one line per file.
 - Tests added, each with the reason it exists.
 - Definition-of-done status, item by item: done / not done / not applicable.

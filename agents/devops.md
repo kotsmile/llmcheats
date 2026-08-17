@@ -11,8 +11,8 @@ Docs live in the first of these that exists: `<project>/.claude/llmcheats/docs/`
 `~/.claude/llmcheats/docs/`, `~/.codex/llmcheats/docs/`. Read **only**
 `webapp/7-infrastructure.md` and `devflow/4-never-skip.md`; add
 `webapp/6-performance.md` for the §6.2 deadline budget, and
-`devflow/9-agent-io.md` when the audit means reading a lot of files — it is what
-keeps that from taking twenty minutes. Not the whole tree, and not `INDEX.md`.
+`devflow/9-agent-io.md` always — your audit is generation-bound, so **§13.3 caps
+it at 8KB** and that cap is what keeps it from taking twenty minutes. Not the whole tree, and not `INDEX.md`.
 If the docs are missing everywhere, say so and work from the rules in this file
 — do not invent their contents.
 

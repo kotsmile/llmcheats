@@ -42,10 +42,11 @@ first**, then read only what the feature touches:
 - a new application, or a change to process/deploy topology →
   `webapp/1-system-shape.md`
 
-Plus `devflow/9-agent-io.md`, always and first — how to spend your tool calls,
-what is out of bounds to read, and how long the plan should be. It is the
-difference between a four-minute pass and an eighteen-minute one, and passes
-that run long get killed before they deliver.
+Plus `devflow/9-agent-io.md`, always and first — what is out of bounds to read,
+the exploration bound, and above all **how long the plan should be**. Your pass
+is generation-bound: measured, it spends about 2% of its wall clock waiting on
+tools and the rest writing. The plan's length *is* the pass's duration, and
+passes that run long get killed before they deliver.
 
 Not the whole tree, and not `INDEX.md`. If the docs are missing everywhere, say
 so and work from the rules in this file — do not invent their contents.
@@ -56,13 +57,15 @@ deadline conventions. Read the actual codebase before planning: reuse existing
 patterns and extend existing modules; the smallest possible change that fits
 the architecture wins.
 
-**Read it in blocks, and stop at the repo's edge.** Independent file reads go in
-a single turn, never one per turn. In scope: this repo's source, tests,
-migrations, config, CI. Out of bounds while planning — dependency and vendor
-source (`site-packages/`, `node_modules/`, `vendor/`), live or production data
-stores, and running the test suite, which you do not do at all. If a decision
-turns on one of those, state it as an assumption in "what was NOT verified"
-instead of going to find out (`devflow/9-agent-io.md`).
+**Stop at the repo's edge, and stop reading on time.** In scope: this repo's
+source, tests, migrations, config, CI. Out of bounds while planning — dependency
+and vendor source (`site-packages/`, `node_modules/`, `vendor/`), live or
+production data stores, and running the test suite, which you do not do at all.
+**About 25 tool calls of exploration, then write**; if a decision still turns on
+something you have not read, state it as an assumption in "what was NOT
+verified" instead of going to find out (`devflow/9-agent-io.md` §13.2, §13.4).
+Independent file reads go in a single turn — free, so do it, but it is not what
+makes your pass fast.
 
 ## The plan
 
@@ -72,14 +75,19 @@ stage's artifact (`devflow/2-full-flow.md` §3.3); a plan that exists only in
 your hand-back dies with you, and the next run pays for it again. Return the
 path in your hand-back and keep the summary in the message short.
 
+**The plan caps at 12KB** (`devflow/9-agent-io.md` §13.3). That is a ceiling for
+a normal single-phase scope, not a target — most plans should come in well under
+it. If the scope genuinely needs more, it needs two phases: say so and plan the
+first. Do not deliver 30KB; it costs the operator five minutes and gets skimmed.
+
 **The sections below are conditional, not a form to fill in.** Emit only the
 ones the scope actually reaches — a service+infra phase has no Frontend plan, a
 change with no schema delta has no Data plan — and open the document with one
 line naming what you dropped and why ("no frontend plan: backend-only phase").
 Only Approach, Risks & rollback, and Validation plan are unconditional. Within a
-section, name files and decisions; do not reproduce code the developer can open.
-A 35KB plan is minutes of generation the operator waits through, and most of
-that length is usually inventory (`devflow/9-agent-io.md`).
+section, name files and decisions; **do not reproduce code the developer can
+open, and do not inventory what is already in the repo** — that is where the
+overrun goes, and it helps nobody who has the repo.
 
 Deliver a design document with these sections:
 

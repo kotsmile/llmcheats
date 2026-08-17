@@ -65,6 +65,23 @@ one time in five, the retries cost more than the tier saved. Move that stage up
 permanently and say that you did — a tiering decision that is never revisited
 decays as the models change.
 
+**Effort is the second dial, and it is the one that buys wall clock.** Tier
+changes the price per token; effort changes how many tokens get generated before
+the answer appears — and since a read-heavy pass is generation-bound
+(`devflow/9-agent-io.md` §13), that is what the operator actually waits through.
+Roughly three quarters of a specialist pass's output tokens are reasoning that
+never reaches the artifact.
+
+The two dials are independent, and a cheap tier still reasoning at full depth
+gives back money without giving back minutes. Set effort **low** where the shape
+of the answer is already fixed by an upstream artifact — transcribing a decided
+docs update, collecting an inventory, reformatting a hand-back, applying a plan
+that already names the files. Leave it at the operator's default where the stage
+*is* the judgment: architecture, security, the acceptance-criteria walk.
+
+Same bound as the tier: if a low-effort stage gets redone more than about one
+time in five, it was not a low-effort stage. Say that you moved it.
+
 ### 14.3 A hand-back is a summary, not a transcript
 
 A subagent's context is its own, and that is the whole point: it reads forty
