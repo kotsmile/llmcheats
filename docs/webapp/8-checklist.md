@@ -11,7 +11,7 @@
 - [ ] Middleware order: Recover → SecureHeaders → logging/metrics → timeout groups → per-route auth
 - [ ] 10s default deadline; carve-outs justified; streaming outside the timeout group
 - [ ] `WriteTimeout` ≥ longest carve-out; drain window = `WriteTimeout`
-- [ ] SQL: const query strings, parameterized only, array binding for IN-lists
+- [ ] SQL: const query strings, array binding for IN-lists (the invariant itself is in the Security block)
 - [ ] Migrations: SQL files, embedded, applied by `migrate` step pre-deploy, expand→contract
 - [ ] Config: one YAML, `${VAR}` secrets, fatal on unset, `Default()` + validation, never logged
 - [ ] Config-parses test + secrets-via-placeholders test
@@ -31,6 +31,7 @@
 - [ ] No manual memoization; no `any`; no suppression comments
 
 **Security**
+- [ ] SQL: every dynamic value bound as a parameter whatever writes the query; identifiers and sort keys allow-listed, never interpolated
 - [ ] HttpOnly + Secure + SameSite=Lax on every cookie; refresh cookie path-scoped
 - [ ] No state-changing GET routes (audit explicitly)
 - [ ] Backend rejects non-JSON `Content-Type` on JSON routes (415 — the CSRF leg)

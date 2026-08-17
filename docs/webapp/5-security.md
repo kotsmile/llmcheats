@@ -117,8 +117,21 @@ Defense in depth, three gates:
 
 ## 5.4 SQL injection
 
-**100% parameterized queries — no exceptions, enforced by review and grep.**
-No SQL built with string formatting anywhere in the codebase. The two idioms:
+**Every dynamic value reaches the database as a bound parameter — no
+exceptions, enforced by review and grep.** No SQL text is built with string
+formatting, concatenation or interpolation anywhere in the codebase, and no
+identifier (table, column, sort key, direction) is interpolated either: map
+client-supplied sort and filter keys to a fixed allow-list of constants before
+they touch a query.
+
+This is the invariant, and it is independent of how the query is written. A
+query builder or an ORM that binds its values satisfies it; the same tool
+satisfies nothing the moment a raw-fragment escape hatch takes a formatted
+string. The reference codebase writes SQL by hand for reasons that are not
+about injection (§2.4, `webapp/2a-backend-layers.md`) — deviating from *that*
+is an architecture choice, deviating from *this* is a vulnerability.
+
+The two idioms:
 
 - Positional placeholders `$1..$n`; variable-length IN-lists stay
   parameterized via array binding: `where subject = any($1)` with
@@ -228,7 +241,14 @@ public route.
 ## 5.8 Frontend security
 
 - **No tokens in JS-readable storage.** HttpOnly cookies only.
-  `localStorage` is for theme and language.
+  `localStorage` is for theme and language. The reason is blast radius: one
+  injected script — your bug, a dependency's, an extension's — reads
+  `localStorage` and walks away with a session it can replay off-box, while an
+  HttpOnly cookie it cannot read only travels on requests the browser was going
+  to send anyway. The trade is that CSRF becomes yours to handle, which is what
+  the three legs in §5.7 are for; a frontend served from another origin loses
+  the same-origin leg (`SameSite` survives a sibling subdomain — see §5.7) and a
+  genuinely cross-*site* deployment owes a CSRF token instead.
 - React's default escaping; **no `dangerouslySetInnerHTML`** (if you must
   render rich text, sanitize server-side and isolate the surface).
 - `encodeURIComponent` every interpolated URL parameter.

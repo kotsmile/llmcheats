@@ -2,6 +2,31 @@
 
 ## 4.1 Philosophy
 
+- **A test protects a behavior or an invariant, never the shape of the
+  implementation.** Assert what a caller depends on — the decision returned, the
+  row persisted, the status code, the event emitted — not the private helper that
+  produced it. A test that has to be rewritten every time its subject is
+  refactored was testing the shape, and it will be deleted the first time it is
+  inconvenient.
+- **Write them in this order**, and stop where the cost of the failure stops
+  justifying the test:
+  1. **a test that reproduces a discovered bug** — written first, failing before
+     the fix, and kept afterwards. This is a gate in the fast flow (§5 F3,
+     `devflow/3-fast-flow.md`) and it does not collapse under any flow, however
+     small (§10.5, `devflow/6-asap-flow.md`). Its one exception is §4.7's, and it
+     is about where the defect lives, never about how urgent the work is;
+  2. business and domain invariants — entity and service;
+  3. contracts something else depends on: an endpoint's authorization matrix, a
+     published request/response shape, a pinned role-name constant;
+  4. critical integration paths — auth, money, migrations, the SQL that is
+     itself the risk (§4.4);
+  5. everything else, only where a failure would actually cost something —
+     business logic gets the density, transport gets a thinner
+     authorization-matrix layer, glue gets none.
+- **Do not add a test because code changed.** A trivial refactor, plain wiring,
+  and behavior already covered by a test one level up get nothing. New behavior
+  gets a test when the behavior is worth protecting; a spike or a throwaway
+  script does not, and then you *say* you skipped it.
 - **Critical paths, justified individually.** Every non-trivial test carries a
   doc comment answering *why does this exist* — the invariant it guards, the
   way the code can silently regress, or the incident that motivated it
@@ -12,8 +37,6 @@
   `TestTheGateAcceptsTheThreeRolesAndOnlyThem`.
 - **AAA with comments**: `// Arrange`, `// Act`, `// Assert` sections in every
   test, both backend and frontend.
-- Business logic (entity + service) gets the density; transport gets a thinner
-  authorization-matrix layer; glue gets none.
 
 ## 4.2 Go unit tests
 
@@ -57,7 +80,13 @@ run the service. Pair it with a test that secrets arrive via placeholders
 ## 4.3 Fakes, not mocks
 
 **No mocking frameworks.** Hand-written fakes are shorter, readable, and fail
-in ways you designed. Three idioms:
+in ways you designed. A project that already runs a mocking framework keeps it;
+what does not move is the property below — a renamed or re-signed port must fail
+the suite rather than be auto-answered. The reason is the failure mode, not the line count: a
+generated or `MagicMock`-style double answers a method that no longer exists, so
+a renamed or re-signed port keeps a green suite while production breaks. The
+price is real and is the point — change a port and every fake stops compiling,
+which is the signal a mock framework swallows. Three idioms:
 
 **Nil-embedded interface — unexpected calls panic:**
 
@@ -206,6 +235,15 @@ in pure `lib/` and `model/` modules — so the testable surface is testable
 without a DOM. If you add component tests, add them for genuinely stateful
 composites (a multi-step form), with Testing Library; do not snapshot-test
 markup.
+
+That discipline is also how §4.1's reproduction test gets paid on the frontend,
+so state it rather than improvising it: a bug in a screen is usually a bug in a
+rule that should not have been inside a component, so pull the rule into
+`lib/`/`model/` and let the failing test land there. Only when nothing is left
+to extract — the defect is in markup, wiring, or a library call — is there no
+unit to write, and then the fix reports the flow walked in the browser and what
+it showed before and after. That is a narrower carve-out than it looks: it never
+covers a rule, a computation, or a state transition.
 
 ## 4.8 CI
 

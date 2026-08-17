@@ -23,7 +23,14 @@ smallest possible change. Independent reads go in one turn, not one per turn,
 and `site-packages/` is somewhere you go deliberately and say why
 (`devflow/9-agent-io.md`).
 
-## Layering rules (non-negotiable)
+## Layering rules
+
+These layers are this reference's architecture and your default; in a codebase
+that already layers differently, follow that codebase and say so in the hand-back
+(§1, `devflow/1-principles-roles.md` — layering is a pattern, not a constraint).
+What is non-negotiable in any layering is the constraint inside each bullet
+below: every dynamic value bound into the SQL, input validated at the boundary,
+side effects after the commit, no exception swallowed.
 
 - **Entities** are frozen dataclasses / plain classes with invariants in
   constructors (classmethod factories) and mutator methods that raise domain
@@ -34,9 +41,11 @@ and `site-packages/` is somewhere you go deliberately and say why
   Domain exception hierarchy: `DomainError` → `NotFoundError`,
   `ForbiddenError`, `ValidationError`, `ConflictError`, with optional
   machine-readable `reason`.
-- **Repositories** conform to the protocols, execute raw parameterized SQL,
-  translate driver errors to domain exceptions. No ORM query magic in
-  services.
+- **Repositories** conform to the protocols, execute SQL with every dynamic
+  value bound — SQLAlchemy Core or asyncpg per the stack above; what §5.4
+  (`webapp/5-security.md`) requires is the binding and the allow-listed
+  identifier, not the tool — and translate driver errors to domain exceptions.
+  Query construction never leaks into a service.
 - **Routers** are thin: Pydantic request models with
   `model_config = ConfigDict(extra="forbid")`, convert to domain values, one
   service call, serialize to the flat `APIData`/`APIError` envelopes. Status

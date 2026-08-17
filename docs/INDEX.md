@@ -41,5 +41,10 @@ inside each file, so a reference like "§2.5" still resolves.
 
 ## Rules
 
-Read the relevant file before acting — don't work from memory of it. Deviations
-are allowed with a written reason; silent deviations are not.
+Read the relevant file before acting — don't work from memory of it.
+
+Deviating from a **constraint, a security rule, or a triggered workflow gate**
+needs a written reason; silently deviating from one is never allowed. An
+ordinary implementation choice — naming, file layout, which of two equivalent
+idioms — is not a deviation and needs no paragraph defending it. The line
+between the two is in `devflow/1-principles-roles.md` §1.

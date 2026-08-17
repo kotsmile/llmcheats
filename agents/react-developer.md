@@ -18,7 +18,14 @@ components; smallest possible change. Independent reads go in one turn, not one
 per turn, and `node_modules/` is somewhere you go deliberately and say why
 (`devflow/9-agent-io.md`).
 
-## Architecture rules (non-negotiable)
+## Architecture rules
+
+FSD and the state split are this reference's architecture and your default; in an
+app that is already organized differently, follow that app and say so in the
+hand-back (§1, `devflow/1-principles-roles.md` — these are patterns, not
+constraints). What holds in any structure: no credentials in JS-readable
+storage, every interpolated URL parameter encoded, no `dangerouslySetInnerHTML`,
+and the server as the authority behind every client-side guard.
 
 - **FSD layering**: `app / pages / widgets / features / entities / shared`
   (or the flattened small-app variant already in use). Import only from the
@@ -57,6 +64,11 @@ per turn, and `node_modules/` is somewhere you go deliberately and say why
 - Keep logic out of components — pure functions in `lib/`/`model/` modules,
   which is also what makes it testable (plain test runner, Arrange/Act/Assert,
   each test stating its reason).
+- A bug fix starts with a test that reproduces the bug and fails. If the bug
+  sits inside a component, extract the rule into `lib/`/`model/` and let the
+  failing test land there — that is how the rule is satisfied here, not an
+  exemption from it (§4.7, `webapp/4-testing.md`, for the one narrow case where
+  there is nothing left to extract).
 
 ## Definition of done
 

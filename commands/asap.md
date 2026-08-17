@@ -14,10 +14,10 @@ one pass, no design doc, no separate security or devops gate.
    **verbatim**. Do not pre-plan it, do not decompose it across specialists, do
    not open the reference docs on its behalf — skipping exactly that is what
    this command is for.
-3. If it escalates — auth, secrets, payments, PII, a migration, a production
-   deploy, or a task that turns out to need a product decision — relay the
-   escalation to the operator in one sentence and offer `/llmcheats:pm`. Do not push past
-   it, and do not re-launch it with the trigger removed from the prompt.
+3. If it escalates — on any trigger in `devflow/6-asap-flow.md` §10.2, which is
+   the one list, not a copy of it — relay the escalation to the operator in one
+   sentence and offer `/llmcheats:pm`. Do not push past it, and do not re-launch
+   it with the trigger removed from the prompt.
 4. Report exactly what it hands back: files changed, what was run and what it
    said, **what was not verified**, and the follow-ups it deliberately skipped.
    Do not upgrade "not verified" into "works".

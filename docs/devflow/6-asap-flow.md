@@ -31,6 +31,10 @@ knowing what you did not verify.
 - Production deploys, infra topology, anything needing a rollback story.
 - Public product surface, or any task where *what correct means* is still open
   — that is a product decision, and it is not the implementer's to make.
+- **A published contract**: a request or response shape, an event payload, a
+  generated client, a shared library's exported signature. The consumer is
+  someone else's code and it is not in this diff, so the change cannot be
+  verified in one pass — which is the whole premise of this flow.
 - Anything whose diff outgrows what a reviewer reads in one sitting (§8,
   `devflow/5-git.md`).
 
@@ -60,8 +64,9 @@ them, not an approval round-trip.
 - Fixing a defect under this flow still means the **reproduction test is
   written first** and fails before the fix (§5's F3 rule in
   `devflow/3-fast-flow.md`; it does not collapse).
-- New behavior gets a test when the behavior is worth protecting. Skip the test
-  for a spike or a throwaway script, and *say* you skipped it.
+- New behavior gets a test on §4.1's terms (`webapp/4-testing.md`) — worth
+  protecting, not merely changed. Skip it for a spike or a throwaway script, and
+  *say* you skipped it.
 - Whatever you could not run is named. An unrun path is never reported as
   passing.
 

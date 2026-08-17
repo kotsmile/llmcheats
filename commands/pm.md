@@ -47,8 +47,11 @@ puts each of them in the indicator by name.
 **Choose the cheapest flow that still clears the gates this change actually
 triggers** (`devflow/10-flow-cost.md`). The full flow is 13 fresh contexts and
 the asap flow is one, so the choice you make here sets the bill for everything
-after it. The test is the trigger list — auth, secrets, payments, PII,
-migrations, deploys, product surface — not how large the request sounds.
+after it. The test is the trigger list in `devflow/6-asap-flow.md` §10.2 — the
+one list, read there rather than from a copy — not how large the request sounds.
+If the docs are unavailable, treat auth, secrets, payments, PII, migrations,
+deploys, product surface, a published contract and an oversized diff as that
+list.
 Downgrading later is allowed and is not a failure: if the architecture stage
 finds the change is a config knob, say so in one line and re-flow it down
 instead of finishing nine more stages around it.

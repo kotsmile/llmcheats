@@ -293,7 +293,16 @@ simpler.
 
 ## 2.4 Infrastructure layer
 
-### Database access: raw SQL, no ORM
+### Database access: raw SQL by default
+
+Hand-written SQL because the query is the artifact that gets reviewed: the
+statement in the code is the statement that runs, so its plan, its lock
+footprint and its column list are all readable at review time, and there is no
+lazy-load or association walk that turns one reviewed call into N. The costs are
+real — more typing, no free portability, hand-written row mapping — and this
+reference pays them deliberately. A project that already runs an ORM keeps it;
+what does not move is §5.4 (`webapp/5-security.md`), which binds every dynamic
+value whatever writes the SQL.
 
 Use `sqlx` (Go) with hand-written SQL. Row structs are private to the infra
 package, tagged with `db:"..."`, and converted to/from entities explicitly:

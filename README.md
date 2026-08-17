@@ -74,6 +74,24 @@ review this diff"*).
 **Codex** gets the docs and an `AGENTS.md` pointer, not the agents or commands —
 reference a file explicitly (*"follow `webapp/2a-backend-layers.md`"*).
 
+What happens to your next prompt:
+
+```
+/llmcheats:pm add order cancellation
+      ↓  intake: goal and constraints restated in two sentences
+      ↓  flow chosen by what the change triggers — auth? migration?
+         a published contract? product surface? — not by how big it sounds
+      ↓  exactly one flow file read: the full flow, the fast one, or asap
+      ↓  one specialist per stage, each reading the one or two doc files it needs
+      ↓  gates: security and devops approve the design, then the implementation
+      ↓  verification, then a hand-back that names what was NOT verified
+/llmcheats:status        where it stands, any time
+/llmcheats:agents <name> what one specialist actually did
+```
+
+A change that triggers nothing runs as one pass in one context; the gates it
+does trigger are compressed, never dropped.
+
 **Humans**: the docs stand alone. Start at
 **[docs/INDEX.md](docs/INDEX.md)** — it maps every file to what is in it.
 `webapp/8-checklist.md` stands up a new app; `devflow/3-fast-flow.md` is a
@@ -141,9 +159,12 @@ are explicit, opinionated, and grounded in code that actually runs in
 production. One document for *how to build*, one for *in what order and with
 which gates*, and agents that enforce both.
 
-The opinions are deliberate (raw SQL over ORMs, hand-written fakes over mock
-frameworks, cookie sessions over localStorage tokens, runtime-agnostic infra).
-Deviate where your context demands it — with a written reason, which is itself
-one of the rules.
+The opinions are deliberate, and each carries its reason and its cost where it is
+stated. Some are *patterns* — raw SQL over ORMs, hand-written fakes over mock
+frameworks, runtime-agnostic infra — so deviate where your context demands it and
+keep your own architecture if you have one. Others are *constraints*, and those
+do not move: every dynamic value bound into the SQL, input validated at the
+boundary, secrets out of the code, no session token in JS-readable storage.
+Deviating from one of those is what owes a written reason.
 
 MIT.

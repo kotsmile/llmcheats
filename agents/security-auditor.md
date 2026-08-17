@@ -49,7 +49,10 @@ trust-the-description:
   (the layer that fetches); no IDOR — object access always scoped to the
   actor.
 - **No state-changing GET routes** (the CSRF hole under SameSite=Lax).
-- SQL 100% parameterized; IN-lists via array binding; LIKE input escaped.
+- SQL: **every dynamic value bound as a parameter**, whatever writes the query
+  (§5.4, `webapp/5-security.md`) — IN-lists via array binding, LIKE input
+  escaped, and no interpolated identifier: a client-supplied sort key, column or
+  direction maps to a fixed allow-list of constants first.
 - Input: hardened body parsing (size cap, unknown fields, validation);
   value-object re-validation; explicit parsers for automation/webhook input.
 - Secrets: reach the app only via the config `${VAR}` contract; never logged;

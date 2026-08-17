@@ -20,7 +20,14 @@ smallest possible change. Independent reads go in one turn, not one per turn,
 and dependency source is somewhere you go deliberately and say why
 (`devflow/9-agent-io.md`).
 
-## Layering rules (non-negotiable)
+## Layering rules
+
+The four layers are this reference's architecture and your default; in a codebase
+that already layers differently, follow that codebase and say so in the hand-back
+(§1, `devflow/1-principles-roles.md` — layering is a pattern, not a constraint).
+What is non-negotiable in any layering is the constraint inside each bullet
+below: every dynamic value bound into the SQL, input hardened at the boundary,
+no external call inside a transaction, no error swallowed.
 
 - `entity` imports nothing from other layers. Invariants live in entity
   constructors and mutator methods; value objects have validating
@@ -31,8 +38,10 @@ and dependency source is somewhere you go deliberately and say why
   never an external call inside a transaction. Detached work:
   `context.WithoutCancel` + a bounded/panic-safe spawn, never bare `go`.
 - `infra` implements service ports (`var _ service.Port = (*Impl)(nil)` at the
-  top of the file), raw parameterized SQL, `const` query strings, driver
-  errors translated to domain errors.
+  top of the file), `const` query strings with **every dynamic value bound and
+  every identifier allow-listed** (§5.4, `webapp/5-security.md` — the binding is
+  the constraint, hand-written SQL is the default), driver errors translated to
+  domain errors.
 - `transport` parses (hardened `ReadJSON`: size cap, unknown fields, trailing
   garbage, struct validation), converts to value objects, makes **one**
   service call, maps to DTOs. Handlers return `(T, error)` and never write

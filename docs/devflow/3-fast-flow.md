@@ -23,7 +23,11 @@ The full flow compressed to what a defect actually needs. Target duration:
 - The smallest change that fixes the defect. No opportunistic refactoring in
   a hotfix — that's a follow-up ticket.
 - **A test that reproduces the bug is written first** and fails before the fix,
-  passes after. This is the one non-negotiable test of the fast flow.
+  passes after. This is the one non-negotiable test of the fast flow. It has
+  exactly one exception, and it is stated rather than improvised: a frontend
+  defect with no rule left to extract (§4.7, `webapp/4-testing.md`), which
+  reports the browser flow walked instead. A defect in a rule, a computation or
+  a state transition is never that case.
 
 ### F4. Testing — *developer*
 - The new reproduction test; the suite of the affected area; **regression

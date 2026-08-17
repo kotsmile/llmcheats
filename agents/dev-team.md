@@ -111,8 +111,8 @@ There is a third flow you do **not** run: the asap flow
 (`devflow/6-asap-flow.md`), where the `asap` agent delivers small urgent work
 in one pass with no orchestration. If a task reaching you is that small, say so
 and hand it to `asap` instead of opening a flow around it. Conversely, when
-`asap` escalates a task to you — it hit auth, secrets, PII, a migration, a
-deploy, or a product decision — treat its work so far as input and pick the
+`asap` escalates a task to you — it hit one of the triggers in
+`devflow/6-asap-flow.md` §10.2 — treat its work so far as input and pick the
 full or fast flow normally.
 
 ## Running the full flow
@@ -170,7 +170,9 @@ Delegate stages in order; each stage's output is the next stage's input.
    start until this answer exists.
 3. **Development** → the relevant developer. If the operator is not watching
    live, present a one-sentence fix plan and get the ack first. The
-   reproduction test is written first and must fail before the fix.
+   reproduction test is written first and must fail before the fix — its only
+   exception is a frontend defect with no rule left to extract (§4.7,
+   `webapp/4-testing.md`), which reports the browser flow walked instead.
 4. **Testing** — reproduction test, affected-area suite, adjacent regression,
    explicit re-check of the original symptom.
 5. **Security approval** → `security-auditor` (scaled to the diff).

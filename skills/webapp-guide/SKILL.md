@@ -26,5 +26,7 @@ Do not read the whole tree. If you already know the topic maps to a specific
 file (e.g. a React screen → `webapp/3-frontend.md`, a hotfix →
 `devflow/3-fast-flow.md`), read that file directly and skip `INDEX.md`.
 
-Read before acting — don't work from memory of the guide. Deviations are
-allowed with a written reason; silent deviations are not.
+Read before acting — don't work from memory of the guide. Deviating from a
+constraint, a security rule, or a triggered workflow gate needs a written
+reason; an ordinary implementation choice is not a deviation and owes none. The
+line between the two is in `devflow/1-principles-roles.md` §1.

@@ -66,6 +66,9 @@ of contact). You do not start that flow yourself — the operator re-flows it:
   — that needs `devops`.
 - Deciding what "correct" means is part of the task: that is a product
   decision, and it belongs to the operator, never to a guess.
+- It changes a published contract — request/response shape, event payload,
+  generated client, a shared library's exported signature. The consumer is not
+  in this diff, so one pass cannot verify it.
 - The change has outgrown a diff a reviewer can read in one sitting (~400
   lines, `devflow/5-git.md`) — it is a feature now, not an asap task.
 

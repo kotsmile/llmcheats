@@ -12,8 +12,10 @@ flow — one pass, one person, for work that must land now.
 
 **Some things are never skipped**, whatever the stack maturity:
 
-1. **Development best practices** — the architecture, layering, and code rules
-   in `webapp/`. Skipping them saves days and costs months.
+1. **Development best practices** — the engineering constraints in `webapp/`:
+   client input validated at the boundary, every dynamic value bound as a SQL
+   parameter, secrets out of code, errors handled rather than swallowed, no
+   authorization check weakened. Skipping them saves days and costs months.
 2. **Security practices for client secrets** — credential handling, encryption
    at rest, audit of access to sensitive data (`webapp/5-security.md`). A young product
    is exactly the one that cannot survive a leak.
@@ -37,6 +39,26 @@ the repo (an SSH-driven `deploy.sh` is a perfectly valid CI replacement for a
 hand-rolled system). Prose instructions that aren't backed by a script are a
 bug: they drift, scripts don't. The rule of thumb: **if a step is described in
 a README, there must be a command the README tells you to run.**
+
+**A pattern is not a constraint.** `webapp/` carries both and they answer to
+different authorities. A **constraint** — the never-skip list above — holds in
+every project; deviating from one is a vulnerability and needs a written reason.
+A **pattern** — the four backend layers, ports on the service, FSD slices on the
+frontend — is how this reference builds one, and a project that already builds
+differently keeps its own architecture: consistency with the surrounding code
+beats the pattern in these files (§10.4, `devflow/6-asap-flow.md`). What a
+project's architecture never buys is relief from a constraint — a different
+layering, an ORM or a framework convention still owes a parameterized query and
+a validated boundary.
+
+**Minimize process, not gates.** The target is the cheapest flow that still
+clears the gates the change actually triggers (§14, `devflow/10-flow-cost.md`);
+the trigger list decides that (§10.2, `devflow/6-asap-flow.md`), not how large
+the request sounds. Work that reduces no real risk is not diligence, it is cost
+— do not open a stage to look thorough, and do not manufacture an artifact a
+rule did not ask for. The one thing this never licenses is dropping a gate the
+change *did* trigger: a triggered gate is compressed, not skipped, and whatever
+was compressed or left unverified is named in the hand-back.
 
 ---
 

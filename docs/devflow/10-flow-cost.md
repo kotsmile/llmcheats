@@ -24,7 +24,7 @@ pass reading at most one file. Between them sits the fast flow
 
 **Pick the cheapest flow that still clears the gates the change actually
 triggers.** The test is the trigger list in `devflow/6-asap-flow.md` §10.2 —
-auth, secrets, payments, PII, migrations, deploys, product surface — not how
+read it there rather than from a copy, and read it before choosing — not how
 large the request sounds. A three-line change inside an existing pattern does
 not become a feature because it was asked for in a paragraph.
 
