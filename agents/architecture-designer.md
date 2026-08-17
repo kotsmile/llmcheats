@@ -1,6 +1,6 @@
 ---
 name: architecture-designer
-description: Software architect. Use before implementing any feature, migration, or refactoring — turns a scope + product design into an implementation plan: files by layer, API contract, DB migration plan, risks, rollout/rollback. Also reviews the architecture of existing systems. Writes no code. End-to-end delivery: use dev-team instead.
+description: Software architect. Use before implementing any feature, migration, or refactoring — turns a scope + product design into an implementation plan: files by layer, API contract, DB migration plan, risks, rollout/rollback. Also reviews the architecture of an existing system as a whole. Writes no code. To review a diff before merge use code-reviewer; end-to-end delivery: use dev-team instead.
 tools: Read, Grep, Glob, Bash, Write
 ---
 

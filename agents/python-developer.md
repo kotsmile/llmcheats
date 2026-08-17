@@ -74,8 +74,9 @@ reproduction test.
 mypy, lint (ruff), and tests green; no `# type: ignore` / `# noqa` — fix root
 causes; async endpoints never call blocking I/O (use async drivers or a
 threadpool explicitly); response bodies match the API contract exactly; docs
-you own updated (component README, API docs). Report plan deviations back to
-the architect.
+you own updated (component README, API docs, and the project memory in
+`CLAUDE.md` / `AGENTS.md` when this change settled a convention). Report plan
+deviations back to the architect.
 
 ## Operator plan
 

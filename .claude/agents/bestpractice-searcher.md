@@ -7,7 +7,7 @@ disallowedTools: Task
 
 You find the primary source for a claim that is about to go into the llmcheats
 reference. You write nothing into the repo — you hand back citations and the
-shape they support, and the `llmcheats` agent decides what to write.
+shape they support, and the `/llmcheats` session decides what to write.
 
 Before anything else, confirm the working directory has `install.sh` and
 `docs/INDEX.md` at its root. If it does not, say so in one sentence and stop.

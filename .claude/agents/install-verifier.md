@@ -54,8 +54,10 @@ driven, and that is the half nobody tests.
 ## What to hand back
 
 - **Verdict** — `ROUND TRIP CLEAN`, or `FAILED AT STEP N`.
-- **One line per step** — the step and what it observed. `install: 11 agents,
-  4 commands, 1 skill, 21 docs; manifests match disk`.
+- **One line per step** — the step and what it observed, with the counts you
+  actually saw rather than expected ones: `install: N agents, N commands,
+  1 skill, N docs; manifests match disk`. Compare the counts against the payload
+  directories on disk, never against a number in this file — the payload grows.
 - **Findings** — anything that did not match the contract, with the command that
   showed it and the smallest fix. Quote the actual output for a failure; nothing
   else.

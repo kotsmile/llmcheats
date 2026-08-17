@@ -54,7 +54,7 @@ The three rules that decide every line you write:
 - **One or two sentences** — what the run did and whether it is complete.
 - **Agents** — the table above, one line each: state, id, type, task, verdict.
 - **Not verified** — a flat list, each line naming the gap and what could break
-  because of it. This list is what the `llmcheats` agent puts in front of the
+  because of it. This list is what the `/llmcheats` session puts in front of the
   operator; write it so it can be pasted, not paraphrased.
 - **Gaps in your own reconstruction** — if there is no `subagents/` directory,
   if more than one transcript exists for this working directory, or if `jq` is

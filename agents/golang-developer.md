@@ -68,7 +68,8 @@ no external call inside a transaction, no error swallowed.
 Build, vet, lint, and tests green; no `//nolint` or suppressions — fix root
 causes; new config keys have defaults + validation and the config-parses test
 still passes; deadline budget respected (justify any route needing more than
-the 10s default); docs you own updated (component README, API docs). Report
+the 10s default); docs you own updated (component README, API docs, and the project memory in
+`CLAUDE.md` / `AGENTS.md` when this change settled a convention). Report
 deviations from the architecture plan back to the architect instead of
 silently improvising.
 

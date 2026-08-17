@@ -28,6 +28,12 @@ read it there rather than from a copy, and read it before choosing — not how
 large the request sounds. A three-line change inside an existing pattern does
 not become a feature because it was asked for in a paragraph.
 
+Once the flow **is** the full flow — chosen on its merits or forced by the
+operator — the same question is asked per stage instead of per flow: the skip
+gates in `devflow/2-full-flow.md` §3.14 close the stages this change does not
+reach, each one removing a context from the bill without dropping a gate the
+change triggered.
+
 **Downgrading mid-flow is allowed, and it is not a failure.** If the
 architecture stage discovers the change is a config knob, say so in one line and
 re-flow it down rather than finishing the remaining nine stages around it. The

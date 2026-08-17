@@ -29,7 +29,7 @@ inside each file, so a reference like "§2.5" still resolves.
 | File | § | Read it when |
 |---|---|---|
 | `1-principles-roles.md` | 1–2 | Need the never-skip list or who owns which stage |
-| `2-full-flow.md` | 3–4 | Feature, migration, or behavior change: all 13 stages, gates, required artifacts |
+| `2-full-flow.md` | 3–4 | Feature, migration, or behavior change: all 13 stages, gates, required artifacts, and the per-stage skip gates that close the stages a change does not reach |
 | `3-fast-flow.md` | 5 | Bug or hotfix, including the infra-inspection-first rule |
 | `4-never-skip.md` | 6–7 | Observability minimums; release-speed targets |
 | `5-git.md` | 8–9 | Commit format, PR description blocks, gate→approval mapping, merge discipline; scaling the process down |
@@ -38,6 +38,7 @@ inside each file, so a reference like "§2.5" still resolves.
 | `8-resuming.md` | 12 | Picking up work that was stopped, ran out of context, or is half-written: plans as files, the resume inventory, counting re-planning rounds, why an orchestrator never finishes the work itself |
 | `9-agent-io.md` | 13 | A single agent pass takes too long: batching independent reads into one block, what is out of bounds to read (vendor source, live data), sizing the output to the scope, budgeting the pass |
 | `10-flow-cost.md` | 14 | A flow costs more than it should: choosing the cheapest flow that clears the gates, tiering the model per stage, hand-backs as summaries, cache-stable prefixes, when parallel is worth it, the loops that burn stages |
+| `11-project-memory.md` | 15 | Writing down what the next session must know: what belongs in `CLAUDE.md` / `AGENTS.md` and what must stay out, keeping one file authoritative across both tools, the managed block not to write inside, and who updates it when |
 
 ## Rules
 

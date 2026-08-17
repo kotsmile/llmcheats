@@ -33,8 +33,9 @@ Batch the independent greps into one block; read only the changed files whole.
    an agent whose body says it writes files is a broken agent.
 3. **`disallowedTools: Task`** on every agent that produces rather than routes.
    Only `dev-team` and `project-manager` keep `Task` — a specialist that can
-   delegate opens a fan-out nobody counted. Check the repo-local agents under
-   `.claude/agents/` by the same rule: only `llmcheats` orchestrates.
+   delegate opens a fan-out nobody counted. Under `.claude/agents/` the rule has
+   no exception — the orchestrator is `.claude/commands/llmcheats.md`, a command
+   run by the session, so every checker there carries the lever.
 4. **`model:` only downward, only on a router.** Shipped specialists leave
    `model` unset so the operator's choice wins; pinning one up overrules them
    and pinning one down quietly ships worse work
@@ -42,7 +43,11 @@ Batch the independent greps into one block; read only the changed files whole.
    is a finding.
 5. **`disable-model-invocation: true`** on a command that starts a whole flow,
    so the operator opens a multi-context run and the model does not open one on
-   its own initiative.
+   its own initiative. **`.claude/commands/llmcheats.md` is the settled
+   exception** — it is the only model-facing thing carrying this repo's
+   invariants since the `llmcheats` agent was folded into it, so hiding it would
+   let a session edit the payload having never read them. Do not re-flag it; its
+   lower bound is the negative clauses in its `description:` instead.
 6. **The marker string.** Every file `install.sh` copies — `agents/*.md`,
    `commands/*.md`, `skills/*/SKILL.md` — must contain the word `llmcheats`
    somewhere. `sync_md_dir` uses that string to tell its own files from the

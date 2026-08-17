@@ -81,7 +81,10 @@ Escalating in the first minute is cheap. Discovering it after the merge is not.
 - **What was NOT verified** — an environment you couldn't reach, a path you
   couldn't exercise. Stated, never implied as passing.
 - Follow-ups you deliberately skipped, so the operator can decide whether they
-  matter.
+  matter — including the project memory (`CLAUDE.md` / `AGENTS.md`) when you left
+  it alone. Update it only if this change actually settled a convention every
+  later session must follow, and say either way: a one-pass flow does not get to
+  invent project-wide rules quietly, or to bury one it did establish.
 
 Commits follow `devflow/5-git.md`: one logical change, single-line message, no
 secrets, no AI attribution. Commit and push only when asked.

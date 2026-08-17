@@ -252,8 +252,14 @@ sync_md_dir() { # $1 = src dir, $2 = dest dir, $3 = manifest, $4 = label
   while IFS= read -r name; do
     [ -n "$name" ] || continue
     if [ ! -f "$src/$name" ] && [ -f "$dest/$name" ]; then
-      rm -f "$dest/$name"
-      echo "claude: removed stale $label $dest/$name"
+      # Marker gone: the operator edited it, and nothing is landing here to
+      # replace it. Update is as careful as uninstall — keep it and say so.
+      if grep -q "llmcheats" "$dest/$name"; then
+        rm -f "$dest/$name"
+        echo "claude: removed stale $label $dest/$name"
+      else
+        echo "warning: kept $dest/$name — left the payload but was edited since install, remove it by hand" >&2
+      fi
     fi
   done <<<"$prev"
 
@@ -289,8 +295,12 @@ sync_skills() { # $1 = base
   while IFS= read -r name; do
     [ -n "$name" ] || continue
     if [ ! -d "$SRC_DIR/skills/$name" ] && [ -d "$base/skills/$name" ]; then
-      rm -rf "$base/skills/$name"
-      echo "claude: removed stale skill $base/skills/$name"
+      if grep -q "llmcheats" "$base/skills/$name/SKILL.md" 2>/dev/null; then
+        rm -rf "$base/skills/$name"
+        echo "claude: removed stale skill $base/skills/$name"
+      else
+        echo "warning: kept $base/skills/$name — left the payload but was edited since install, remove it by hand" >&2
+      fi
     fi
   done <<<"$prev"
 
@@ -332,8 +342,9 @@ remove_skills() { # $1 = base
 # Before v2 the commands installed flat as /status; they now live in a
 # commands/llmcheats/ subdir so Claude Code namespaces them as /llmcheats:status.
 # Without this both copies would exist and both would answer. The previous
-# manifest is read too: a command can leave the payload in the same release that
-# moves it (llmcheats.md did), and that copy has to go as well.
+# manifest is read too, so a command that left the payload in the same release
+# that moved it (llmcheats.md did) is caught here as well — and backed up, since
+# nothing is landing to replace it.
 drop_flat_commands() { # $1 = base, $2 = manifest written by the previous install
   local base="$1" manifest="$2" f name
   # Installing into the llmcheats checkout itself would aim this at the repo's
@@ -344,9 +355,24 @@ drop_flat_commands() { # $1 = base, $2 = manifest written by the previous instal
     for f in "$SRC_DIR"/commands/*.md; do basename -- "$f"; done
   } | sort -u | while IFS= read -r name; do
     [ -n "$name" ] || continue
-    if [ -f "$base/commands/$name" ] && grep -q "llmcheats" "$base/commands/$name"; then
+    [ -f "$base/commands/$name" ] && grep -q "llmcheats" "$base/commands/$name" || continue
+    # Ours to remove only if it is byte-identical to what we ship: the marker
+    # alone is not proof, because a payload name an operator plausibly picks too
+    # (review.md, artifacts.md, status.md) may merely mention llmcheats. Anything
+    # else is backed up. A flat copy from an older version whose text has since
+    # changed is backed up rather than removed — clutter, but a .bak-llmcheats is
+    # not loaded as a command, so the duplicate still stops answering.
+    if [ -f "$SRC_DIR/commands/$name" ] &&
+       cmp -s "$SRC_DIR/commands/$name" "$base/commands/$name"; then
       rm -f "$base/commands/$name"
       echo "claude: removed flat $base/commands/$name (commands are /llmcheats:<name> now)"
+    else
+      mv "$base/commands/$name" "$base/commands/$name.bak-llmcheats"
+      if [ -f "$manifest" ] && grep -qxF "$name" "$manifest"; then
+        echo "warning: $base/commands/$name left the payload or was edited since install — backed up to $base/commands/$name.bak-llmcheats" >&2
+      else
+        echo "warning: $base/commands/$name was not installed by llmcheats — backed up to $base/commands/$name.bak-llmcheats" >&2
+      fi
     fi
   done
 }

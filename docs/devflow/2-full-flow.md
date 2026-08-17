@@ -112,6 +112,10 @@ is already in the loop — they see the plan as it forms.
 Documentation is part of the feature, updated **in the same change set or
 immediately after**, by the role that owns each document (§4).
 - Developer: architecture docs, API docs, READMEs of touched components.
+- Developer: **project memory** — the conventions and decisions this change
+  established, written into `CLAUDE.md` / `AGENTS.md`
+  (`devflow/11-project-memory.md`). Both tools load it unprompted next session,
+  which is what lets the change after this one plan less.
 - Security auditor: security notes / threat model deltas.
 - DevOps: runbooks, infra description, deploy/operations instructions.
 - **Gate:** the docs a newcomer would read no longer lie.
@@ -130,6 +134,57 @@ immediately after**, by the role that owns each document (§4).
 - **Artifact:** release record — version, when, by whom, and the one-command
   rollback.
 
+### 3.14 Skip gates — running the full flow without paying for all thirteen
+
+The full flow is 13 fresh contexts (`devflow/10-flow-cost.md` §14.1), and an
+operator who **forces** it — because the gates are wanted unconditionally, or
+because the work will run for hours without supervision — should get the gates,
+not thirteen contexts of ceremony. So each stage carries a **skip gate**: one
+test, answered at intake, and a stage whose test is met closes before it opens.
+
+This applies to **every** full-flow run, forced or chosen: a flow picked on its
+merits still has stages this particular change does not reach.
+
+| Stage | Skip it only when |
+|---|---|
+| 3.1 Scope | the request already states the problem and testable done-conditions; restate them in two sentences instead of opening a stage |
+| 3.2 Product design | nothing user-visible changes — no screen, no copy, no surface a consumer sees |
+| 3.3 Architecture | a plan for this scope is already on disk (`devflow/8-resuming.md`), the change is one file inside a pattern the codebase already repeats, or the conventions it must follow are already recorded in project memory (`devflow/11-project-memory.md`) — which is how a project that writes its decisions down plans less over time |
+| 3.4 Security design approval | the change reaches nothing on the trigger list in `devflow/6-asap-flow.md` §10.2 — no auth, sessions, tokens, crypto, secrets, PII, payments, new input source or new route |
+| 3.5 DevOps design approval | no migration, no config or secret change, no new infra, no deploy-order dependency — **and** the change needs no new metric, log or alert and already has a rollback story. Observability is a never-skip item (`devflow/1-principles-roles.md` §1): a change that needs a new signal opens this stage whatever else is true |
+| 3.6 Plan approval | already conditional — the operator is watching the work live (§3.6) |
+| 3.8 Testing | never skipped; the *manual* walk collapses into the suite when every acceptance criterion has an automated test |
+| 3.9 Security implementation approval | §3.4 was skipped **and** the diff added no route, query, or input path |
+| 3.10 DevOps release readiness | §3.5 was skipped **and** the diff adds no migration, config change, or deploy step |
+| 3.11 Documentation | no touched component's README, API doc or runbook is now wrong — checked, not assumed — **and** the change established no convention or decision worth recording in project memory |
+| 3.12 Product review | §3.2 was skipped **and** every acceptance criterion is mechanically verifiable |
+| 3.13 Release | the change does not deploy |
+
+§3.7 has no row: development is the work.
+
+- **A skipped stage is a recorded verdict, not an absence.** One line per stage,
+  printed at intake with its reason — `stage 5 · devops design ⊘ SKIPPED: no
+  migration, no config change`. A stage nobody mentioned was forgotten, and the
+  operator cannot tell the two apart afterwards.
+- **A triggered gate is compressed, never skipped.** The tests above skip stages
+  the change does not reach; they never drop one it does. Tell the gate owner the
+  scope is small and ask for a proportionate review
+  (`devflow/1-principles-roles.md` §1).
+- **Skipping is not downgrading.** Downgrading moves the whole change to a
+  cheaper flow (`devflow/10-flow-cost.md` §14.1); this keeps the full flow and
+  drops the stages its triggers do not reach. Forcing the full flow is what makes
+  the difference explicit.
+- **A lost bet costs one stage, not the flow.** If development turns up a
+  migration nobody planned, §3.5 and §3.10 reopen — name the stage that reopened
+  and why. Re-checking the trigger list mid-flow is already mandatory
+  (`devflow/6-asap-flow.md` §10.2).
+
+The skip gate itself opens no context: the questions are answered in the intake
+context that is already running, and each "no" removes a whole stage's context
+from the bill. **Every row is answered from this table — open nothing to answer
+one**; the files named above are where a *disputed* skip gets settled, not where
+the test lives.
+
 ---
 
 ## 4. Artifacts after every feature and release
@@ -144,6 +199,7 @@ these must be current:
 | **DevOps instructions** | devops | how to build, deploy, roll back, run migrations — each backed by a runnable script/job |
 | **Infra info** | devops | what runs where, DNS, certs, secret map names, capacity notes |
 | **Runbooks** | devops | per-alert: what it means, what to check, how to mitigate |
+| **Project memory** | developer | `CLAUDE.md` / `AGENTS.md`: how to run it, the architecture the project actually follows and where it departs from `webapp/`, decisions with their reasons (`devflow/11-project-memory.md`) |
 | **Security notes** | security auditor | data classification, authz model per surface, accepted risks with expiry dates |
 | **READMEs** | developer | every touched component's README still tells the truth: what it is, how to run it, how to test it |
 | **Release record** | devops | version, changelog entry, rollback command |

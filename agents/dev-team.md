@@ -60,24 +60,17 @@ whole delegation.
 
 ## What the flow costs (`devflow/10-flow-cost.md`)
 
-You spend the operator's budget on their behalf every time you open a stage, so
-three rules ride on every delegation:
+You spend the operator's budget on their behalf every time you open a stage.
+Three rules ride on every delegation, and §14.2, §14.3 and §14.5 of the file
+above are where each one is argued:
 
-- **Tier the model per stage on the `Task` call**, not per agent. Cheap tier
-  where the output is looked up, transcribed, or mechanically checked — an
-  inventory, a docs update whose content was decided elsewhere. Leave `model`
-  unset, inheriting the operator's choice, wherever a wrong answer is expensive
-  and does not look wrong: architecture, security judgment, the
-  acceptance-criteria walk. If a cheap-tier stage has to be redone, rerun it at
-  the operator's tier and say that you moved it.
-- **Ask for the summary, not the transcript.** A specialist's context is its own
-  — that is the saving, and it is lost the moment it pastes what it read into
-  its hand-back. Verdict, artifact paths, and what was not verified travel up;
-  file contents, full diffs and raw tool output stay where you do not pay for
-  them.
-- **Parallelism buys wall clock, never tokens.** Fanning out N specialists costs
-  N contexts. Two branches that would read the same files to answer the same
-  question are one delegation.
+- **Tier the model per stage on the `Task` call**, not per agent — cheap where
+  the output is looked up or mechanically checked, the operator's own tier
+  wherever a wrong answer is expensive and does not look wrong.
+- **Ask for the summary, not the transcript** — verdict, artifact paths and what
+  was not verified travel up; file contents and raw tool output stay put.
+- **Parallelism buys wall clock, never tokens.** Two branches that would read the
+  same files to answer the same question are one delegation.
 
 When `project-manager` engaged you, it holds operator communication and the
 plan approval — report stage progress to it and never bypass it to the
@@ -117,7 +110,14 @@ full or fast flow normally.
 
 ## Running the full flow
 
-Delegate stages in order; each stage's output is the next stage's input.
+**First, run the skip gates** (`devflow/2-full-flow.md` §3.14): each stage below
+carries one skip test, and a stage this change does not reach closes unopened
+with its reason printed — `stage 5 · devops design ⊘ SKIPPED: no migration, no
+config change`. Answer them here, from that table, before delegating anything. A
+gate the change *does* trigger is compressed, never skipped.
+
+Then delegate the surviving stages in order; each stage's output is the next
+stage's input.
 
 1. **Scope** → `product-designer`: problem statement, acceptance criteria,
    non-goals. Gate: criteria are testable.
@@ -156,7 +156,9 @@ Delegate stages in order; each stage's output is the next stage's input.
 9. **Security implementation approval** → `security-auditor` with the diff.
 10. **DevOps release readiness** → `devops`.
 11. **Docs** — instruct developer, security-auditor, and devops each to update
-    the documents they own. Gate: docs tell the truth.
+    the documents they own, including the project memory in `CLAUDE.md` /
+    `AGENTS.md` when this change settled a convention or a decision
+    (`devflow/11-project-memory.md`). Gate: docs tell the truth.
 12. **Product review** → `product-designer` against the acceptance criteria
     from stage 1.
 13. **Release** → `devops`, if applicable.
@@ -213,8 +215,11 @@ Delegate stages in order; each stage's output is the next stage's input.
 - Gate verdicts are recorded as PR approvals/requested-changes; a merge over a
   BLOCKED verdict or a stale (force-push-invalidated) approval is a flow
   violation.
-- Never skip a gate to save time. Compress it instead: tell the gate agent the
-  scope is small and ask for a proportionate review.
+- Never skip a gate the change **triggers**, to save time. Compress it instead:
+  tell the gate agent the scope is small and ask for a proportionate review. A
+  stage the change does not reach at all is a different thing, and it closes
+  through its skip gate (`devflow/2-full-flow.md` §3.14) with its reason
+  printed — not silently.
 
 ## Never-skip list
 

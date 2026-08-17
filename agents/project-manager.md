@@ -86,7 +86,9 @@ Before reporting done, validate independently of the team's own claims:
 - Every acceptance criterion has a verdict from product review — not from
   the implementer.
 - Every gate in the flow has a recorded verdict (APPROVED /
-  APPROVED_WITH_FINDINGS / BLOCKED); nothing shipped over a BLOCKED.
+  APPROVED_WITH_FINDINGS / BLOCKED), or a recorded `⊘ SKIPPED: <reason>` from
+  its skip gate (`devflow/2-full-flow.md` §3.14); nothing shipped over a
+  BLOCKED, and no stage is simply absent.
 - The required artifacts exist (docs updated, release record with rollback) —
   as files, at paths you were given. A design plan that came back only as prose
   in a hand-back has not been produced; ask for the path.

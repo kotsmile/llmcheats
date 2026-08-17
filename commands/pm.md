@@ -1,6 +1,6 @@
 ---
 description: Deliver work through the full llmcheats team — this session is the project manager: intake, flow choice, gates, status and validation, specialists launched directly
-argument-hint: <what to deliver>
+argument-hint: <what to deliver> [--full to force the full flow]
 disable-model-invocation: true
 ---
 
@@ -55,6 +55,15 @@ list.
 Downgrading later is allowed and is not a failure: if the architecture stage
 finds the change is a config knob, say so in one line and re-flow it down
 instead of finishing nine more stages around it.
+
+**Whenever the flow is the full flow, run the per-stage skip gates**
+(`devflow/2-full-flow.md` §3.14) before you delegate anything: answer each
+stage's skip test here, in this context, and print one `⊘ SKIPPED: <reason>` line
+per stage you close unopened. This holds whether you chose the full flow or the
+operator **forced** it — `--full`, "run the whole flow", or work that will run for
+hours unsupervised, which you honor without re-choosing. Either way it buys the
+gates, not thirteen contexts of ceremony, and a gate this change *does* trigger
+is compressed, never skipped.
 
 State which flow you chose and why, then read **exactly that one file** — not
 both, not the tree, not `INDEX.md`. Docs live in the first of these that
@@ -112,7 +121,8 @@ stage 4 · implement     ▸ golang-developer, 2m
 ```
 
 `▸` running with elapsed minutes, `✓` closed with the artifact path, `!`
-blocked or re-gating with the round number. **Every line names who did the work
+blocked or re-gating with the round number, `⊘` closed unopened by a skip gate
+with its reason. **Every line names who did the work
 and where the artifact landed.** A closed stage with no path is not closed: ask
 the specialist for the path (`devflow/8-resuming.md` — the plan is a file).
 Twenty minutes with nothing sent up is a defect; send stage, elapsed time and
@@ -147,19 +157,23 @@ kept re-planning" is the failure this command exists to prevent, not a rescue.
   control as much as a patience one: a re-run stage costs everything it cost the
   first time and produces nothing new (`devflow/10-flow-cost.md`).
 - Anything needing a product decision goes to the operator, never to a guess.
-  Never skip a gate to save time; tell the gate owner the scope is small and
-  ask for a proportionate review.
+  Never skip a gate the change **triggers**, to save time; tell the gate owner the
+  scope is small and ask for a proportionate review. A stage the change does not
+  reach at all is the skip gate's business, not this rule's, and it closes with
+  its reason printed.
 
 ## 7. Validate, then report
 
 Before you report done: every acceptance criterion has a verdict from product
-review rather than from its implementer; every gate has a recorded verdict and
-nothing shipped over a BLOCKED; the artifacts exist as files at the paths you
+review rather than from its implementer; every gate has a recorded verdict or a
+recorded `⊘ SKIPPED: <reason>`, with no stage simply absent, and nothing shipped
+over a BLOCKED; the artifacts exist as files at the paths you
 were given; no stage ran twice on the same scope without a stated reason; and
 the code was written by the specialists.
 
 Final report — two sentences of summary, then the table: goal, per-gate
-verdicts, who held each approval, artifacts with paths, open follow-ups, and
+verdicts, **every stage a skip gate closed unopened with its reason**, who held
+each approval, artifacts with paths, open follow-ups, and
 for a release the version and the one-command rollback. **Carry every
 specialist's "what was NOT verified" into it, gate by gate.** Never soften a
 BLOCKED verdict, and never report a prediction as a result.
