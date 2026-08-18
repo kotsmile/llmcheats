@@ -150,7 +150,15 @@ else
   mkdir -p "$DEST/templates"
 fi
 
-printf 'repo=%s\nref=%s\n' "$LLMCHEATS_REPO" "$LLMCHEATS_REF" > "$DEST/VERSION"
+# A codeload tarball is a git archive, and its pax global header carries the
+# commit. Reading it here pins VERSION to a revision instead of a branch name
+# that moves, without a second request. Falls back to the ref for a payload that
+# was not produced by git archive.
+sha="$(gunzip -c "$tarball" 2>/dev/null | dd bs=512 count=2 2>/dev/null | tr -d '\0' \
+  | sed -n 's/.*comment=\([0-9a-f]\{7,40\}\).*/\1/p' || true)"
+[ -n "$sha" ] || sha="$LLMCHEATS_REF"
+
+printf 'repo=https://github.com/%s\nref=%s\n' "$LLMCHEATS_REPO" "$sha" > "$DEST/VERSION"
 
 # ---- skills ------------------------------------------------------------------
 #

@@ -58,6 +58,11 @@ R="$(new_repo repo_default)"
 check $? "installer exits 0"
 
 exists "$R/.llmcheats/VERSION"                       "VERSION written"
+grep -q '^repo=https://github.com/' "$R/.llmcheats/VERSION" 2>/dev/null
+check $? "VERSION carries the full repo URL"
+# This payload is a plain tar, not a git archive, so there is no commit to read.
+grep -q '^ref=main$' "$R/.llmcheats/VERSION" 2>/dev/null
+check $? "VERSION falls back to the ref when the payload carries no commit"
 exists "$R/.llmcheats/docs/INDEX.md"                 "corpus: the single index"
 exists "$R/.llmcheats/docs/devflow/git.md"           "corpus: devflow/ group"
 exists "$R/.llmcheats/docs/webapp/testing-strategy.md" "corpus: webapp/ group"
@@ -278,6 +283,22 @@ R6="$(new_repo repo_bad)"
 ( cd "$R6" && LLMCHEATS_TARBALL="file://$BAD_TAR" bash "$ROOT/install.sh" >/dev/null 2>&1 )
 [ $? -ne 0 ]
 check $? "a payload missing docs/ and workflows/ is rejected"
+
+# --- 14. VERSION pins a commit when the payload is a git archive -------------
+#
+# codeload serves `git archive` output, whose pax global header carries the
+# commit. VERSION has to record that, not the branch name it was fetched by.
+
+section "14. VERSION records the commit, not the branch"
+GA_TAR="$WORK/payload_archive.tar.gz"
+( cd "$ROOT" && git archive --format=tar.gz --prefix=llmcheats-test/ HEAD -o "$GA_TAR" )
+HEAD_SHA="$(cd "$ROOT" && git rev-parse HEAD)"
+
+R9="$(new_repo repo_archive)"
+( cd "$R9" && LLMCHEATS_TARBALL="file://$GA_TAR" bash "$ROOT/install.sh" >/dev/null 2>&1 )
+check $? "install from a git archive exits 0"
+grep -q "^ref=$HEAD_SHA\$" "$R9/.llmcheats/VERSION" 2>/dev/null
+check $? "VERSION records the commit ($HEAD_SHA)"
 
 # --- summary ------------------------------------------------------------------
 
