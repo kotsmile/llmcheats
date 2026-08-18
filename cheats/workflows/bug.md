@@ -6,6 +6,7 @@ description: "bug: fix agreed-broken behavior. Use for a prompt starting bug:, o
 # `bug:` — fast flow
 
 <!-- F-010 -->
+
 Seven stages. Target duration: minutes to hours, not days.
 
 ## 1. Scope
@@ -18,17 +19,19 @@ Decision: fix now or schedule it. **Data-loss or security ⇒ now** — switch t
 ## 2. Is this code or infra?
 
 <!-- F-018 -->
+
 **Ask this before reading the code.** Check recent deploys, resource
 saturation, dependency outages, certificate and quota expiry.
 
 Half of "bugs" are infra events. A code fix for an infra problem wastes the
-release *and* leaves the problem in place.
+release _and_ leaves the problem in place.
 
 **Artifact:** one paragraph — what was ruled out, and how you ruled it out.
 
 ## 3. Reproduce, in a test, first
 
 <!-- F-015 -->
+
 **A test that reproduces the bug is written first, fails before the fix, and
 passes after.** This is the one non-negotiable test of this flow. It does not
 collapse for a small change, an urgent change, or a one-line fix.
@@ -42,11 +45,13 @@ case.
 ## 4. Fix
 
 <!-- F-016 -->
+
 The smallest change that fixes the defect. **No opportunistic refactoring** —
 that is a separate `refactor:` task. Never mix a refactor with a behavior change
 in one commit.
 
 <!-- F-012 -->
+
 `practices/floor.md` applies. In particular: no test is deleted or skipped, and
 no suppression comment is added, to make a build green.
 
@@ -55,7 +60,7 @@ no suppression comment is added, to make a build green.
 - The new reproduction test.
 - The suite of the affected area.
 - **Regression check of adjacent flows.**
-- An explicit re-check of the *original reported problem* on a stand or locally
+- An explicit re-check of the _original reported problem_ on a stand or locally
   composed stack. The fix must be **observed** fixing it, not inferred.
 
 ## 6. Gates, scaled to the diff
@@ -69,6 +74,7 @@ change, or a restart ordering. Is rollback still one command?
 ## 7. Hand-back
 
 <!-- F-013 -->
+
 ```
 Changed:      files touched, one line each
 Ran:          the repro test, the suite, the adjacent flows, the original symptom
@@ -80,5 +86,6 @@ State the root cause in one sentence. "Fixed" without a cause is a symptom
 patched.
 
 <!-- F-007 -->
+
 If this is the second time this class of bug appeared, that is a convention
 nobody wrote down — record it per `practices/project-memory.md`.

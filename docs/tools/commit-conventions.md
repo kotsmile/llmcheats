@@ -2,7 +2,24 @@
 title: Commit, branch and review conventions
 summary: The single-line commit format tied to a tracker key, the no-ticket escape hatches, and the comment, function and test rules applied in review.
 theme: tools
-keywords: [commit message, single line, tracker key, ticket, branch name, pull request, chore, hotfix, machine commit, audit trailer, co-authored-by, comments, DRY, tests, prohibited actions]
+keywords:
+  [
+    commit message,
+    single line,
+    tracker key,
+    ticket,
+    branch name,
+    pull request,
+    chore,
+    hotfix,
+    machine commit,
+    audit trailer,
+    co-authored-by,
+    comments,
+    DRY,
+    tests,
+    prohibited actions,
+  ]
 related:
   - devops/release-tagging-and-gitops.md
   - backend/layered-architecture.md
@@ -26,9 +43,9 @@ related:
 
 Two projects, split by what the change is rather than by who wrote it:
 
-| Scope | Belongs to |
-| --- | --- |
-| Product work — apps, API, sites | the product project |
+| Scope                                                           | Belongs to                 |
+| --------------------------------------------------------------- | -------------------------- |
+| Product work — apps, API, sites                                 | the product project        |
 | Infrastructure requests — cluster, CI, network, access, tooling | the infrastructure project |
 
 A third key appears in history and is **retired**: read it, never write it.
@@ -41,11 +58,11 @@ A third key appears in history and is **retired**: read it, never write it.
 
 ## No-ticket prefixes
 
-| Prefix | When |
-| --- | --- |
+| Prefix    | When                  |
+| --------- | --------------------- |
 | `hotfix:` | Urgent production fix |
-| `chore:` | Housekeeping |
-| `auto:` | Written by a machine |
+| `chore:`  | Housekeeping          |
+| `auto:`   | Written by a machine  |
 
 Machine commits cover automated deployment bumps and approved access changes. An approval commit carries an **audit trailer block** naming the request, the requester and the approver, readable through the log's trailer format — that trailer is the audit record, so it must not be stripped by a rebase.
 
@@ -60,15 +77,15 @@ A subsystem that changes often benefits from a second prefix after the project n
 
 **Before creating a PR, always ask: ticket or chore?** Never guess — the answer sets the branch name, the title prefix and whether there is a description.
 
-| Answer | Branch | Title | Description |
-| --- | --- | --- | --- |
-| A ticket key | `<KEY>-<n>-short-name` | `<KEY>-<n>: <title>` | none |
-| chore | `chore-short-name` | `chore: <title>` | two paragraphs: problem (1–2 rows), solution (1–2 rows) |
+| Answer       | Branch                 | Title                | Description                                             |
+| ------------ | ---------------------- | -------------------- | ------------------------------------------------------- |
+| A ticket key | `<KEY>-<n>-short-name` | `<KEY>-<n>: <title>` | none                                                    |
+| chore        | `chore-short-name`     | `chore: <title>`     | two paragraphs: problem (1–2 rows), solution (1–2 rows) |
 
 ## Comments
 
 - **1–2 rows maximum**, and none at all where the code speaks for itself.
-- Explain only what the code cannot say itself — a ticket reference, a non-obvious *why*.
+- Explain only what the code cannot say itself — a ticket reference, a non-obvious _why_.
 - **No comment on a function whose name already tells what it does.**
 
 Backend code tightens this further; see the layered-architecture doc.

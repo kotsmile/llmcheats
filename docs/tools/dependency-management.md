@@ -2,7 +2,20 @@
 title: Dependency management and the version barrier
 summary: How dependencies are added per ecosystem, why lock files are never hand-edited, and the runtime-version check that prevents a stale module tree.
 theme: tools
-keywords: [dependency, lock file, workspace, package manager, native module, engines, node version, stale module tree, phantom type errors, go mod tidy, version mismatch]
+keywords:
+  [
+    dependency,
+    lock file,
+    workspace,
+    package manager,
+    native module,
+    engines,
+    node version,
+    stale module tree,
+    phantom type errors,
+    go mod tidy,
+    version mismatch,
+  ]
 related:
   - tools/commit-conventions.md
   - frontend/typescript-react-conventions.md
@@ -11,11 +24,11 @@ related:
 
 ## Adding a dependency
 
-| Ecosystem | How |
-| --- | --- |
-| JS/TS | The workspace package manager's add and remove commands, scoped to the target workspace |
-| Go | `go get <pkg>@<version>`, then `go mod tidy` |
-| Native mobile modules | The mobile framework's own install command — **never** the plain package-manager add |
+| Ecosystem             | How                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| JS/TS                 | The workspace package manager's add and remove commands, scoped to the target workspace |
+| Go                    | `go get <pkg>@<version>`, then `go mod tidy`                                            |
+| Native mobile modules | The mobile framework's own install command — **never** the plain package-manager add    |
 
 The framework installer exists because it picks the version compatible with the current SDK and performs the linking. A plain add installs a version that compiles and fails at runtime on one platform.
 

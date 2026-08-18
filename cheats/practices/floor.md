@@ -1,6 +1,7 @@
 # The floor
 
 <!-- F-012 -->
+
 Speed buys ceremony. It never buys these. A task that cannot be done without
 breaking one is an **escalation, not a judgment call** — stop and say so.
 
@@ -19,6 +20,7 @@ stage feature and a two-minute chore.
 ## The four never-skips
 
 <!-- F-039 -->
+
 Whatever the maturity of the project:
 
 - **Engineering constraints** — validated input, bound parameters, secrets out
@@ -34,6 +36,7 @@ Whatever the maturity of the project:
 ## Binding every dynamic value
 
 <!-- F-081 -->
+
 Every dynamic value reaches the database as a **bound parameter**. No SQL text
 is built with string formatting, concatenation or interpolation, anywhere.
 
@@ -42,6 +45,7 @@ binds its values satisfies it; the same tool satisfies nothing the moment a
 raw-fragment escape hatch takes a formatted string.
 
 <!-- F-082 -->
+
 Identifiers are not values: table names, column names, sort keys and sort
 direction are **allow-listed against a fixed set of constants**, never
 interpolated. Parameter binding cannot help you here, which is why it is a
@@ -50,6 +54,7 @@ separate rule.
 ## Validating input
 
 <!-- F-083 -->
+
 Three gates, and the third is the one that gets forgotten:
 
 1. **Transport** — one chokepoint: size cap, reject unknown fields, reject
@@ -63,6 +68,7 @@ Three gates, and the third is the one that gets forgotten:
 ## Suppressions
 
 <!-- F-064 -->
+
 Never suppress a lint rule or a type error. No disable comments, no ignore
 directives, no file-level opt-outs. Fix the root cause, or change the rule
 deliberately and say that you did.
@@ -70,6 +76,7 @@ deliberately and say that you did.
 ## Destructive flags
 
 <!-- F-057 -->
+
 **Never run the prune half of a sync tool.** Where two writers share a store and
 one of them holds a "delete what I don't know about" flag, that flag will
 eventually delete the other's work — the other writer's entries are, by
@@ -85,6 +92,7 @@ mode. The shape is the same and so is the rule.
 ## Files that are not yours to edit
 
 <!-- F-063 -->
+
 - **Generated files.** Change the spec or the annotation and regenerate. A hand
   edit is silently reverted by the next run and produces a diff nobody can
   review.

@@ -3,6 +3,7 @@
 ## Commit messages
 
 <!-- F-059 -->
+
 **One line.** Imperative, ≤72 characters, no trailing period, no body.
 
 ```
@@ -13,13 +14,14 @@ If the message needs a body to be understood, the commit is too big or the
 design doc is missing. Fix that instead of writing the body.
 
 <!-- F-060 -->
+
 Three no-ticket prefixes, and only where they genuinely apply:
 
-| Prefix | When |
-|---|---|
-| `hotfix:` | urgent production fix |
-| `chore:` | deps, tooling, formatting |
-| `auto:` | machine-written, carrying a trailer naming what triggered it |
+| Prefix    | When                                                         |
+| --------- | ------------------------------------------------------------ |
+| `hotfix:` | urgent production fix                                        |
+| `chore:`  | deps, tooling, formatting                                    |
+| `auto:`   | machine-written, carrying a trailer naming what triggered it |
 
 `stack.md` records whether this repo uses a tracker key and what its scope
 vocabulary is. No tracker → drop the prefix, keep the rest.
@@ -27,6 +29,7 @@ vocabulary is. No tracker → drop the prefix, keep the rest.
 ## Commit rules
 
 <!-- F-042 -->
+
 1. **One logical change per commit**, revertable as a unit: code, its tests, and
    the generated files that change with it land together. **Never mix a refactor
    with a behavior change.**
@@ -44,16 +47,18 @@ vocabulary is. No tracker → drop the prefix, keep the rest.
 ## Before opening a pull request
 
 <!-- F-074 -->
+
 **Ask: ticket or chore? Never guess.** The answer sets three things:
 
-| Answer | Branch | Title | Description |
-|---|---|---|---|
-| a ticket key | `<KEY>-<n>-short-name` | `<KEY>-<n>: <title>` | none |
-| chore | `chore-short-name` | `chore: <title>` | two paragraphs: problem, solution |
+| Answer       | Branch                 | Title                | Description                       |
+| ------------ | ---------------------- | -------------------- | --------------------------------- |
+| a ticket key | `<KEY>-<n>-short-name` | `<KEY>-<n>: <title>` | none                              |
+| chore        | `chore-short-name`     | `chore: <title>`     | two paragraphs: problem, solution |
 
 ## Pull requests
 
 <!-- F-068 -->
+
 Four blocks, no template theater:
 
 ```
@@ -64,6 +69,7 @@ Rollback: how to undo (revert is the default; say so when it isn't)
 ```
 
 <!-- F-069 -->
+
 - **Small enough to review honestly.** ~400 lines of non-generated change is the
   practical ceiling. Past it, split — stacked PRs beat a rubber stamp.
 - <!-- F-070 -->**CI green is an entry condition for review**, not a post-review

@@ -1,6 +1,7 @@
 # Observability — the day-one minimum
 
 <!-- F-039 -->
+
 A never-skip item. You cannot operate what you cannot see, and a change that
 needs a new signal opens the devops gate whatever else is true.
 
@@ -19,6 +20,7 @@ needs a new signal opens the devops gate whatever else is true.
 ## System health signals
 
 <!-- F-095 -->
+
 - **RED metrics per route pattern**: rate, error percentage, duration. **Route
   pattern, never raw path** — raw paths blow up metric cardinality.
 - **Structured logs, centrally queryable.**
@@ -26,12 +28,14 @@ needs a new signal opens the devops gate whatever else is true.
   anomaly is visible as one.
 
 <!-- F-094 -->
+
 Log levels carry meaning: **401/403 Info, 4xx Warn, 5xx Error.** An auth failure
 is not an error of the system; a 500 is.
 
 ## Alert severities
 
 <!-- F-093 -->
+
 Exactly two:
 
 - **CRIT** — a person is paged now: service down, error-rate spike,
@@ -50,5 +54,6 @@ a k8s probe. **The runtime restarts what the metrics only report.**
 ## Dashboards and alert rules are code
 
 <!-- F-048 -->
+
 They live in the repo, whatever the toolchain. Click-ops drifts and dies, and
 where a reconciler owns them, a UI edit is reverted by self-heal without notice.

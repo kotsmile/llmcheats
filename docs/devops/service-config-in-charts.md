@@ -2,7 +2,21 @@
 title: Rendering service config into a deployment
 summary: Why the config block is copied verbatim as a literal scalar, and which values the template — not the process — substitutes.
 theme: devops
-keywords: [chart, values, configmap, literal block scalar, toYaml, verbatim, quoting, template token, image tag, subchart host, mount path, placeholder collision]
+keywords:
+  [
+    chart,
+    values,
+    configmap,
+    literal block scalar,
+    toYaml,
+    verbatim,
+    quoting,
+    template token,
+    image tag,
+    subchart host,
+    mount path,
+    placeholder collision,
+  ]
 related:
   - backend/configuration-loading.md
   - devops/secrets-and-delegation.md
@@ -24,10 +38,10 @@ Two reasons, and both have bitten:
 
 ## Two substitution mechanisms that must not be confused
 
-| Marker | Substituted by | Used for |
-| --- | --- | --- |
-| `${VAR}` | The **process**, at boot, from its environment | Secrets delivered by the secrets operator |
-| `@@TOKEN@@` | The **chart template**, at render time | Values only the template can know |
+| Marker      | Substituted by                                 | Used for                                  |
+| ----------- | ---------------------------------------------- | ----------------------------------------- |
+| `${VAR}`    | The **process**, at boot, from its environment | Secrets delivered by the secrets operator |
+| `@@TOKEN@@` | The **chart template**, at render time         | Values only the template can know         |
 
 The template-side markers are delimited so they are **visibly not YAML** and cannot be mistaken for something the process resolves. What they carry:
 

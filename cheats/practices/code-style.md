@@ -1,6 +1,7 @@
 # Code style
 
 <!-- F-038 -->
+
 Everything here is a **pattern**, not a constraint. Where this repo already does
 it differently, this repo wins — consistency with the surrounding code beats
 anything below. The constraints live in `practices/floor.md`.
@@ -8,10 +9,11 @@ anything below. The constraints live in `practices/floor.md`.
 ## Comments
 
 <!-- F-075 -->
+
 **1–2 rows maximum, and none at all where the code speaks for itself.**
 
 Write a comment only for what the code cannot say: a ticket reference, a
-non-obvious *why*, an invariant, a workaround, a subtle gotcha.
+non-obvious _why_, an invariant, a workaround, a subtle gotcha.
 
 **No comment on a function whose name already tells what it does.**
 
@@ -38,6 +40,7 @@ Some repos go further and run zero comments in a given language or layer.
 ## Helpers
 
 <!-- F-076 -->
+
 **Extract a function when it has more than one caller.** A single-use helper,
 however well named, is often just indirection.
 
@@ -56,9 +59,10 @@ A string literal used in more than one place becomes a named constant.
 ## Documentation
 
 <!-- F-088 -->
+
 **Do not write documentation unless asked.**
 
-The scope of that rule is *unrequested prose* — a README nobody wanted, an
+The scope of that rule is _unrequested prose_ — a README nobody wanted, an
 architecture essay, a summary file at the end of a task.
 
 It does **not** exempt you from keeping owned documents true. When a change makes
@@ -67,6 +71,7 @@ change, not new documentation. The test is: did this document already exist and
 does the change make it lie?
 
 <!-- F-098 -->
+
 Docs live **next to the code they describe** — per-directory READMEs, ADRs in the
 repo — not in an external wiki that CI cannot see and reviews do not touch. A
 doc outside the repo is a doc that goes stale without anyone noticing.

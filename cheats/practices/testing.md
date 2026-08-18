@@ -3,6 +3,7 @@
 ## What a test protects
 
 <!-- F-077 -->
+
 **A test protects a behavior or an invariant, never the shape of the
 implementation.** Assert what a caller depends on — the decision returned, the
 row persisted, the status code, the event emitted — not the private helper that
@@ -14,6 +15,7 @@ the shape, and it will be deleted the first time it is inconvenient.
 ## The order to write them in
 
 <!-- F-078 -->
+
 Write in this order and **stop where the cost of the failure stops justifying
 the test**:
 
@@ -31,6 +33,7 @@ the test**:
 ## The reproduction test does not collapse
 
 <!-- F-015 -->
+
 Under every flow, however small or urgent: the failing test comes first.
 
 One stated exception: a frontend defect with no rule left to extract, which
@@ -40,6 +43,7 @@ a state transition is never that case.**
 ## When not to write a test
 
 <!-- F-079 -->
+
 Do not add a test because code changed.
 
 - A trivial refactor gets nothing.
@@ -53,6 +57,7 @@ depend on beat broad coverage of implementation detail.
 ## Justifying and naming
 
 <!-- F-080 -->
+
 Every non-trivial test carries a one-line reason: the invariant it guards, the
 way the code can silently regress, or the incident that motivated it.
 
@@ -67,10 +72,12 @@ with those comments where the repo's language convention allows them.
 ## CI
 
 <!-- F-084 -->
+
 Checks are **blocking by default**. Making one advisory is a conscious,
 documented exception.
 
 <!-- F-085 -->
+
 **The same check runs locally and in CI.** A failure must reproduce on a laptop
 without reading the CI config — that is the whole point of keeping the check
 definition next to the code rather than inside the pipeline.
