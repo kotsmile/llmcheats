@@ -76,7 +76,7 @@ finds the change is a config knob, say so in one line and re-flow it down.
 | Read | Only when `stack.md` shows |
 |---|---|
 | `docs/backend/*` | Go, and a layered/DDD structure |
-| `docs/backend/llm-*` | the product has LLM features |
+| `docs/webapp/ai-features.md` | the product has LLM features |
 | `docs/frontend/typescript-react-conventions.md` | TypeScript + React |
 | `docs/frontend/mobile-*` | React Native |
 | `docs/frontend/feature-sliced-architecture.md` | the repo already uses FSD |

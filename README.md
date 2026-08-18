@@ -26,6 +26,108 @@ $llmcheats-setup      # Codex
 That is the whole thing. The installer copies files; the setup skill reads your
 repo and writes config specialized to it.
 
+## Usage
+
+Type a prefix and the task. No slash command — the prefix routes to a playbook
+and a flow, and the flow decides how much process the change owes.
+
+| Prefix | Flow | Example |
+| --- | --- | --- |
+| `feature:` | full | `feature: add rate limiting to the ingest endpoint` |
+| `bug:` | fast | `bug(auth): 401 on token refresh after 24h` |
+| `hotfix:` | fast | `hotfix: checkout returns 500 on every card payment` |
+| `refactor:` | asap → full | `refactor: split Handler into transport and domain layers` |
+| `migrate:` | full | `migrate: postgres 14 -> 16` |
+| `chore:` | asap | `chore: bump golangci-lint and fix the new warnings` |
+| `prompt:` | fast → full | `prompt: the intent classifier tags refunds as complaints` |
+| `review:` | — | `review: the rate-limit branch before it merges` |
+| `release:` | — | `release: cut v2.4.0 and ship it` |
+| `rollback:` | — | `rollback: revert the v2.4.0 deploy, error rate tripled` |
+
+An optional `(scope)` narrows it: `bug(auth):`, `chore(ci):`. **No prefix is
+also valid** — the agent classifies from the text, says which prefix it chose in
+one sentence, and proceeds.
+
+`asap` is one pass in minutes, `fast` is seven stages, `full` is thirteen with
+skip gates. The last three prefixes are not flows: they run against something
+that already exists.
+
+## Chaining
+
+Each prefix is one unit of work. A real change is usually two or three in
+sequence, and **you type the next one** — nothing auto-chains. Order matters
+only in that `review:` needs a diff to exist and `chore:` picks up what the
+earlier steps left behind.
+
+**`feature:` → `review:` → `chore:`** — the default for anything user-visible.
+
+```
+feature: add rate limiting to the ingest endpoint
+review: the rate-limit branch before it merges
+chore: bump the redis client the limiter pulled in
+```
+
+**`bug:` → `review:`** — a fix earns a second read even though it is small,
+because a reproduction test is easy to write against the bug you imagined.
+
+```
+bug(auth): 401 on token refresh after 24h
+review: the token-refresh fix, focus on the expiry math
+```
+
+**`review:` → `chore:`** — someone else's diff, then the housekeeping it turned
+up. The review returns a verdict and changes nothing itself.
+
+```
+review: PR 412, the new webhook dispatcher
+chore: drop the two dead helpers the review found
+```
+
+**`prompt:` → `feature:` → `review:` → `chore:`** — model-facing text first,
+because the code that calls it is shaped by what the prompt returns.
+
+```
+prompt: extraction instruction for the refund questionnaire
+feature: wire the refund extractor into the ticket pipeline
+review: the refund pipeline end to end
+chore: move the eval fixtures out of testdata into their own package
+```
+
+**`hotfix:` → `bug:`** — stop the bleeding, then fix it properly. The hotfix
+buys time and is allowed to be ugly; the `bug:` pass adds the reproduction test
+and removes the patch.
+
+```
+hotfix: disable the recommendation call, it is timing out checkout
+bug: recommendation client has no deadline and blocks the checkout path
+```
+
+**`refactor:` → `review:`** — shape changed, behavior did not, so the review is
+the only thing that can confirm the second half of that claim.
+
+```
+refactor: split Handler into transport and domain layers
+review: the Handler split, confirm behavior is identical
+```
+
+**`migrate:` → `release:`** — a schema move is always full-flow, and shipping it
+is a separate event with its own rollback story.
+
+```
+migrate: postgres 14 -> 16
+release: cut v3.0.0, the pg16 cutover
+```
+
+**`release:` → `rollback:`** — the one chain worth knowing before you need it.
+
+```
+release: cut v2.4.0 and ship it
+rollback: revert the v2.4.0 deploy, error rate tripled
+```
+
+Re-routing mid-task is normal, not a failure: a `refactor:` that turns out to
+change behavior stops and becomes a `feature:`, and says so in one line.
+
 ## The design bet
 
 **The installer is dumb. The setup skill is smart.**
@@ -46,7 +148,7 @@ command it writes, it can name the file it saw it in.
 AGENTS.md                     routing table + project memory
 CLAUDE.md                     @AGENTS.md
 .llmcheats/
-├── docs/                     79-file reference corpus, verbatim
+├── docs/                     76-file reference corpus, verbatim
 │   └── INDEX.md              its routing table
 ├── cheats/
 │   ├── index.md              how to read the rest
