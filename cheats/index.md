@@ -4,15 +4,15 @@ Read this file, then `routing.md`. Everything else is read on demand.
 
 ## What is installed here
 
-| Path | What it is | When to read it |
-|---|---|---|
-| `routing.md` | prefix → workflow → flow | always, it is in `AGENTS.md` |
-| `workflows/` | one playbook per prefix | the one your prefix names |
-| `practices/` | the portable constraints | the ones your workflow names |
-| `docs/INDEX.md` | the reference's own routing table | when a workflow names a file |
-| `docs/webapp/` `docs/devflow/` | how to build, and in what order | when a workflow names a file |
-| `docs/backend/` `docs/frontend/` `docs/devops/` `docs/tools/` | patterns from one production monorepo | only on a stack match |
-| `stack.md` | what this repo actually is | first, every session |
+| Path                                                          | What it is                            | When to read it              |
+| ------------------------------------------------------------- | ------------------------------------- | ---------------------------- |
+| `routing.md`                                                  | prefix → workflow → flow              | always, it is in `AGENTS.md` |
+| `workflows/`                                                  | one playbook per prefix               | the one your prefix names    |
+| `practices/`                                                  | the portable constraints              | the ones your workflow names |
+| `docs/INDEX.md`                                               | the reference's own routing table     | when a workflow names a file |
+| `docs/webapp/` `docs/devflow/`                                | how to build, and in what order       | when a workflow names a file |
+| `docs/backend/` `docs/frontend/` `docs/devops/` `docs/tools/` | patterns from one production monorepo | only on a stack match        |
+| `stack.md`                                                    | what this repo actually is            | first, every session         |
 
 `docs/` is a reference corpus installed verbatim, with `docs/INDEX.md` as its
 entry point. The last four groups describe **one** production system — Go
@@ -60,11 +60,11 @@ rule, or a triggered gate. Not for a variable name.
 A pass is generation-bound: wall clock ≈ output tokens ÷ 55. Output size is the
 lever, not tool calls.
 
-| artifact | cap |
-|---|---|
-| plan / design | 12 KB |
-| audit, code review | 8 KB |
-| hand-back message | 2 KB |
+| artifact           | cap   |
+| ------------------ | ----- |
+| plan / design      | 12 KB |
+| audit, code review | 8 KB  |
+| hand-back message  | 2 KB  |
 
 Over the cap, split the scope rather than trimming the content. Never paste a
 doc's contents into a delegation — name the path and let the reader open it.

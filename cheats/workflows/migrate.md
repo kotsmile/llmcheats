@@ -12,11 +12,11 @@ looks.
 
 ## 1. Which kind of migration is this?
 
-| Kind | Governing rule |
-|---|---|
-| Schema (DDL) | expand → migrate → contract, below |
-| Data backfill | irreversible on real data; needs a dry run and a batch bound |
-| Version move (runtime, dependency major) | the version barrier, below |
+| Kind                                     | Governing rule                                               |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| Schema (DDL)                             | expand → migrate → contract, below                           |
+| Data backfill                            | irreversible on real data; needs a dry run and a batch bound |
+| Version move (runtime, dependency major) | the version barrier, below                                   |
 
 ## 2. Schema: expand → migrate → contract
 

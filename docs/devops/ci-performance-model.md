@@ -22,13 +22,13 @@ Cache keys are **per job**. One shared key against a shared backend lets concurr
 
 A job pod is fresh every time, so fetching sources is a full clone: measured at 42–89 seconds, against 5–12 seconds to schedule the pod and pull its node-cached image.
 
-| Technique | When |
-| --- | --- |
-| Depth 1 | The global default |
-| Full history | Only where history *is* the data — release notes, a tag-driven timeline |
-| Depth ~20 | A job that rebases onto the default branch and pushes |
-| **No clone at all** | **Any job that does not read the repo** |
-| Sparse checkout + shallow, blob-filtered fetch | A job that reads exactly one file |
+| Technique                                      | When                                                                    |
+| ---------------------------------------------- | ----------------------------------------------------------------------- |
+| Depth 1                                        | The global default                                                      |
+| Full history                                   | Only where history *is* the data — release notes, a tag-driven timeline |
+| Depth ~20                                      | A job that rebases onto the default branch and pushes                   |
+| **No clone at all**                            | **Any job that does not read the repo**                                 |
+| Sparse checkout + shallow, blob-filtered fetch | A job that reads exactly one file                                       |
 
 A job running a one-second command spent 49–75 seconds cloning before the no-clone strategy was set on it. That is the single highest-leverage change on this list.
 
@@ -40,12 +40,12 @@ For the one-file case, narrowing the working tree and fetching with a blob filte
 
 Pools are split by **job length**, not only by resource appetite: a tier is a queue, and the slowest job in it sets everyone's wait.
 
-| Tier | Runs |
-| --- | --- |
-| xs | API calls: approve, cancel, sync, no-op checks |
-| s | Small scripts, image push, and the **fast checks** (a few minutes) |
-| m | The **slow checks** (roughly 10–25 minutes) |
-| l | Image builds and memory-heavy type checks, which have OOM history on smaller tiers |
+| Tier | Runs                                                                               |
+| ---- | ---------------------------------------------------------------------------------- |
+| xs   | API calls: approve, cancel, sync, no-op checks                                     |
+| s    | Small scripts, image push, and the **fast checks** (a few minutes)                 |
+| m    | The **slow checks** (roughly 10–25 minutes)                                        |
+| l    | Image builds and memory-heavy type checks, which have OOM history on smaller tiers |
 
 Putting a three-minute check on the slow tier costs it roughly half an hour of queue time.
 

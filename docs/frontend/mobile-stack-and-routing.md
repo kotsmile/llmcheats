@@ -14,21 +14,21 @@ related:
 
 React Native with the New Architecture enabled, on a managed framework SDK.
 
-| Concern | Library |
-| --- | --- |
-| Routing | The framework's file-based router with typed routes; its version tracks the SDK |
-| Styling | Utility classes for React Native, plus the shared design-token preset |
-| Animation | A native-driven animation library |
-| Server state | A query/cache library |
-| Client state | A small store library, persisted through synchronous key-value storage |
-| Storage | A synchronous key-value module replacing the async storage API |
-| Keyboard | A native keyboard-animation library |
-| Graphics | A GPU-accelerated 2D canvas, plus a chart library built on it |
-| Menus | A native context-menu wrapper |
-| Lists | A high-performance list component |
-| Notifications | Push tokens plus locally scheduled notifications |
-| Forms | A form library with a schema-validator resolver |
-| i18n | An i18n runtime fed by the shared translations package |
+| Concern       | Library                                                                         |
+| ------------- | ------------------------------------------------------------------------------- |
+| Routing       | The framework's file-based router with typed routes; its version tracks the SDK |
+| Styling       | Utility classes for React Native, plus the shared design-token preset           |
+| Animation     | A native-driven animation library                                               |
+| Server state  | A query/cache library                                                           |
+| Client state  | A small store library, persisted through synchronous key-value storage          |
+| Storage       | A synchronous key-value module replacing the async storage API                  |
+| Keyboard      | A native keyboard-animation library                                             |
+| Graphics      | A GPU-accelerated 2D canvas, plus a chart library built on it                   |
+| Menus         | A native context-menu wrapper                                                   |
+| Lists         | A high-performance list component                                               |
+| Notifications | Push tokens plus locally scheduled notifications                                |
+| Forms         | A form library with a schema-validator resolver                                 |
+| i18n          | An i18n runtime fed by the shared translations package                          |
 
 ## Commands
 
@@ -44,14 +44,14 @@ Always install a native module with the framework's own install command, never t
 
 The router directory is organised by group:
 
-| Group | Contents |
-| --- | --- |
-| root layout | Gesture handler, keyboard provider, query client, safe area |
-| auth group | Login, signup, activation, password reset, email verification |
-| private group | The signed-in app, containing the tab group and stack screens |
-| tab group | One screen file per tab |
-| onboarding group | The onboarding flow |
-| public group | Routes reachable without a session, e.g. email verification links |
+| Group            | Contents                                                          |
+| ---------------- | ----------------------------------------------------------------- |
+| root layout      | Gesture handler, keyboard provider, query client, safe area       |
+| auth group       | Login, signup, activation, password reset, email verification     |
+| private group    | The signed-in app, containing the tab group and stack screens     |
+| tab group        | One screen file per tab                                           |
+| onboarding group | The onboarding flow                                               |
+| public group     | Routes reachable without a session, e.g. email verification links |
 
 Dynamic routes carry the id in the filename. Two conversation screens exist and are genuinely different: one streams model output with tool cards and quick replies, the other is human-to-human with offline support and file uploads.
 
@@ -84,11 +84,11 @@ Note the current major version uses a **factory function**, not a constructor.
 
 ## Keyboard handling — three layers
 
-| Layer | Mechanism |
-| --- | --- |
-| Root layout | A keyboard provider wrapping the entire app |
+| Layer                 | Mechanism                                                                   |
+| --------------------- | --------------------------------------------------------------------------- |
+| Root layout           | A keyboard provider wrapping the entire app                                 |
 | Auth and form screens | A keyboard-aware scroll view replacing the avoiding-view + scroll-view pair |
-| Chat screens | An animated keyboard hook driving an absolutely positioned input |
+| Chat screens          | An animated keyboard hook driving an absolutely positioned input            |
 
 ```typescript
 const { height: keyboardHeight } = useReanimatedKeyboardAnimation()
@@ -101,10 +101,10 @@ const inputStyle = useAnimatedStyle(() => ({
 
 ## Lists
 
-| Component | Use for |
-| --- | --- |
+| Component            | Use for                                                                                                                       |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | The performance list | Non-inverted lists — conversation lists, pickers. The current major measures items itself, so there is no estimated-size prop |
-| The stock list | **Inverted** message lists — the performance list's inverted mode misbehaves with chat scrolling |
+| The stock list       | **Inverted** message lists — the performance list's inverted mode misbehaves with chat scrolling                              |
 
 ## Forms
 

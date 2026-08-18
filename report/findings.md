@@ -19,11 +19,11 @@ Phase A was mined against a corpus split into `docs/best/` (patterns) and
 `index.json` mirror. That split was subsequently collapsed into a **single
 `docs/` tree with one `docs/INDEX.md`**:
 
-| was | now |
-|---|---|
-| `docs/best/{backend,frontend,tools,devops}/` | `docs/{backend,frontend,tools,devops}/` |
-| `docs/flows/{webapp,devflow}/` | `docs/{webapp,devflow}/` |
-| `docs/best/INDEX.md` + `docs/flows/INDEX.md` + `docs/flows/index.json` | `docs/INDEX.md` |
+| was                                                                    | now                                     |
+| ---------------------------------------------------------------------- | --------------------------------------- |
+| `docs/best/{backend,frontend,tools,devops}/`                           | `docs/{backend,frontend,tools,devops}/` |
+| `docs/flows/{webapp,devflow}/`                                         | `docs/{webapp,devflow}/`                |
+| `docs/best/INDEX.md` + `docs/flows/INDEX.md` + `docs/flows/index.json` | `docs/INDEX.md`                         |
 
 **Citations below were rewritten to the new paths and remain exact:** the files
 were moved, not edited, so every line number still resolves. The merge also made
@@ -1117,12 +1117,12 @@ not evidence, and it contradicts the build prompt — see F-002.
 
 # Counts
 
-| Class | Pure | In a split | Total mentions |
-|---|---|---|---|
-| universal | 80 | 6 | 86 |
-| stack-specific | 12 | 4 | 16 |
-| project-idiosyncratic | 2 | 2 | 4 |
-| **entries** | **94** | **6** | **100** |
+| Class                 | Pure   | In a split | Total mentions |
+| --------------------- | ------ | ---------- | -------------- |
+| universal             | 80     | 6          | 86             |
+| stack-specific        | 12     | 4          | 16             |
+| project-idiosyncratic | 2      | 2          | 4              |
+| **entries**           | **94** | **6**      | **100**        |
 
 Six findings are split — the principle is universal, the mechanism is not:
 F-041 (roster vs. gates-survive-role-collapse), F-047 (bump commit vs.

@@ -85,25 +85,25 @@ Entity and service types use domain language, not transport details. Prefer `Pro
 
 Not by feature:
 
-| File | Scope |
-| --- | --- |
-| `service.go` | Service struct, port interfaces, sentinel errors, DI, metrics, wiring validation |
-| `auth.go` | Authentication flows and public user-facing operations |
-| `admin.go` | Elevated-permission operations only |
-| role-named files | Operations scoped to one staff role |
-| `profile.go`, `account.go` | Self-service |
-| `system.go` | Internal helpers, system-driven mutations |
+| File                       | Scope                                                                            |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| `service.go`               | Service struct, port interfaces, sentinel errors, DI, metrics, wiring validation |
+| `auth.go`                  | Authentication flows and public user-facing operations                           |
+| `admin.go`                 | Elevated-permission operations only                                              |
+| role-named files           | Operations scoped to one staff role                                              |
+| `profile.go`, `account.go` | Self-service                                                                     |
+| `system.go`                | Internal helpers, system-driven mutations                                        |
 
 Do not create a new service file without an explicit need — a genuinely new scope, or an existing file exceeding ~300 lines. All methods are `func (s *Service) ...`; do not introduce a second struct.
 
 ## Naming
 
-| Thing | Convention |
-| --- | --- |
-| Files | snake_case |
-| Packages | lowercase single word with a domain prefix (`userservice`, `userentity`, `userinfra`) |
-| Request/response DTOs | `PostSignUpEmailRequest`, `PostSignUpEmailResponse` |
-| Import aliases | alias the domain package explicitly at the import site |
+| Thing                 | Convention                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------- |
+| Files                 | snake_case                                                                            |
+| Packages              | lowercase single word with a domain prefix (`userservice`, `userentity`, `userinfra`) |
+| Request/response DTOs | `PostSignUpEmailRequest`, `PostSignUpEmailResponse`                                   |
+| Import aliases        | alias the domain package explicitly at the import site                                |
 
 - **Variable names must match parameter semantics.** If a parameter is `supportID`, the fetched entity is `support`, not `actor`.
 - **A string literal used in more than one place becomes an unexported `const`.**

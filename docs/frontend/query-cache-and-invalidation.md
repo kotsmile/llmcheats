@@ -97,9 +97,9 @@ Any composition works as the callback:
 
 ## Symptom-to-cause table
 
-| Symptom | Likely cause |
-| --- | --- |
-| Data stale after a mutation | Mutation did not invalidate, or invalidated a sibling prefix |
-| Top of screen refreshes, widgets do not | A local `refetch()` instead of a domain invalidate |
-| Nothing refetches on mount | Stale time not yet elapsed — invalidate explicitly |
-| Two spinners on pull-to-refresh | A platform refresh control added next to the custom indicator |
+| Symptom                                 | Likely cause                                                  |
+| --------------------------------------- | ------------------------------------------------------------- |
+| Data stale after a mutation             | Mutation did not invalidate, or invalidated a sibling prefix  |
+| Top of screen refreshes, widgets do not | A local `refetch()` instead of a domain invalidate            |
+| Nothing refetches on mount              | Stale time not yet elapsed — invalidate explicitly            |
+| Two spinners on pull-to-refresh         | A platform refresh control added next to the custom indicator |

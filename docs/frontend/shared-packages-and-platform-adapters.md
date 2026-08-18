@@ -13,15 +13,15 @@ related:
 
 Seven packages under one scope, consumed by the mobile app and the web admin app. Isolated marketing projects use none of them.
 
-| Package | Owns | Build |
-| --- | --- | --- |
-| core | Types, translations, utilities | bundler |
-| api | Generated fetch client | bundler + spec codegen |
-| data | Query hooks, auth store, query keys | bundler |
-| design-tokens | Colours, spacing, typography | token transformer |
-| ui | Cross-platform components | bundler |
-| platform-web | Web adapters | bundler |
-| platform-mobile | Native adapters | bundler |
+| Package         | Owns                                | Build                  |
+| --------------- | ----------------------------------- | ---------------------- |
+| core            | Types, translations, utilities      | bundler                |
+| api             | Generated fetch client              | bundler + spec codegen |
+| data            | Query hooks, auth store, query keys | bundler                |
+| design-tokens   | Colours, spacing, typography        | token transformer      |
+| ui              | Cross-platform components           | bundler                |
+| platform-web    | Web adapters                        | bundler                |
+| platform-mobile | Native adapters                     | bundler                |
 
 **After changing a package, rebuild it before testing in an app.** The apps consume build output, not source.
 
@@ -56,20 +56,20 @@ configureClient({
 })
 ```
 
-| Mode | Consumer | Config |
-| --- | --- | --- |
-| Token | Mobile | access-token getter + refresh callback |
-| Cookie | Web admin | cookie flag + refresh callback |
+| Mode   | Consumer  | Config                                 |
+| ------ | --------- | -------------------------------------- |
+| Token  | Mobile    | access-token getter + refresh callback |
+| Cookie | Web admin | cookie flag + refresh callback         |
 
 It auto-retries a 401 after a successful refresh, and logs requests and responses in development.
 
 ### The refresh verdict is three-way, and the split is the point
 
-| Verdict | Behaviour |
-| --- | --- |
-| ok, with a new token | Retry the request |
-| invalid — the server answered 401/403, the session is dead | Call the unauthorized handler |
-| transient — network error, 5xx, timeout | Return the original 401 **without signing out** |
+| Verdict                                                    | Behaviour                                       |
+| ---------------------------------------------------------- | ----------------------------------------------- |
+| ok, with a new token                                       | Retry the request                               |
+| invalid — the server answered 401/403, the session is dead | Call the unauthorized handler                   |
+| transient — network error, 5xx, timeout                    | Return the original 401 **without signing out** |
 
 A two-way verdict makes a flaky network indistinguishable from a revoked session, and wipes a refresh token that was still valid. That is the bug this type exists to prevent.
 
@@ -95,11 +95,11 @@ A single source of truth in an interchange format, compiled by a token transform
 
 Raw palette and scales live in a base directory; theme files map them onto the **semantic** tokens apps consume. Apps never reference the raw palette.
 
-| Consumer | How |
-| --- | --- |
-| Web | A CSS import of the generated theme |
-| Mobile | The generated preset in the styling config |
-| JavaScript | Named exports |
+| Consumer   | How                                        |
+| ---------- | ------------------------------------------ |
+| Web        | A CSS import of the generated theme        |
+| Mobile     | The generated preset in the styling config |
+| JavaScript | Named exports                              |
 
 Adding a token: edit the source JSON, rebuild the package, then use it through a class or an import.
 

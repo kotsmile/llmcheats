@@ -11,10 +11,10 @@ related:
 
 ## Two distinct layers
 
-| Layer | Question it answers | Where it lives | How it is applied |
-| --- | --- | --- | --- |
-| **Guard** | Can role X hit endpoint Y? | the domain's transport package | `Auth(handler, SupportGuard)` |
-| **Permission** | Can user X perform action Z on user W? | the domain's entity package | `actor.CheckPerm(PermUserActivate)` inside an entity method |
+| Layer          | Question it answers                    | Where it lives                 | How it is applied                                           |
+| -------------- | -------------------------------------- | ------------------------------ | ----------------------------------------------------------- |
+| **Guard**      | Can role X hit endpoint Y?             | the domain's transport package | `Auth(handler, SupportGuard)`                               |
+| **Permission** | Can user X perform action Z on user W? | the domain's entity package    | `actor.CheckPerm(PermUserActivate)` inside an entity method |
 
 They are deliberately separate. **Do not duplicate permission logic in the transport layer.**
 

@@ -74,14 +74,14 @@ Key types derive from the primary locale, so a key present in the secondary loca
 
 A marketing site and a content site sit outside the shared-package graph on purpose.
 
-| Aspect | How the isolated projects differ |
-| --- | --- |
-| Architecture | No FSD, no state management, no shared packages |
-| Routing | Path-based dispatch from the location, no router library |
-| Tokens | Their own theme block, not the shared token package |
-| i18n | A small context and a translations object, not the i18n runtime |
-| Styling | Inline styles are acceptable for dynamic gradients and complex backgrounds |
-| DOM | Plain DOM elements are allowed — these are web-only |
+| Aspect       | How the isolated projects differ                                           |
+| ------------ | -------------------------------------------------------------------------- |
+| Architecture | No FSD, no state management, no shared packages                            |
+| Routing      | Path-based dispatch from the location, no router library                   |
+| Tokens       | Their own theme block, not the shared token package                        |
+| i18n         | A small context and a translations object, not the i18n runtime            |
+| Styling      | Inline styles are acceptable for dynamic gradients and complex backgrounds |
+| DOM          | Plain DOM elements are allowed — these are web-only                        |
 
 A content site with its own lock file also builds from **its own directory as the Docker context**, not the workspace root — so it cannot reference anything above that directory, and its image build is defined on its own rather than shared.
 

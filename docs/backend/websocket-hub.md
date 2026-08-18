@@ -90,11 +90,11 @@ Streaming from another domain does **not** go through the chat service and does 
 
 Neither domain imports the other; the adapter is the only link.
 
-| Change | Impact |
-| --- | --- |
-| Shape of the stream event | Producing domain + the client parser; the hub is untouched |
-| Shape of the outgoing chat message | The client chat parser; the producing domain is unaffected |
-| Reusing the pub/sub for another streaming feature | Add a second adapter over the same narrow interface |
+| Change                                            | Impact                                                     |
+| ------------------------------------------------- | ---------------------------------------------------------- |
+| Shape of the stream event                         | Producing domain + the client parser; the hub is untouched |
+| Shape of the outgoing chat message                | The client chat parser; the producing domain is unaffected |
+| Reusing the pub/sub for another streaming feature | Add a second adapter over the same narrow interface        |
 
 Routing streaming through the ordinary send path would double-store the content under the wrong key and make the producer appear as a peer in the conversation list.
 

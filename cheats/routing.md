@@ -5,18 +5,18 @@ Answer from this table. Do not open a file to decide which file to open.
 
 ## Prefix → workflow
 
-| Prefix | Workflow | Flow | Use when |
-|---|---|---|---|
-| `feature:` | `workflows/feature.md` | full | new user-visible behavior |
-| `bug:` | `workflows/bug.md` | fast | agreed-broken behavior, not urgent |
-| `hotfix:` | `workflows/hotfix.md` | fast | production is broken now |
-| `refactor:` | `workflows/refactor.md` | asap → full | shape changes, behavior does not |
-| `migrate:` | `workflows/migrate.md` | full | schema, data, or a version move |
-| `chore:` | `workflows/chore.md` | asap | deps, tooling, formatting, config |
-| `release:` | `workflows/release.md` | — | cut and ship a version |
-| `rollback:` | `workflows/rollback.md` | — | undo a shipped change |
-| `review:` | `workflows/review.md` | — | read a finished diff, return a verdict |
-| `prompt:` | `workflows/prompt.md` | fast → full | write or change text a model executes |
+| Prefix      | Workflow                | Flow        | Use when                               |
+| ----------- | ----------------------- | ----------- | -------------------------------------- |
+| `feature:`  | `workflows/feature.md`  | full        | new user-visible behavior              |
+| `bug:`      | `workflows/bug.md`      | fast        | agreed-broken behavior, not urgent     |
+| `hotfix:`   | `workflows/hotfix.md`   | fast        | production is broken now               |
+| `refactor:` | `workflows/refactor.md` | asap → full | shape changes, behavior does not       |
+| `migrate:`  | `workflows/migrate.md`  | full        | schema, data, or a version move        |
+| `chore:`    | `workflows/chore.md`    | asap        | deps, tooling, formatting, config      |
+| `release:`  | `workflows/release.md`  | —           | cut and ship a version                 |
+| `rollback:` | `workflows/rollback.md` | —           | undo a shipped change                  |
+| `review:`   | `workflows/review.md`   | —           | read a finished diff, return a verdict |
+| `prompt:`   | `workflows/prompt.md`   | fast → full | write or change text a model executes  |
 
 No prefix? Classify from the trigger list below, say which you chose in one
 sentence, and proceed. Do not ask which prefix the user meant when the text
@@ -58,10 +58,10 @@ Any of these means the work is **not** a one-pass job, whatever its prefix:
 Pick the cheapest flow that still clears the gates the change actually
 triggers. The trigger list decides, not how large the request sounds.
 
-| Flow | Shape | Read |
-|---|---|---|
-| asap | one pass, one person, minutes | `docs/devflow/asap-flow.md` |
-| fast | seven stages, minutes to hours | `docs/devflow/fast-flow.md` |
+| Flow | Shape                           | Read                        |
+| ---- | ------------------------------- | --------------------------- |
+| asap | one pass, one person, minutes   | `docs/devflow/asap-flow.md` |
+| fast | seven stages, minutes to hours  | `docs/devflow/fast-flow.md` |
 | full | thirteen stages with skip gates | `docs/devflow/full-flow.md` |
 
 Downgrading mid-flow is allowed and is not a failure. If the architecture stage
@@ -73,16 +73,16 @@ finds the change is a config knob, say so in one line and re-flow it down.
 `docs/` is one production system's patterns. Read a file only when
 `stack.md` says this repo matches its substrate, and read it as a pattern.
 
-| Read | Only when `stack.md` shows |
-|---|---|
-| `docs/backend/*` | Go, and a layered/DDD structure |
-| `docs/webapp/ai-features.md` | the product has LLM features |
-| `docs/frontend/typescript-react-conventions.md` | TypeScript + React |
-| `docs/frontend/mobile-*` | React Native |
-| `docs/frontend/feature-sliced-architecture.md` | the repo already uses FSD |
-| `docs/devops/release-tagging-and-gitops.md` | a reconciler owns deploys |
-| `docs/devops/ci-*` | GitLab-style CI with per-job runners |
-| `docs/tools/*` | always — commits and dependencies are universal |
+| Read                                            | Only when `stack.md` shows                      |
+| ----------------------------------------------- | ----------------------------------------------- |
+| `docs/backend/*`                                | Go, and a layered/DDD structure                 |
+| `docs/webapp/ai-features.md`                    | the product has LLM features                    |
+| `docs/frontend/typescript-react-conventions.md` | TypeScript + React                              |
+| `docs/frontend/mobile-*`                        | React Native                                    |
+| `docs/frontend/feature-sliced-architecture.md`  | the repo already uses FSD                       |
+| `docs/devops/release-tagging-and-gitops.md`     | a reconciler owns deploys                       |
+| `docs/devops/ci-*`                              | GitLab-style CI with per-job runners            |
+| `docs/tools/*`                                  | always — commits and dependencies are universal |
 
 <!-- F-096 -->
 Version guards, not just language guards: the no-manual-memoization rule needs
@@ -91,13 +91,13 @@ memoization is the supported mechanism there.
 
 ## Practices — always in scope
 
-| File | Holds |
-|---|---|
-| `practices/floor.md` | the six things speed never buys |
-| `practices/git.md` | commits, PRs, what never gets committed |
-| `practices/testing.md` | what to test, in what order, when not to |
-| `practices/agent-discipline.md` | read bounds, output caps, reporting |
-| `practices/project-memory.md` | what goes in `AGENTS.md` and what stays out |
-| `practices/code-style.md` | comments, helpers, suppressions |
-| `practices/release.md` | tags, deploys, rollback, migrations in deploy |
-| `practices/observability.md` | the day-one minimum |
+| File                            | Holds                                            |
+| ------------------------------- | ------------------------------------------------ |
+| `practices/floor.md`            | the six things speed never buys                  |
+| `practices/git.md`              | commits, PRs, what never gets committed          |
+| `practices/testing.md`          | what to test, in what order, when not to         |
+| `practices/agent-discipline.md` | read bounds, output caps, table shape, reporting |
+| `practices/project-memory.md`   | what goes in `AGENTS.md` and what stays out      |
+| `practices/code-style.md`       | comments, helpers, suppressions                  |
+| `practices/release.md`          | tags, deploys, rollback, migrations in deploy    |
+| `practices/observability.md`    | the day-one minimum                              |

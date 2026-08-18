@@ -123,13 +123,13 @@ Two filters put things here:
 
 Cut wholesale, with no F-number, because they are not checkable:
 
-| Text | Source | Why cut |
-|---|---|---|
-| "The architecture is deliberately boring." | `system-shape.md:27` | A stance, not a check. |
-| "SOLID without over-engineering." | `typescript-react-conventions.md:30` | Cannot fail. |
-| "Choose by team size and operational maturity, not fashion." | `infrastructure.md:17` | No observable trigger. |
-| "Consider `-race` in CI when the suite affords it." | `testing-ci.md:19` | "Affords it" is unfalsifiable; the local `-race` half ships because it is a command. |
-| "Keep docs next to the code." | `release-artifacts.md:31` | Ships only in its checkable form — a doc path inside the repo, not a wiki URL. |
+| Text                                                         | Source                               | Why cut                                                                              |
+| ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------------------------------ |
+| "The architecture is deliberately boring."                   | `system-shape.md:27`                 | A stance, not a check.                                                               |
+| "SOLID without over-engineering."                            | `typescript-react-conventions.md:30` | Cannot fail.                                                                         |
+| "Choose by team size and operational maturity, not fashion." | `infrastructure.md:17`               | No observable trigger.                                                               |
+| "Consider `-race` in CI when the suite affords it."          | `testing-ci.md:19`                   | "Affords it" is unfalsifiable; the local `-race` half ships because it is a command. |
+| "Keep docs next to the code."                                | `release-artifacts.md:31`            | Ships only in its checkable form — a doc path inside the repo, not a wiki URL.       |
 
 ## R-10 · The prompt's own `<!-- llmcheats:keep -->` marker
 
@@ -149,13 +149,13 @@ Cut wholesale, with no F-number, because they are not checkable:
 
 ## Tally
 
-| Disposition | Count |
-|---|---|
-| Rejected outright | 4 (R-01, R-02, R-05 as rule, R-06 as rule) |
-| Split — universal half kept | 2 (R-03, R-04) |
-| Shipped, demoted or guarded | 2 (R-07, R-08) |
-| Cut as unfalsifiable | 5 lines (R-09) |
-| Specified-but-not-built | 1 (R-10) |
+| Disposition                 | Count                                      |
+| --------------------------- | ------------------------------------------ |
+| Rejected outright           | 4 (R-01, R-02, R-05 as rule, R-06 as rule) |
+| Split — universal half kept | 2 (R-03, R-04)                             |
+| Shipped, demoted or guarded | 2 (R-07, R-08)                             |
+| Cut as unfalsifiable        | 5 lines (R-09)                             |
+| Specified-but-not-built     | 1 (R-10)                                   |
 
 Every `project-idiosyncratic` finding in `findings.md` appears above. No finding
 was dropped silently.

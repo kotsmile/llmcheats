@@ -19,10 +19,10 @@ r.Post("/path", JSONFunc(h.Handler))
 r.Post("/path", Auth(JSONFunc(h.Handler), guard))
 ```
 
-| Outcome | Envelope |
-| --- | --- |
-| Success | `APIData[T]{Data: T, Code: "200"}` |
-| Error | `APIError{Error: "msg", Code: "400"}` |
+| Outcome | Envelope                              |
+| ------- | ------------------------------------- |
+| Success | `APIData[T]{Data: T, Code: "200"}`    |
+| Error   | `APIError{Error: "msg", Code: "400"}` |
 
 Debug mode — enabled for elevated roles via context — adds extended error info to the response.
 
@@ -60,11 +60,11 @@ The main request-response group wraps its routes in a **10s** context timeout. D
 
 Sibling groups raise the deadline for specific routes, each justified in a comment above its group:
 
-| Group | Deadline |
-| --- | --- |
-| Main request-response | 10s |
-| Synchronous model inference, third-party fetch | 45s |
-| Long interactive replies | 60s |
+| Group                                          | Deadline |
+| ---------------------------------------------- | -------- |
+| Main request-response                          | 10s      |
+| Synchronous model inference, third-party fetch | 45s      |
+| Long interactive replies                       | 60s      |
 
 ## Streaming routes live outside the group
 

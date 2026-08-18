@@ -42,6 +42,21 @@ gets skimmed, so the length buys nothing it cost five minutes to produce.
   developer will write anyway, a recap of the section just written — each is
   wall clock for no decision unblocked.
 
+## Tables
+
+**A table you do write is column-aligned** — every cell padded to the widest
+cell in its column, the separator row sized to match. Nothing renders a grid for
+you: a diff, a review comment and the next session's context all see the raw
+pipes.
+
+**Align the values you wrote, never the padding you copied.** A column sized
+around `{{BUILD}}` is crooked the moment a real command lands in it, and a table
+re-aligned only where a value grew re-flows rows nothing changed in — noise in
+every later diff of that file.
+
+This is not licence to pretty-print. The cheapest table is still the one that
+was a sentence.
+
 ## The read bound
 
 <!-- F-031 -->

@@ -21,20 +21,20 @@ stage 2 · product design ⊘ SKIPPED: nothing user-visible changes
 stage 5 · devops design   ● OPEN:    adds a migration
 ```
 
-| Stage | Skip it only when |
-|---|---|
-| 1 Scope | the request already states the problem and testable done-conditions |
-| 2 Product design | nothing user-visible changes — no screen, no copy, no consumer surface |
-| 3 Architecture | a plan is already on disk, or the change is one file inside a pattern the repo already repeats, or the conventions are already in `AGENTS.md` |
-| 4 Security design | the change reaches nothing on the trigger list in `routing.md` |
-| 5 DevOps design | no migration, no config or secret change, no new infra, no deploy-order dependency — **and** it needs no new metric, log or alert and already has a rollback story |
-| 6 Plan approval | the operator is watching the work live |
-| 8 Testing | never skipped; the *manual* walk collapses when every criterion has an automated test |
-| 9 Security impl | stage 4 was skipped **and** the diff added no route, query or input path |
-| 10 DevOps release | stage 5 was skipped **and** the diff adds no migration, config change or deploy step |
-| 11 Documentation | no touched README, API doc or runbook is now wrong — checked, not assumed — **and** the change established no convention worth recording |
-| 12 Product review | stage 2 was skipped **and** every criterion is mechanically verifiable |
-| 13 Release | the change does not deploy |
+| Stage             | Skip it only when                                                                                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1 Scope           | the request already states the problem and testable done-conditions                                                                                                |
+| 2 Product design  | nothing user-visible changes — no screen, no copy, no consumer surface                                                                                             |
+| 3 Architecture    | a plan is already on disk, or the change is one file inside a pattern the repo already repeats, or the conventions are already in `AGENTS.md`                      |
+| 4 Security design | the change reaches nothing on the trigger list in `routing.md`                                                                                                     |
+| 5 DevOps design   | no migration, no config or secret change, no new infra, no deploy-order dependency — **and** it needs no new metric, log or alert and already has a rollback story |
+| 6 Plan approval   | the operator is watching the work live                                                                                                                             |
+| 8 Testing         | never skipped; the *manual* walk collapses when every criterion has an automated test                                                                              |
+| 9 Security impl   | stage 4 was skipped **and** the diff added no route, query or input path                                                                                           |
+| 10 DevOps release | stage 5 was skipped **and** the diff adds no migration, config change or deploy step                                                                               |
+| 11 Documentation  | no touched README, API doc or runbook is now wrong — checked, not assumed — **and** the change established no convention worth recording                           |
+| 12 Product review | stage 2 was skipped **and** every criterion is mechanically verifiable                                                                                             |
+| 13 Release        | the change does not deploy                                                                                                                                         |
 
 <!-- F-020 -->
 A **triggered** gate is compressed, never skipped. Tell the gate owner the scope

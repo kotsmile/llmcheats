@@ -20,12 +20,12 @@ the opposite of the intuitive one.
 Measured over 85 specialist passes from this reference's own sidecar
 transcripts:
 
-| agent | avg pass | waiting on tools | generating | output tokens |
-| --- | --- | --- | --- | --- |
-| `architecture-designer` | 15.8 min | **2%** | 15.5 min | 55,768 |
-| `python-developer` | 12.6 min | 14% | 10.8 min | 42,472 |
-| `security-auditor` | 9.9 min | 5% | 9.5 min | 23,197 |
-| `devops` | 9.0 min | 15% | 7.6 min | 22,282 |
+| agent                   | avg pass | waiting on tools | generating | output tokens |
+| ----------------------- | -------- | ---------------- | ---------- | ------------- |
+| `architecture-designer` | 15.8 min | **2%**           | 15.5 min   | 55,768        |
+| `python-developer`      | 12.6 min | 14%              | 10.8 min   | 42,472        |
+| `security-auditor`      | 9.9 min  | 5%               | 9.5 min    | 23,197        |
+| `devops`                | 9.0 min  | 15%              | 7.6 min    | 22,282        |
 
 Generation ran at 40–65 tokens/second in every one of them. That rate is the
 model's, not the prompt's — so for a read-heavy agent the arithmetic is simply:
@@ -104,12 +104,12 @@ generation time the operator waits through.
 **The artifact caps.** These are ceilings for a normal single-phase scope, not
 targets to fill:
 
-| artifact | cap | at ~55 tok/s |
-| --- | --- | --- |
-| architecture plan | **12KB** | ~1.5 min |
-| security / devops audit | **8KB** | ~1 min |
-| code review | **8KB** | ~1 min |
-| hand-back message (any agent) | **2KB** | seconds |
+| artifact                      | cap      | at ~55 tok/s |
+| ----------------------------- | -------- | ------------ |
+| architecture plan             | **12KB** | ~1.5 min     |
+| security / devops audit       | **8KB**  | ~1 min       |
+| code review                   | **8KB**  | ~1 min       |
+| hand-back message (any agent) | **2KB**  | seconds      |
 
 Measured passes are running well past these: `architecture-designer` averages
 ~61KB of written text per pass against a section that used to say only that 35KB

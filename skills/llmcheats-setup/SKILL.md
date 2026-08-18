@@ -44,21 +44,21 @@ databases, and running the full test suite to learn what the code does.
 Look for these, in this order. The left column is what you need; the right is
 where it actually lives.
 
-| What | Where to look | Why it matters |
-|---|---|---|
-| **Task runner** | `Makefile`, `justfile`, `Taskfile.yml`, `package.json` scripts, `pyproject.toml`, `Cargo.toml` | <!-- F-085 -->The real commands live here, **not in the CI file**. The same check must run locally and in CI. |
-| **Build / test / lint / format** | the task runner, then the CI workflow to confirm | These four lines are the highest-value thing you will write. |
-| **Language + version** | `go.mod`, `package.json` engines, `.python-version`, `pyproject.toml`, `rust-toolchain` | Decides which `docs/` groups are in scope. |
-| **Framework + major version** | lockfile or manifest | <!-- F-096 -->Version, not just name. React 19-with-compiler and React 18 take opposite advice on memoization. |
-| **Test layout** | `*_test.go`, `tests/`, `__tests__/`, `spec/` | Where a new test goes, and what the naming convention is. |
-| **Migrations** | `migrations/`, `alembic/`, `db/migrate/`, `prisma/` | Tool, naming, whether `down` exists, how they are applied. |
-| **CI gates** | `.github/workflows/`, `.gitlab-ci.yml`, `.circleci/` | Which checks block a merge, in what order. |
-| **Deploy + rollback** | `deploy.sh`, `Dockerfile`, `charts/`, `k8s/`, `docker-compose.yml`, `fly.toml` | <!-- F-047 -->Whether a rollback is a revert, and whether it is one command. |
-| **Commit history** | `git log --oneline -100` | <!-- F-059 -->The commit format **actually used**, the scope vocabulary, whether a tracker key appears. |
-| **Generated + vendored paths** | `.gitignore`, codegen config, `// Code generated` headers | <!-- F-063 -->The "what not to touch" list. |
-| **Existing agent config** | `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md` | Do not overwrite. Merge, and report what you found. |
-| **Contribution conventions** | `CONTRIBUTING.md`, PR template, `CODEOWNERS`, `docs/adr/`, any per-change checklist | The rules a maintainer applies by hand. These are the highest-value lines in `AGENTS.md` and the easiest to walk past — they are prose, not config, so no tool surfaces them. |
-| **Lint / format config** | `.eslintrc`, `.golangci.yml`, `ruff.toml`, `.editorconfig` | What is enforced mechanically rather than socially. |
+| What                             | Where to look                                                                                  | Why it matters                                                                                                                                                                |
+| -------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Task runner**                  | `Makefile`, `justfile`, `Taskfile.yml`, `package.json` scripts, `pyproject.toml`, `Cargo.toml` | <!-- F-085 -->The real commands live here, **not in the CI file**. The same check must run locally and in CI.                                                                 |
+| **Build / test / lint / format** | the task runner, then the CI workflow to confirm                                               | These four lines are the highest-value thing you will write.                                                                                                                  |
+| **Language + version**           | `go.mod`, `package.json` engines, `.python-version`, `pyproject.toml`, `rust-toolchain`        | Decides which `docs/` groups are in scope.                                                                                                                                    |
+| **Framework + major version**    | lockfile or manifest                                                                           | <!-- F-096 -->Version, not just name. React 19-with-compiler and React 18 take opposite advice on memoization.                                                                |
+| **Test layout**                  | `*_test.go`, `tests/`, `__tests__/`, `spec/`                                                   | Where a new test goes, and what the naming convention is.                                                                                                                     |
+| **Migrations**                   | `migrations/`, `alembic/`, `db/migrate/`, `prisma/`                                            | Tool, naming, whether `down` exists, how they are applied.                                                                                                                    |
+| **CI gates**                     | `.github/workflows/`, `.gitlab-ci.yml`, `.circleci/`                                           | Which checks block a merge, in what order.                                                                                                                                    |
+| **Deploy + rollback**            | `deploy.sh`, `Dockerfile`, `charts/`, `k8s/`, `docker-compose.yml`, `fly.toml`                 | <!-- F-047 -->Whether a rollback is a revert, and whether it is one command.                                                                                                  |
+| **Commit history**               | `git log --oneline -100`                                                                       | <!-- F-059 -->The commit format **actually used**, the scope vocabulary, whether a tracker key appears.                                                                       |
+| **Generated + vendored paths**   | `.gitignore`, codegen config, `// Code generated` headers                                      | <!-- F-063 -->The "what not to touch" list.                                                                                                                                   |
+| **Existing agent config**        | `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`                    | Do not overwrite. Merge, and report what you found.                                                                                                                           |
+| **Contribution conventions**     | `CONTRIBUTING.md`, PR template, `CODEOWNERS`, `docs/adr/`, any per-change checklist            | The rules a maintainer applies by hand. These are the highest-value lines in `AGENTS.md` and the easiest to walk past — they are prose, not config, so no tool surfaces them. |
+| **Lint / format config**         | `.eslintrc`, `.golangci.yml`, `ruff.toml`, `.editorconfig`                                     | What is enforced mechanically rather than socially.                                                                                                                           |
 
 Prefer one `Grep` across a directory over a dozen `Read`s when the question is
 *where is this*. Read a file once, whole.
@@ -76,6 +76,12 @@ the overrun `practices/agent-discipline.md` bounds.
 
 Write three files. Nothing else. No README, no summary document.
 
+Every table you write is column-aligned, per
+`.llmcheats/cheats/practices/agent-discipline.md`. The template's columns are
+sized around its `{{PLACEHOLDERS}}`; re-align each one around the real values
+you substituted in, or the file ships crooked and every later edit re-flows rows
+that did not change.
+
 ### `.llmcheats/stack.md`
 
 What you observed, as facts with sources. This is the file that makes every
@@ -84,16 +90,16 @@ later session cheap, and the file a re-run diffs against.
 ```markdown
 # Stack
 
-| Fact | Value | Observed in |
-|---|---|---|
-| language | Go 1.24 | `go.mod` — "go 1.24" |
-| build | `make build` | `Makefile` — "build:" target |
-| test | `make test` | `Makefile` — "test:" target; run, 41 passed |
-| lint | `golangci-lint run` | `.golangci.yml` exists; `ci.yml` lint job |
-| migrations | goose, `migrations/`, no down files | `migrations/` listing |
-| deploy | `./deploy.sh prod` | `deploy.sh` |
-| rollback | **not observed** | — |
-| commit format | lowercase, no ticket key | `git log`, 84/100 commits |
+| Fact          | Value                               | Observed in                                 |
+| ------------- | ----------------------------------- | ------------------------------------------- |
+| language      | Go 1.24                             | `go.mod` — "go 1.24"                        |
+| build         | `make build`                        | `Makefile` — "build:" target                |
+| test          | `make test`                         | `Makefile` — "test:" target; run, 41 passed |
+| lint          | `golangci-lint run`                 | `.golangci.yml` exists; `ci.yml` lint job   |
+| migrations    | goose, `migrations/`, no down files | `migrations/` listing                       |
+| deploy        | `./deploy.sh prod`                  | `deploy.sh`                                 |
+| rollback      | **not observed**                    | —                                           |
+| commit format | lowercase, no ticket key            | `git log`, 84/100 commits                   |
 
 ## Stack guards matched
 - docs/backend/*  — Go, layered structure under internal/
@@ -160,7 +166,7 @@ pointer — never two copies.
 
 ## Phase 4 — Verify, then report
 
-Do all four. This phase is not optional.
+Do all of them. This phase is not optional.
 
 1. **Re-read what you wrote.** Not from memory — open the files.
 2. <!-- F-005 -->**Check every command against Phase 1.** For each command in
@@ -171,9 +177,12 @@ Do all four. This phase is not optional.
    line re-read — if it does not say what you claimed, drop the number and keep
    the quote. A wrong pointer is worse than no pointer: it is confidently
    checkable and wrong, and the next session will not re-verify it.
-4. **Run the test command once.** If it fails, that is a finding about the repo,
+4. **Re-align every table you wrote.** Substituting a real command into a
+   template column leaves it crooked. Check the files as text, not as rendered
+   markdown — the padding is the thing being checked.
+5. **Run the test command once.** If it fails, that is a finding about the repo,
    not a reason to change what you wrote — report the failure verbatim.
-5. **Confirm the two skill trees are identical twins:**
+6. **Confirm the two skill trees are identical twins:**
    `diff -r .claude/skills .agents/skills` — should be empty. If only one exists,
    that is `--agents` doing its job; say which.
 

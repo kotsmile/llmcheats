@@ -34,13 +34,13 @@ The generated artifacts cited `install.sh:180`, `install.sh:82`,
 `install.sh:100`, `install.sh:33` and `test/install_test.sh:37`. **Four of the
 five were wrong:**
 
-| Cited | Claimed | Actually |
-|---|---|---|
-| `install.sh:180` | stub derivation | blank line (real: 182) |
-| `install.sh:82` | `LLMCHEATS_TARBALL` | `codex) want_codex=1 ;;` |
-| `install.sh:100` | download URL | blank line |
-| `install.sh:33` | `--ref` | `--target DIR …` |
-| `test/install_test.sh:37` | tarball export | blank line |
+| Cited                     | Claimed             | Actually                 |
+| ------------------------- | ------------------- | ------------------------ |
+| `install.sh:180`          | stub derivation     | blank line (real: 182)   |
+| `install.sh:82`           | `LLMCHEATS_TARBALL` | `codex) want_codex=1 ;;` |
+| `install.sh:100`          | download URL        | blank line               |
+| `install.sh:33`           | `--ref`             | `--target DIR …`         |
+| `test/install_test.sh:37` | tarball export      | blank line               |
 
 This is the tool's stated primary failure mode reappearing one level down. The
 *commands* were all real — verified against the repo, and the test command was
@@ -82,20 +82,20 @@ that there is no CI, rather than filling those rows. `stack.md` carries a
 
 ## Recovered — the real layer had it, llmcheats regenerated it
 
-| # | Recovered | Where it was | Where it landed |
-|---|---|---|---|
-| R-1 | Route via an index; read one or two files, never the tree | `webapp-guide/SKILL.md` | `cheats/index.md`, `routing.md` stack guards |
-| R-2 | "Read before acting — don't work from memory" + the deviation *scoping* rule | `webapp-guide/SKILL.md` | `cheats/index.md` (F-100) |
-| R-3 | "Say so explicitly rather than invent the documents' contents" | `webapp-guide/SKILL.md` | the whole anti-hallucination spine (F-005) |
-| R-4 | `AGENTS.md` managed block, user content preserved outside | `README.md`, `.gitignore` | markers + `install.sh` idempotence (F-002) |
-| R-5 | Restart the agent after install | `README.md` | setup skill Phase 4 (F-009) |
-| R-6 | Nothing of yours is overwritten | `README.md` | re-run preserves `AGENTS.md`/`CLAUDE.md`/`stack.md`; `--force` is the only wipe |
-| R-7 | Installer auto-discovers payload; no installer edit to add one | `llmcheats-checklists.md` | stub derivation from workflow front-matter, asserted by test §10 |
-| R-8 | `docs/INDEX.md` updated in the same change | `llmcheats-checklists.md` | `AGENTS.md` review rules (F-099) |
-| R-9 | Never paste the checklists into a subagent prompt | `commands/llmcheats.md` invariant 1 | `practices/agent-discipline.md` (F-033) |
-| R-10 | Pin `model` only downward, only for routers | `llmcheats-checklists.md` | `practices/agent-discipline.md` (F-035) |
-| R-11 | Commit format taken from history | `git log` | recorded, **including the 116-char divergence from the reference's ≤72** |
-| R-12 | Do-not-touch paths | `.gitignore` | `AGENTS.md` "Do not touch" |
+| #    | Recovered                                                                    | Where it was                        | Where it landed                                                                 |
+| ---- | ---------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------- |
+| R-1  | Route via an index; read one or two files, never the tree                    | `webapp-guide/SKILL.md`             | `cheats/index.md`, `routing.md` stack guards                                    |
+| R-2  | "Read before acting — don't work from memory" + the deviation *scoping* rule | `webapp-guide/SKILL.md`             | `cheats/index.md` (F-100)                                                       |
+| R-3  | "Say so explicitly rather than invent the documents' contents"               | `webapp-guide/SKILL.md`             | the whole anti-hallucination spine (F-005)                                      |
+| R-4  | `AGENTS.md` managed block, user content preserved outside                    | `README.md`, `.gitignore`           | markers + `install.sh` idempotence (F-002)                                      |
+| R-5  | Restart the agent after install                                              | `README.md`                         | setup skill Phase 4 (F-009)                                                     |
+| R-6  | Nothing of yours is overwritten                                              | `README.md`                         | re-run preserves `AGENTS.md`/`CLAUDE.md`/`stack.md`; `--force` is the only wipe |
+| R-7  | Installer auto-discovers payload; no installer edit to add one               | `llmcheats-checklists.md`           | stub derivation from workflow front-matter, asserted by test §10                |
+| R-8  | `docs/INDEX.md` updated in the same change                                   | `llmcheats-checklists.md`           | `AGENTS.md` review rules (F-099)                                                |
+| R-9  | Never paste the checklists into a subagent prompt                            | `commands/llmcheats.md` invariant 1 | `practices/agent-discipline.md` (F-033)                                         |
+| R-10 | Pin `model` only downward, only for routers                                  | `llmcheats-checklists.md`           | `practices/agent-discipline.md` (F-035)                                         |
+| R-11 | Commit format taken from history                                             | `git log`                           | recorded, **including the 116-char divergence from the reference's ≤72**        |
+| R-12 | Do-not-touch paths                                                           | `.gitignore`                        | `AGENTS.md` "Do not touch"                                                      |
 
 R-11 is the one worth pausing on: the target's own commits run to 116 characters
 while the shipped reference says ≤72. The generated `AGENTS.md` records what the
@@ -107,13 +107,13 @@ corpus into a repo that decided differently.
 
 ## Missed — the real layer had it, llmcheats did not generate it
 
-| # | Missed | Gap in | Severity |
-|---|---|---|---|
-| M-1 | The nine repo-local checker agents | neither — scope decision | none |
+| #   | Missed                                                                             | Gap in                                   | Severity |
+| --- | ---------------------------------------------------------------------------------- | ---------------------------------------- | -------- |
+| M-1 | The nine repo-local checker agents                                                 | neither — scope decision                 | none     |
 | M-2 | The per-change checklists (add a doc / an agent / a command / touch the installer) | **the setup skill's repo-reading phase** | **real** |
-| M-3 | The `.gitignore` un-ignore-by-name discipline | the repo-reading phase | minor |
-| M-4 | Global install (`~/.claude`, `~/.codex`) | the installer, by design | none |
-| M-5 | Backing up a user file the installer would clobber | **`install.sh`** | **real** |
+| M-3 | The `.gitignore` un-ignore-by-name discipline                                      | the repo-reading phase                   | minor    |
+| M-4 | Global install (`~/.claude`, `~/.codex`)                                           | the installer, by design                 | none     |
+| M-5 | Backing up a user file the installer would clobber                                 | **`install.sh`**                         | **real** |
 
 **M-2 — the important one.** The prior layer's richest artifact was
 `.claude/llmcheats-checklists.md`: a hand-written per-change checklist that is

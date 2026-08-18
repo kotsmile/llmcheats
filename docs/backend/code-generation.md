@@ -15,16 +15,16 @@ Build and test are defined by the project, next to the code, so the same definit
 
 The make targets cover the rest — the things the build itself does not own:
 
-| Target | Purpose |
-| --- | --- |
-| default | tidy, format, test, build |
-| run | run the server locally (a variant also tees output to a log file) |
-| test | tests, end-to-end excluded — this is the real test target |
-| generate | API docs + generated clients + `go generate ./...` |
-| format | formatter + import sorting |
-| dev tools | install local development tooling |
-| deps up / down | start and stop local database and cache containers |
-| migration create | scaffold a new migration file |
+| Target           | Purpose                                                           |
+| ---------------- | ----------------------------------------------------------------- |
+| default          | tidy, format, test, build                                         |
+| run              | run the server locally (a variant also tees output to a log file) |
+| test             | tests, end-to-end excluded — this is the real test target         |
+| generate         | API docs + generated clients + `go generate ./...`                |
+| format           | formatter + import sorting                                        |
+| dev tools        | install local development tooling                                 |
+| deps up / down   | start and stop local database and cache containers                |
+| migration create | scaffold a new migration file                                     |
 
 There is **no lint target** — the linter config is checked in and runs in CI.
 

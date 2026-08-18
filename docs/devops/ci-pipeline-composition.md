@@ -41,17 +41,17 @@ Every job name is prefixed with its project. The namespace is merged across all 
 
 ## Shared templates
 
-| Template | Purpose |
-| --- | --- |
-| cancel-outdated | Cancels older release-tag pipelines through the API |
-| no-check | A no-op check for projects with nothing to run |
-| cache | Task-runner cache configuration, opt-in |
-| language env | Concurrency settings for a container that misreads its CPU quota |
-| image build | In-cluster image build to the registry |
-| project-driven image build | The same, parameterised by the project rather than by the job |
-| approve | Manual gate with an allow-list of approvers |
-| deployment bump | Tag bump, re-render and push to the default branch |
-| deployment sync | Manifest upsert, sync and wait |
+| Template                   | Purpose                                                          |
+| -------------------------- | ---------------------------------------------------------------- |
+| cancel-outdated            | Cancels older release-tag pipelines through the API              |
+| no-check                   | A no-op check for projects with nothing to run                   |
+| cache                      | Task-runner cache configuration, opt-in                          |
+| language env               | Concurrency settings for a container that misreads its CPU quota |
+| image build                | In-cluster image build to the registry                           |
+| project-driven image build | The same, parameterised by the project rather than by the job    |
+| approve                    | Manual gate with an allow-list of approvers                      |
+| deployment bump            | Tag bump, re-render and push to the default branch               |
+| deployment sync            | Manifest upsert, sync and wait                                   |
 
 Include the cache template explicitly in the projects that use it — it is not global.
 

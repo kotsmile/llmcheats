@@ -375,6 +375,68 @@ NESTED="$(mkdir -p "$A/b/repo" && cd "$A/b/repo" && git init -q . \
 check $? "install inside the nested repo exits 0"
 exists "$NESTED/.llmcheats/VERSION" "it installed into the repo, not the root above"
 
+# --- 17. every shipped markdown table is column-aligned ----------------------
+#
+# practices/agent-discipline.md tells the agent its tables are padded and its
+# separator row is sized to match. A corpus shipping crooked tables teaches the
+# opposite on every read.
+
+section "17. shipped tables are column-aligned"
+
+cat > "$WORK/aligned.awk" <<'EOF'
+function sig(s,   i, out) {
+  out = ""
+  for (i = 1; i <= length(s); i++)
+    if (substr(s, i, 1) == "|") out = out ":" i
+  return out
+}
+function check(   i, want) {
+  if (n < 2 || rows[1] !~ /-/ || rows[1] ~ /[^ \t|:-]/) { n = 0; return }
+  if (rows[1] !~ /\| :?---/) {
+    printf "%s:%d unpadded separator row\n", f, start + 1
+    bad++
+    n = 0
+    return
+  }
+  want = sig(rows[0])
+  for (i = 1; i < n; i++)
+    if (sig(rows[i]) != want) {
+      printf "%s:%d row is not aligned with its header\n", f, start + i
+      bad++
+      break
+    }
+  n = 0
+}
+BEGIN { n = 0; bad = 0; fence = 0 }
+/^[ \t]*(```|~~~)/ { check(); fence = !fence; next }
+fence { next }
+/^[ \t]*\|/ { if (n == 0) start = FNR; rows[n++] = $0; next }
+{ check() }
+END { check(); exit bad > 0 ? 1 : 0 }
+EOF
+
+# tr collapses every multibyte character to a single byte first, so a row
+# carrying an em dash is not measured as one column wider than its neighbours.
+crooked=0
+while IFS= read -r tbl; do
+  LC_ALL=C tr -d '\200-\277' < "$tbl" | LC_ALL=C awk -v f="$tbl" -f "$WORK/aligned.awk" \
+    || crooked=$((crooked + 1))
+done < <(find "$R/.llmcheats" "$R/.claude/skills" "$R/.agents/skills" \
+  \( -name '*.md' -o -name '*.tpl' \))
+[ "$crooked" -eq 0 ]
+check $? "every table in the installed corpus is padded and aligned ($crooked crooked)"
+
+# The check has to be able to fail: neither of these may pass it.
+printf '| a | bbbb |\n| --- | --- |\n| c | d |\n' > "$WORK/crooked.md"
+LC_ALL=C awk -v f=crooked -f "$WORK/aligned.awk" "$WORK/crooked.md" >/dev/null 2>&1
+[ $? -ne 0 ]
+check $? "the alignment check rejects a crooked table"
+
+printf '|a|b|\n|-|-|\n|c|d|\n' > "$WORK/compact.md"
+LC_ALL=C awk -v f=compact -f "$WORK/aligned.awk" "$WORK/compact.md" >/dev/null 2>&1
+[ $? -ne 0 ]
+check $? "the alignment check rejects an unpadded table"
+
 # --- summary ------------------------------------------------------------------
 
 printf '\n%s\n' "-----------------------------------------"

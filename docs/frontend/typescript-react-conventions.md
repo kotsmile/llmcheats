@@ -31,8 +31,8 @@ related:
 
 ## State
 
-| Kind | Library |
-| --- | --- |
+| Kind         | Library               |
+| ------------ | --------------------- |
 | Client state | A small store library |
 | Server state | A query/cache library |
 
@@ -46,10 +46,10 @@ Two deliberate exceptions exist — an isolated marketing site with its own them
 
 ## Path aliases
 
-| Alias | Resolves to |
-| --- | --- |
+| Alias                    | Resolves to                 |
+| ------------------------ | --------------------------- |
 | the shared-package scope | each package's build output |
-| `@/*` inside an app | that app's source root |
+| `@/*` inside an app      | that app's source root      |
 
 Always use the alias instead of a relative path for source-root imports.
 

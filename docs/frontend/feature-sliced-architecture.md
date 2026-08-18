@@ -49,12 +49,12 @@ Do not "upgrade" such a project to FSD. Do not let it grow a domain model withou
 
 ## Where a new file goes
 
-| It is… | Layer |
-| --- | --- |
-| A business domain model or its hooks | `entities` |
-| A user action or a flow | `features` |
-| A large composed UI block a screen assembles from | `widgets` |
-| A route screen | the router directory (mobile) or `pages` (web) |
-| A primitive, a store, a hook, validation, i18n setup | `shared` |
+| It is…                                               | Layer                                          |
+| ---------------------------------------------------- | ---------------------------------------------- |
+| A business domain model or its hooks                 | `entities`                                     |
+| A user action or a flow                              | `features`                                     |
+| A large composed UI block a screen assembles from    | `widgets`                                      |
+| A route screen                                       | the router directory (mobile) or `pages` (web) |
+| A primitive, a store, a hook, validation, i18n setup | `shared`                                       |
 
 If a new component needs a deep import to be usable, the gap is in the exporting slice's `index.ts`, not in the importer.

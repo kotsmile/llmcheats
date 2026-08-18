@@ -8,13 +8,13 @@ Prefix your request and the matching playbook is used. No prefix: classify from
 the trigger list in `.llmcheats/cheats/routing.md`, say which in one sentence,
 and proceed. Read the playbook before acting on it.
 
-| Prefix | Playbook | | Prefix | Playbook |
-|---|---|---|---|---|
-| `feature:` | `workflows/feature.md` | | `chore:` | `workflows/chore.md` |
-| `bug:` | `workflows/bug.md` | | `migrate:` | `workflows/migrate.md` |
-| `hotfix:` | `workflows/hotfix.md` | | `release:` | `workflows/release.md` |
-| `refactor:` | `workflows/refactor.md` | | `rollback:` | `workflows/rollback.md` |
-| `review:` | `workflows/review.md` | | `prompt:` | `workflows/prompt.md` |
+| Prefix      | Playbook                |     | Prefix      | Playbook                |
+| ----------- | ----------------------- | --- | ----------- | ----------------------- |
+| `feature:`  | `workflows/feature.md`  |     | `chore:`    | `workflows/chore.md`    |
+| `bug:`      | `workflows/bug.md`      |     | `migrate:`  | `workflows/migrate.md`  |
+| `hotfix:`   | `workflows/hotfix.md`   |     | `release:`  | `workflows/release.md`  |
+| `refactor:` | `workflows/refactor.md` |     | `rollback:` | `workflows/rollback.md` |
+| `review:`   | `workflows/review.md`   |     | `prompt:`   | `workflows/prompt.md`   |
 
 Paths are under `.llmcheats/cheats/`. `index.md` says how to read the rest;
 `.llmcheats/stack.md` says what this repo actually is.
@@ -42,16 +42,17 @@ never swallowed; nothing destructive on shared state without a go-ahead.
 ## How to run it
 
 <!-- Commands only, each one observed in this repo. Delete any line you could
-     not source; do not guess a plausible command. -->
+     not source; do not guess a plausible command. These columns are sized for
+     the placeholders — re-align them around the commands you substitute in. -->
 
-| Task | Command |
-|---|---|
-| build | `{{BUILD}}` |
-| test | `{{TEST}}` |
-| lint | `{{LINT}}` |
-| format | `{{FORMAT}}` |
-| migrate | `{{MIGRATE}}` |
-| run locally | `{{RUN}}` |
+| Task        | Command       |
+| ----------- | ------------- |
+| build       | `{{BUILD}}`   |
+| test        | `{{TEST}}`    |
+| lint        | `{{LINT}}`    |
+| format      | `{{FORMAT}}`  |
+| migrate     | `{{MIGRATE}}` |
+| run locally | `{{RUN}}`     |
 
 ## Architecture decisions
 

@@ -13,11 +13,11 @@ This is a git operation. Treat it as one.
 
 ## 1. Decide: roll back or roll forward?
 
-| Roll back | Roll forward |
-|---|---|
-| the previous version was healthy | the previous version had its own bug |
-| no migration contracted the schema | a contract step already ran |
-| the fix is not understood yet | the fix is understood and one line |
+| Roll back                          | Roll forward                         |
+| ---------------------------------- | ------------------------------------ |
+| the previous version was healthy   | the previous version had its own bug |
+| no migration contracted the schema | a contract step already ran          |
+| the fix is not understood yet      | the fix is understood and one line   |
 
 <!-- F-051 -->
 **The migration question decides it.** If the release included a *contract* step
