@@ -16,6 +16,13 @@ migrate: postgres 14 -> 16
 curl -fsSL https://raw.githubusercontent.com/kotsmile/llmcheats/main/install.sh | bash
 ```
 
+That installs into the current git repo. **Git is not required** — pass a root
+and it goes there:
+
+```bash
+curl -fsSL .../install.sh | bash -s -- --target ~/Projects/a
+```
+
 Then, inside the agent, once:
 
 ```
@@ -158,12 +165,41 @@ CLAUDE.md                     @AGENTS.md
 ├── templates/
 ├── stack.md                  what your repo actually is (skill-written)
 └── VERSION
-.claude/skills/llmcheats-*/   three-line stubs + the setup skill
+.claude/skills/llmcheats-*/   path-anchored stubs + the setup skill
 .agents/skills/llmcheats-*/   byte-identical twins
 ```
 
 One copy of each playbook, two discovery paths, zero drift. Claude Code reads
 `.claude/skills/`; Codex reads `.agents/skills/` and does not read Claude's.
+
+## Working from a subdirectory
+
+Neither agent looks for skills in a _parent_ directory. So if the knowledge base
+lives at `~/Projects/a` and you launch the agent in `~/Projects/a/b/c/d`, it
+finds nothing. `--here` fixes that — run it from the directory you work in:
+
+```bash
+curl -fsSL .../install.sh | bash -s -- --target ~/Projects/a --here
+```
+
+```
+~/Projects/a/                    the root: one corpus, shared
+├── .llmcheats/{docs,cheats}/
+└── b/c/d/                       the working directory: skills only
+    ├── .claude/skills/          stubs reading ../../../.llmcheats/
+    ├── .agents/skills/
+    ├── AGENTS.md                written here by the setup skill
+    └── .llmcheats/stack.md      ...and this
+```
+
+The corpus is not duplicated — the stubs carry a relative path back up to it, so
+moving the whole tree keeps working. `AGENTS.md` and `stack.md` are written in
+the working directory, because they describe _that_ project and one root can
+hold several.
+
+Attach a second working directory by running `--here` from it. After the first
+time the attachment is remembered: a plain re-run from `d` finds the root by
+walking up and refreshes both ends, so the stubs cannot go stale.
 
 ## Two rules worth knowing before you run it
 
@@ -193,15 +229,21 @@ installing this into a Django app would be vandalism.
 ## Options
 
 ```
-install.sh [--agents claude|codex|both] [--ref REF] [--target DIR] [--force]
+install.sh [--agents claude|codex|both] [--ref REF] [--target DIR] [--here] [--force]
 ```
 
 |            |                                                                    |
 | ---------- | ------------------------------------------------------------------ |
 | `--agents` | which trees to write. Default `both`                               |
 | `--ref`    | git ref to install from. Default `main`                            |
-| `--target` | repo to install into. Default `git rev-parse --show-toplevel`      |
+| `--target` | root to install into. Needs no git. Default below                  |
+| `--here`   | also install the skills into the current directory                 |
 | `--force`  | delete `.llmcheats/` first. The only path that discards `stack.md` |
+
+With no `--target`, the root is the nearest `.llmcheats/VERSION` at or above the
+current directory, else the git top level, else it is an error naming both ways
+out. The upward search stops at a repository boundary: a repo checked out below
+an installed root is its own project, not part of it.
 
 `LLMCHEATS_REPO`, `LLMCHEATS_REF`, `LLMCHEATS_TARBALL` override the source.
 Re-running refreshes the knowledge base and leaves `AGENTS.md`, `CLAUDE.md` and

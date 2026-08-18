@@ -300,6 +300,81 @@ check $? "install from a git archive exits 0"
 grep -q "^ref=$HEAD_SHA\$" "$R9/.llmcheats/VERSION" 2>/dev/null
 check $? "VERSION records the commit ($HEAD_SHA)"
 
+# --- 15. a tree with no git at all -------------------------------------------
+#
+# ~/Projects/a/b/c/d with the knowledge base in a: one corpus at the root, the
+# skills in the directory the agent is actually launched from.
+
+section "15. no git anywhere: root + nested working directory"
+A="$WORK/nogit_a"
+D="$A/b/c/d"
+mkdir -p "$D"
+
+( cd "$D" && bash "$ROOT/install.sh" --target "$A" --here >/dev/null 2>&1 )
+check $? "--target ROOT --here exits 0 with no git in sight"
+
+exists     "$A/.llmcheats/VERSION"                    "corpus installed in the root"
+exists     "$A/.claude/skills/llmcheats-setup/SKILL.md" "root has the skills too"
+not_exists "$D/.llmcheats"                            "the working directory gets no second corpus"
+exists     "$D/.claude/skills/llmcheats-feature/SKILL.md" "claude: stubs in the working directory"
+exists     "$D/.agents/skills/llmcheats-feature/SKILL.md" "codex: stubs in the working directory"
+
+diff -r "$D/.claude/skills" "$D/.agents/skills" >/dev/null 2>&1
+check $? "the nested trees are byte-identical twins as well"
+
+grep -q '`\.\./\.\./\.\./\.llmcheats/cheats/workflows/feature\.md`' \
+  "$D/.claude/skills/llmcheats-feature/SKILL.md" 2>/dev/null
+check $? "the nested stub reaches the root by a relative path"
+
+grep -q '\.\./\.\./\.\./\.llmcheats/' "$D/.claude/skills/llmcheats-setup/SKILL.md" 2>/dev/null
+check $? "the nested setup skill is told where the knowledge base is"
+
+grep -q '^description:.*feature:' "$D/.claude/skills/llmcheats-feature/SKILL.md" 2>/dev/null
+check $? "the nested stub keeps its routing description"
+
+grep -q '`\.llmcheats/cheats/workflows/feature\.md`' \
+  "$A/.claude/skills/llmcheats-feature/SKILL.md" 2>/dev/null
+check $? "the root stub is unprefixed"
+
+# A refresh from the working directory has to find the root by itself.
+( cd "$D" && bash "$ROOT/install.sh" --here >/dev/null 2>&1 )
+check $? "a later --here refresh finds the root by walking up"
+exists "$D/.claude/skills/llmcheats-feature/SKILL.md" "and rewrote the nested stubs"
+not_exists "$D/.llmcheats" "and still did not create a second corpus"
+
+# The setup skill writes stack.md into the working directory, which gives it a
+# .llmcheats/ of its own. That must not read as a second root on the next run,
+# and the attachment must survive a refresh that does not repeat --here.
+mkdir -p "$D/.llmcheats"
+printf 'stack: nested sentinel\n' > "$D/.llmcheats/stack.md"
+( cd "$D" && bash "$ROOT/install.sh" >/dev/null 2>&1 )
+check $? "a plain re-run from an attached working directory exits 0"
+not_exists "$D/.llmcheats/VERSION" "a working directory's stack.md is not mistaken for a root"
+grep -q sentinel "$D/.llmcheats/stack.md" 2>/dev/null
+check $? "and its stack.md is untouched"
+grep -q '`\.\./\.\./\.\./\.llmcheats/cheats/workflows/feature\.md`' \
+  "$D/.claude/skills/llmcheats-feature/SKILL.md" 2>/dev/null
+check $? "the attachment survives a re-run without --here"
+
+# Without --here the working directory is left alone entirely.
+E="$WORK/nogit_e"
+mkdir -p "$E/sub"
+( cd "$E/sub" && bash "$ROOT/install.sh" --target "$E" >/dev/null 2>&1 )
+check $? "--target without --here exits 0"
+not_exists "$E/sub/.claude" "no --here means nothing is written to the working directory"
+
+# --- 16. the upward search stops at a repository boundary --------------------
+#
+# A repo checked out below an installed root is its own project, so a plain
+# install inside it must land in the repo and not refresh the root above it.
+
+section "16. an existing .llmcheats/ above a repo does not capture it"
+NESTED="$(mkdir -p "$A/b/repo" && cd "$A/b/repo" && git init -q . \
+  && git config user.email t@t && git config user.name t && pwd)"
+( cd "$NESTED" && bash "$ROOT/install.sh" >/dev/null 2>&1 )
+check $? "install inside the nested repo exits 0"
+exists "$NESTED/.llmcheats/VERSION" "it installed into the repo, not the root above"
+
 # --- summary ------------------------------------------------------------------
 
 printf '\n%s\n' "-----------------------------------------"
