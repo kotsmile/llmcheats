@@ -1,74 +1,148 @@
 # llmcheats
 
-A production-tested reference for **building web applications** (Go/Python
-backend + React SPA), the **delivery process** around them, and **agents** that
-make Claude Code or Codex act as a development team following both.
+Bootstrap a repo so a bare prompt works correctly in Claude Code and Codex — no
+slash command, no pasted context.
 
-Everything here was extracted from real production systems.
+```
+feature: add rate limiting to the ingest endpoint
+bug(auth): 401 on token refresh after 24h
+refactor: split Handler into transport and domain layers
+migrate: postgres 14 -> 16
+```
 
 ## Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kotsmile/llmcheats/main/get.sh | bash
+curl -fsSL https://raw.githubusercontent.com/kotsmile/llmcheats/main/install.sh | bash
 ```
 
-Installs into the current directory as a project; add `-s -- --global` for
-`~/.claude` and `~/.codex`. Re-run to update, or `./update.sh` for every install
-on the machine. **Restart Claude Code afterwards** — slash commands are read at
-startup.
-
-Nothing of yours is overwritten: a same-named file llmcheats did not install is
-backed up to `.bak-llmcheats`, uninstall keeps anything you edited, and your
-`AGENTS.md` keeps everything outside its managed block.
-
-Claude Code gets agents, commands, the skill and the docs; Codex gets the docs
-plus a pointer block in `AGENTS.md` — there, reference a file explicitly
-(*"follow `webapp/2a-backend-layers.md`"*).
-
-## How to use it
+Then, inside the agent, once:
 
 ```
-/llmcheats:pm      add order cancellation to the API   # full team, gated stages
-/llmcheats:artifacts                                   # write CLAUDE.md / AGENTS.md
-/llmcheats:asap    add a --dry-run flag to deploy.sh   # one agent, one pass
-/llmcheats:review  HEAD~3..HEAD                        # code + security verdict
-/llmcheats:status                                      # where the work stands
-/llmcheats:agents  security-auditor                    # what one agent did
+/llmcheats-setup      # Claude Code
+$llmcheats-setup      # Codex
 ```
 
-**The point of the first run is the artifacts it leaves behind.** `/llmcheats:pm`
-is the expensive one — hours, up to 13 stages, skip gates closing the ones your
-change does not reach. It leaves plans under `docs/plans/`, docs beside the code,
-and the conventions in `CLAUDE.md` / `AGENTS.md`. After that, plain prompts land
-correctly with no flow around them; call `/llmcheats:review` once a feature is
-done rather than after every commit.
+That is the whole thing. The installer copies files; the setup skill reads your
+repo and writes config specialized to it.
 
-Or ask by name: *"use the dev-team agent"*, *"have security-auditor review this
-diff"*.
+## The design bet
 
-## What's inside
+**The installer is dumb. The setup skill is smart.**
+
+`install.sh` detects no stacks, templates nothing, and never writes `AGENTS.md`.
+It copies a knowledge base and one skill. That is deliberate: only an agent that
+can read your repo can write config that names *your* test command.
+
+A generic "write tests first" instruction is worth nearly nothing. The same
+instruction carrying your real `make test` is worth a lot. **Inventing a
+plausible command that does not exist in your repo is this tool's primary
+failure mode**, and the setup skill's verify phase exists to catch it — every
+command it writes, it can name the file it saw it in.
+
+## What lands in your repo
 
 ```
-docs/webapp/    How to build: system shape, backend DDD in Go and Python,
-                React SPA, testing, security, performance, infra, AI features.
-docs/devflow/   In what order: full flow and its gates, fast bug flow, asap
-                flow, git rules, run visibility, cost, project memory.
-agents/         project-manager, dev-team, asap, product-designer,
-                architecture-designer, golang-developer, python-developer,
-                react-developer, ai-engineer, security-auditor, code-reviewer,
-                devops
-commands/       /llmcheats:pm, :artifacts, :asap, :review, :status, :agents
-skills/         webapp-guide — routes any web-app task to the right doc file
+AGENTS.md                     routing table + project memory
+CLAUDE.md                     @AGENTS.md
+.llmcheats/
+├── docs/                     79-file reference corpus, verbatim
+│   └── INDEX.md              its routing table
+├── cheats/
+│   ├── index.md              how to read the rest
+│   ├── routing.md            prefix -> workflow -> flow
+│   ├── workflows/            one playbook per prefix
+│   └── practices/            the portable constraints
+├── templates/
+├── stack.md                  what your repo actually is (skill-written)
+└── VERSION
+.claude/skills/llmcheats-*/   three-line stubs + the setup skill
+.agents/skills/llmcheats-*/   byte-identical twins
 ```
 
-**Reading it as a human**: start at **[docs/INDEX.md](docs/INDEX.md)**.
-`webapp/8-checklist.md` stands up a new app; `devflow/3-fast-flow.md` is a usable
-hotfix protocol.
+One copy of each playbook, two discovery paths, zero drift. Claude Code reads
+`.claude/skills/`; Codex reads `.agents/skills/` and does not read Claude's.
 
-**Patterns vs constraints.** Most opinions here are *patterns* — raw SQL over
-ORMs, hand-written fakes over mock frameworks — so keep your own architecture if
-you have one. A few are *constraints* and do not move: every dynamic value bound
-into the SQL, input validated at the boundary, secrets out of the code, no
-session token in JS-readable storage. Deviating from one owes a written reason.
+## Two rules worth knowing before you run it
 
-MIT.
+**1. Everything outside the markers is yours.** llmcheats manages exactly one
+block in `AGENTS.md`:
+
+```
+<!-- llmcheats:begin -->   ...regenerated every install
+<!-- llmcheats:end -->
+```
+
+Project memory goes *below* the closing marker and is preserved across installs
+and re-runs. Only `--force` discards anything. A damaged marker pair makes the
+installer refuse to touch the file.
+
+**2. A pattern is not a constraint.** `.llmcheats/docs/` describes one production
+system — Go, React, GitLab CI, an Argo-style reconciler. Your repo is probably
+not that repo, and it is not supposed to become it. The architectural material
+is advisory and **yields to whatever your codebase already does**. What does not
+yield is the floor: secrets never committed, SQL parameterized, input validated,
+no authz check weakened, no test deleted to green a build, errors never
+swallowed.
+
+That distinction is the load-bearing idea of the whole tool. Without it,
+installing this into a Django app would be vandalism.
+
+## Options
+
+```
+install.sh [--agents claude|codex|both] [--ref REF] [--target DIR] [--force]
+```
+
+| | |
+|---|---|
+| `--agents` | which trees to write. Default `both` |
+| `--ref` | git ref to install from. Default `main` |
+| `--target` | repo to install into. Default `git rev-parse --show-toplevel` |
+| `--force` | delete `.llmcheats/` first. The only path that discards `stack.md` |
+
+`LLMCHEATS_REPO`, `LLMCHEATS_REF`, `LLMCHEATS_TARBALL` override the source.
+Re-running refreshes the knowledge base and leaves `AGENTS.md`, `CLAUDE.md` and
+`stack.md` alone.
+
+If you keep your own skill under a `llmcheats-*` name, the installer copies it to
+`.bak-llmcheats/` before refreshing rather than deleting it, and says how many it
+saved. A directory identical to the shipped one is left alone, so a normal
+re-run is silent.
+
+## Adding a workflow
+
+One file in `cheats/workflows/` plus one row in `cheats/routing.md`. Nothing
+else — the installer generates the skill stub from the workflow's own
+front-matter, so neither `install.sh` nor the setup skill changes. `test/` asserts
+this.
+
+## Where the rules come from
+
+Every rule traces to something observed in the reference corpus, and carries its
+finding id as an HTML comment (`<!-- F-023 -->`). The audit trail:
+
+| File | What it holds |
+|---|---|
+| `report/findings.md` | 100 findings, each with `file:line` evidence |
+| `report/rejected.md` | what was mined and deliberately not shipped, with reasons |
+| `report/provenance.md` | rule → finding map, and why 8 findings ship as routing only |
+| `report/rederivation.md` | recovered / missed / invented, run against a stripped repo |
+| `report/build-prompt.md` | the spec this was built from |
+
+Rules with no evidence did not ship. Where the reference contradicted general
+best-practice advice, the reference won and the disagreement is recorded rather
+than split.
+
+## Testing
+
+```bash
+bash test/install_test.sh
+```
+
+Offline: packages the working tree to a tarball and installs it into scratch
+repos.
+
+## License
+
+MIT

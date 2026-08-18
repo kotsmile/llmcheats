@@ -1,0 +1,180 @@
+# provenance.md — rule → finding
+
+Generated from the `<!-- F-nnn -->` comments in the shipped files. Every rule in
+`cheats/`, `skills/` and `templates/` traces to a numbered finding in
+`report/findings.md`, which carries the `file:line` evidence.
+
+## By shipped file
+
+| File | Findings |
+|---|---|
+| `cheats/index.md` | F-029, F-030, F-033, F-038, F-043, F-099, F-100 |
+| `cheats/practices/agent-discipline.md` | F-014, F-024, F-025, F-026, F-027, F-028, F-029, F-030, F-031, F-032, F-033, F-034, F-035, F-036, F-037, F-040, F-097 |
+| `cheats/practices/code-style.md` | F-038, F-075, F-076, F-088, F-098 |
+| `cheats/practices/floor.md` | F-012, F-039, F-057, F-063, F-064, F-081, F-082, F-083 |
+| `cheats/practices/git.md` | F-042, F-059, F-060, F-061, F-062, F-065, F-066, F-067, F-068, F-069, F-070, F-071, F-072, F-073, F-074 |
+| `cheats/practices/observability.md` | F-039, F-048, F-093, F-094, F-095 |
+| `cheats/practices/project-memory.md` | F-001, F-002, F-003, F-004, F-005, F-006, F-007, F-008, F-009 |
+| `cheats/practices/release.md` | F-045, F-046, F-048, F-050, F-051, F-052, F-053, F-055, F-058, F-090, F-091, F-092 |
+| `cheats/practices/testing.md` | F-015, F-077, F-078, F-079, F-080, F-084, F-085 |
+| `cheats/routing.md` | F-010, F-011, F-021, F-038, F-096, F-103, F-116 |
+| `cheats/workflows/bug.md` | F-007, F-010, F-012, F-013, F-015, F-016, F-018 |
+| `cheats/workflows/chore.md` | F-013, F-014, F-017, F-060, F-062, F-063, F-064, F-074 |
+| `cheats/workflows/feature.md` | F-007, F-010, F-012, F-013, F-014, F-019, F-020, F-021, F-022, F-029, F-038, F-066 |
+| `cheats/workflows/hotfix.md` | F-012, F-013, F-015, F-016, F-018, F-046, F-047, F-060, F-072, F-092 |
+| `cheats/workflows/migrate.md` | F-011, F-013, F-050, F-051, F-063, F-078 |
+| `cheats/workflows/prompt.md` | F-013, F-014, F-029, F-038, F-101, F-102, F-103, F-104, F-105, F-106, F-107, F-108, F-109, F-110, F-111, F-112, F-113, F-114, F-115, F-116, F-117, F-118, F-119, F-120, F-121, F-122, F-123, F-124 |
+| `cheats/workflows/refactor.md` | F-011, F-012, F-013, F-016, F-038, F-042, F-076, F-077 |
+| `cheats/workflows/release.md` | F-013, F-045, F-046, F-048, F-051, F-052, F-091, F-092 |
+| `cheats/workflows/review.md` | F-014, F-015, F-029, F-031, F-038, F-042, F-051, F-069, F-071, F-077, F-079 |
+| `cheats/workflows/rollback.md` | F-007, F-013, F-045, F-046, F-047, F-048, F-051, F-091 |
+| `skills/llmcheats-setup/SKILL.md` | F-001, F-002, F-003, F-005, F-009, F-014, F-019, F-023, F-031, F-032, F-047, F-059, F-063, F-066, F-085, F-096 |
+
+## By finding
+
+| Finding | Shipped in |
+|---|---|
+| F-001 | `skills/llmcheats-setup/SKILL.md`, `cheats/practices/project-memory.md` |
+| F-002 | `cheats/practices/project-memory.md`, `skills/llmcheats-setup/SKILL.md` |
+| F-003 | `cheats/practices/project-memory.md`, `skills/llmcheats-setup/SKILL.md` |
+| F-004 | `cheats/practices/project-memory.md` |
+| F-005 | `cheats/practices/project-memory.md`, `skills/llmcheats-setup/SKILL.md` |
+| F-006 | `cheats/practices/project-memory.md` |
+| F-007 | `cheats/workflows/feature.md`, `cheats/workflows/rollback.md`, `cheats/workflows/bug.md`, `cheats/practices/project-memory.md` |
+| F-008 | `cheats/practices/project-memory.md` |
+| F-009 | `cheats/practices/project-memory.md`, `skills/llmcheats-setup/SKILL.md` |
+| F-010 | `cheats/routing.md`, `cheats/workflows/feature.md`, `cheats/workflows/bug.md` |
+| F-011 | `cheats/routing.md`, `cheats/workflows/refactor.md`, `cheats/workflows/migrate.md` |
+| F-012 | `cheats/workflows/refactor.md`, `cheats/workflows/feature.md`, `cheats/workflows/hotfix.md`, `cheats/workflows/bug.md`, `cheats/practices/floor.md` |
+| F-013 | `cheats/workflows/migrate.md`, `cheats/workflows/release.md`, `cheats/workflows/hotfix.md`, `cheats/workflows/bug.md`, `cheats/workflows/rollback.md`, `cheats/workflows/chore.md`, `cheats/workflows/refactor.md`, `cheats/workflows/feature.md`, `cheats/workflows/prompt.md` |
+| F-014 | `cheats/workflows/feature.md`, `cheats/practices/agent-discipline.md`, `cheats/workflows/chore.md`, `skills/llmcheats-setup/SKILL.md`, `cheats/workflows/prompt.md`, `cheats/workflows/review.md` |
+| F-015 | `cheats/practices/testing.md`, `cheats/workflows/bug.md`, `cheats/workflows/hotfix.md`, `cheats/workflows/review.md` |
+| F-016 | `cheats/workflows/refactor.md`, `cheats/workflows/bug.md`, `cheats/workflows/hotfix.md` |
+| F-017 | `cheats/workflows/chore.md` |
+| F-018 | `cheats/workflows/bug.md`, `cheats/workflows/hotfix.md` |
+| F-019 | `cheats/workflows/feature.md`, `skills/llmcheats-setup/SKILL.md` |
+| F-020 | `cheats/workflows/feature.md` |
+| F-021 | `cheats/routing.md`, `cheats/workflows/feature.md` |
+| F-022 | `cheats/workflows/feature.md` |
+| F-023 | `skills/llmcheats-setup/SKILL.md` |
+| F-024 | `cheats/practices/agent-discipline.md` |
+| F-025 | `cheats/practices/agent-discipline.md` |
+| F-026 | `cheats/practices/agent-discipline.md` |
+| F-027 | `cheats/practices/agent-discipline.md` |
+| F-028 | `cheats/practices/agent-discipline.md` |
+| F-029 | `cheats/index.md`, `cheats/workflows/feature.md`, `cheats/practices/agent-discipline.md`, `cheats/workflows/prompt.md`, `cheats/workflows/review.md` |
+| F-030 | `cheats/index.md`, `cheats/practices/agent-discipline.md` |
+| F-031 | `cheats/practices/agent-discipline.md`, `skills/llmcheats-setup/SKILL.md`, `cheats/workflows/review.md` |
+| F-032 | `cheats/practices/agent-discipline.md`, `skills/llmcheats-setup/SKILL.md` |
+| F-033 | `cheats/practices/agent-discipline.md`, `cheats/index.md` |
+| F-034 | `cheats/practices/agent-discipline.md` |
+| F-035 | `cheats/practices/agent-discipline.md` |
+| F-036 | `cheats/practices/agent-discipline.md` |
+| F-037 | `cheats/practices/agent-discipline.md` |
+| F-038 | `cheats/index.md`, `cheats/workflows/refactor.md`, `cheats/routing.md`, `cheats/workflows/feature.md`, `cheats/practices/code-style.md`, `cheats/workflows/prompt.md`, `cheats/workflows/review.md` |
+| F-039 | `cheats/practices/observability.md`, `cheats/practices/floor.md` |
+| F-040 | `cheats/practices/agent-discipline.md` |
+| F-042 | `cheats/workflows/refactor.md`, `cheats/practices/git.md`, `cheats/workflows/review.md` |
+| F-043 | `cheats/index.md` |
+| F-045 | `cheats/workflows/release.md`, `cheats/workflows/rollback.md`, `cheats/practices/release.md` |
+| F-046 | `cheats/workflows/release.md`, `cheats/workflows/rollback.md`, `cheats/practices/release.md`, `cheats/workflows/hotfix.md` |
+| F-047 | `cheats/workflows/rollback.md`, `cheats/workflows/hotfix.md`, `skills/llmcheats-setup/SKILL.md` |
+| F-048 | `cheats/workflows/release.md`, `cheats/workflows/rollback.md`, `cheats/practices/release.md`, `cheats/practices/observability.md` |
+| F-050 | `cheats/workflows/migrate.md`, `cheats/practices/release.md` |
+| F-051 | `cheats/workflows/release.md`, `cheats/workflows/rollback.md`, `cheats/workflows/migrate.md`, `cheats/practices/release.md`, `cheats/workflows/review.md` |
+| F-052 | `cheats/practices/release.md`, `cheats/workflows/release.md` |
+| F-053 | `cheats/practices/release.md` |
+| F-055 | `cheats/practices/release.md` |
+| F-057 | `cheats/practices/floor.md` |
+| F-058 | `cheats/practices/release.md` |
+| F-059 | `skills/llmcheats-setup/SKILL.md`, `cheats/practices/git.md` |
+| F-060 | `cheats/workflows/chore.md`, `cheats/workflows/hotfix.md`, `cheats/practices/git.md` |
+| F-061 | `cheats/practices/git.md` |
+| F-062 | `cheats/workflows/chore.md`, `cheats/practices/git.md` |
+| F-063 | `cheats/workflows/migrate.md`, `cheats/workflows/chore.md`, `skills/llmcheats-setup/SKILL.md`, `cheats/practices/floor.md` |
+| F-064 | `cheats/workflows/chore.md`, `cheats/practices/floor.md` |
+| F-065 | `cheats/practices/git.md` |
+| F-066 | `cheats/workflows/feature.md`, `skills/llmcheats-setup/SKILL.md`, `cheats/practices/git.md` |
+| F-067 | `cheats/practices/git.md` |
+| F-068 | `cheats/practices/git.md` |
+| F-069 | `cheats/practices/git.md`, `cheats/workflows/review.md` |
+| F-070 | `cheats/practices/git.md` |
+| F-071 | `cheats/practices/git.md`, `cheats/workflows/review.md` |
+| F-072 | `cheats/workflows/hotfix.md`, `cheats/practices/git.md` |
+| F-073 | `cheats/practices/git.md` |
+| F-074 | `cheats/workflows/chore.md`, `cheats/practices/git.md` |
+| F-075 | `cheats/practices/code-style.md` |
+| F-076 | `cheats/workflows/refactor.md`, `cheats/practices/code-style.md` |
+| F-077 | `cheats/workflows/refactor.md`, `cheats/practices/testing.md`, `cheats/workflows/review.md` |
+| F-078 | `cheats/practices/testing.md`, `cheats/workflows/migrate.md` |
+| F-079 | `cheats/practices/testing.md`, `cheats/workflows/review.md` |
+| F-080 | `cheats/practices/testing.md` |
+| F-081 | `cheats/practices/floor.md` |
+| F-082 | `cheats/practices/floor.md` |
+| F-083 | `cheats/practices/floor.md` |
+| F-084 | `cheats/practices/testing.md` |
+| F-085 | `skills/llmcheats-setup/SKILL.md`, `cheats/practices/testing.md` |
+| F-088 | `cheats/practices/code-style.md` |
+| F-090 | `cheats/practices/release.md` |
+| F-091 | `cheats/workflows/rollback.md`, `cheats/practices/release.md`, `cheats/workflows/release.md` |
+| F-092 | `cheats/workflows/release.md`, `cheats/practices/release.md`, `cheats/workflows/hotfix.md` |
+| F-093 | `cheats/practices/observability.md` |
+| F-094 | `cheats/practices/observability.md` |
+| F-095 | `cheats/practices/observability.md` |
+| F-096 | `cheats/routing.md`, `skills/llmcheats-setup/SKILL.md` |
+| F-097 | `cheats/practices/agent-discipline.md` |
+| F-098 | `cheats/practices/code-style.md` |
+| F-099 | `cheats/index.md` |
+| F-100 | `cheats/index.md` |
+| F-101 | `cheats/workflows/prompt.md` |
+| F-102 | `cheats/workflows/prompt.md` |
+| F-103 | `cheats/routing.md`, `cheats/workflows/prompt.md` |
+| F-104 | `cheats/workflows/prompt.md` |
+| F-105 | `cheats/workflows/prompt.md` |
+| F-106 | `cheats/workflows/prompt.md` |
+| F-107 | `cheats/workflows/prompt.md` |
+| F-108 | `cheats/workflows/prompt.md` |
+| F-109 | `cheats/workflows/prompt.md` |
+| F-110 | `cheats/workflows/prompt.md` |
+| F-111 | `cheats/workflows/prompt.md` |
+| F-112 | `cheats/workflows/prompt.md` |
+| F-113 | `cheats/workflows/prompt.md` |
+| F-114 | `cheats/workflows/prompt.md` |
+| F-115 | `cheats/workflows/prompt.md` |
+| F-116 | `cheats/routing.md`, `cheats/workflows/prompt.md` |
+| F-117 | `cheats/workflows/prompt.md` |
+| F-118 | `cheats/workflows/prompt.md` |
+| F-119 | `cheats/workflows/prompt.md` |
+| F-120 | `cheats/workflows/prompt.md` |
+| F-121 | `cheats/workflows/prompt.md` |
+| F-122 | `cheats/workflows/prompt.md` |
+| F-123 | `cheats/workflows/prompt.md` |
+| F-124 | `cheats/workflows/prompt.md` |
+
+## Coverage
+
+**116 of 124 findings ship as rules.** F-001..F-100 come from
+`$REFERENCE=./docs`; F-101..F-124 come from the second source described at the
+end of `report/findings.md` and all of them ship, in `cheats/workflows/prompt.md`
+— behind the LLM-surface guard, not unconditionally.
+
+The 9 that do not are deliberate, and each is accounted for in
+`report/rejected.md`:
+
+| Finding | Class | Why it does not ship as a rule |
+|---|---|---|
+| F-041 | project-idiosyncratic | the 11-agent roster; universal half ships via the gates-survive-role-collapse rule |
+| F-054 | project-idiosyncratic | CI job namespacing in one flat recursive pipeline |
+| F-087 | project-idiosyncratic | "never start dev servers" — a fact about one local setup |
+| F-044 | stack-specific | orchestration depth; needs a subagent-capable harness |
+| F-049 | stack-specific | committed render diffs; reachable via `docs/devops/` on a guard match |
+| F-056 | stack-specific | CI clone cost; reachable via `docs/devops/ci-performance-model.md` |
+| F-086 | stack-specific | build-does-not-generate; reachable via `docs/backend/code-generation.md` |
+| F-089 | stack-specific | one-config-file pattern; reachable via `docs/webapp/` on a guard match |
+| F-057 | split | console model rejected; the two-writer prune lesson ships in `practices/floor.md` |
+
+The five stack-specific entries are **routed, not dropped**: they install
+with the corpus and `cheats/routing.md` points at them when `stack.md`
+reports a matching substrate. A rule that ships unconditionally and a
+document reachable behind a guard are different things, and the payload
+decision was to keep the second rather than flatten it into the first.
