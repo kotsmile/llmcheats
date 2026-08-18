@@ -26,32 +26,6 @@ $llmcheats-setup      # Codex
 That is the whole thing. The installer copies files; the setup skill reads your
 repo and writes config specialized to it.
 
-## Usage
-
-Type a prefix and the task. No slash command — the prefix routes to a playbook
-and a flow, and the flow decides how much process the change owes.
-
-| Prefix | Flow | Example |
-| --- | --- | --- |
-| `feature:` | full | `feature: add rate limiting to the ingest endpoint` |
-| `bug:` | fast | `bug(auth): 401 on token refresh after 24h` |
-| `hotfix:` | fast | `hotfix: checkout returns 500 on every card payment` |
-| `refactor:` | asap → full | `refactor: split Handler into transport and domain layers` |
-| `migrate:` | full | `migrate: postgres 14 -> 16` |
-| `chore:` | asap | `chore: bump golangci-lint and fix the new warnings` |
-| `prompt:` | fast → full | `prompt: the intent classifier tags refunds as complaints` |
-| `review:` | — | `review: the rate-limit branch before it merges` |
-| `release:` | — | `release: cut v2.4.0 and ship it` |
-| `rollback:` | — | `rollback: revert the v2.4.0 deploy, error rate tripled` |
-
-An optional `(scope)` narrows it: `bug(auth):`, `chore(ci):`. **No prefix is
-also valid** — the agent classifies from the text, says which prefix it chose in
-one sentence, and proceeds.
-
-`asap` is one pass in minutes, `fast` is seven stages, `full` is thirteen with
-skip gates. The last three prefixes are not flows: they run against something
-that already exists.
-
 ## Chaining
 
 Each prefix is one unit of work. A real change is usually two or three in
@@ -128,13 +102,39 @@ rollback: revert the v2.4.0 deploy, error rate tripled
 Re-routing mid-task is normal, not a failure: a `refactor:` that turns out to
 change behavior stops and becomes a `feature:`, and says so in one line.
 
+## Usage
+
+Type a prefix and the task. No slash command — the prefix routes to a playbook
+and a flow, and the flow decides how much process the change owes.
+
+| Prefix      | Flow        | Example                                                    |
+| ----------- | ----------- | ---------------------------------------------------------- |
+| `feature:`  | full        | `feature: add rate limiting to the ingest endpoint`        |
+| `bug:`      | fast        | `bug(auth): 401 on token refresh after 24h`                |
+| `hotfix:`   | fast        | `hotfix: checkout returns 500 on every card payment`       |
+| `refactor:` | asap → full | `refactor: split Handler into transport and domain layers` |
+| `migrate:`  | full        | `migrate: postgres 14 -> 16`                               |
+| `chore:`    | asap        | `chore: bump golangci-lint and fix the new warnings`       |
+| `prompt:`   | fast → full | `prompt: the intent classifier tags refunds as complaints` |
+| `review:`   | —           | `review: the rate-limit branch before it merges`           |
+| `release:`  | —           | `release: cut v2.4.0 and ship it`                          |
+| `rollback:` | —           | `rollback: revert the v2.4.0 deploy, error rate tripled`   |
+
+An optional `(scope)` narrows it: `bug(auth):`, `chore(ci):`. **No prefix is
+also valid** — the agent classifies from the text, says which prefix it chose in
+one sentence, and proceeds.
+
+`asap` is one pass in minutes, `fast` is seven stages, `full` is thirteen with
+skip gates. The last three prefixes are not flows: they run against something
+that already exists.
+
 ## The design bet
 
 **The installer is dumb. The setup skill is smart.**
 
 `install.sh` detects no stacks, templates nothing, and never writes `AGENTS.md`.
 It copies a knowledge base and one skill. That is deliberate: only an agent that
-can read your repo can write config that names *your* test command.
+can read your repo can write config that names _your_ test command.
 
 A generic "write tests first" instruction is worth nearly nothing. The same
 instruction carrying your real `make test` is worth a lot. **Inventing a
@@ -175,7 +175,7 @@ block in `AGENTS.md`:
 <!-- llmcheats:end -->
 ```
 
-Project memory goes *below* the closing marker and is preserved across installs
+Project memory goes _below_ the closing marker and is preserved across installs
 and re-runs. Only `--force` discards anything. A damaged marker pair makes the
 installer refuse to touch the file.
 
@@ -196,12 +196,12 @@ installing this into a Django app would be vandalism.
 install.sh [--agents claude|codex|both] [--ref REF] [--target DIR] [--force]
 ```
 
-| | |
-|---|---|
-| `--agents` | which trees to write. Default `both` |
-| `--ref` | git ref to install from. Default `main` |
-| `--target` | repo to install into. Default `git rev-parse --show-toplevel` |
-| `--force` | delete `.llmcheats/` first. The only path that discards `stack.md` |
+|            |                                                                    |
+| ---------- | ------------------------------------------------------------------ |
+| `--agents` | which trees to write. Default `both`                               |
+| `--ref`    | git ref to install from. Default `main`                            |
+| `--target` | repo to install into. Default `git rev-parse --show-toplevel`      |
+| `--force`  | delete `.llmcheats/` first. The only path that discards `stack.md` |
 
 `LLMCHEATS_REPO`, `LLMCHEATS_REF`, `LLMCHEATS_TARBALL` override the source.
 Re-running refreshes the knowledge base and leaves `AGENTS.md`, `CLAUDE.md` and
@@ -224,13 +224,13 @@ this.
 Every rule traces to something observed in the reference corpus, and carries its
 finding id as an HTML comment (`<!-- F-023 -->`). The audit trail:
 
-| File | What it holds |
-|---|---|
-| `report/findings.md` | 100 findings, each with `file:line` evidence |
-| `report/rejected.md` | what was mined and deliberately not shipped, with reasons |
-| `report/provenance.md` | rule → finding map, and why 8 findings ship as routing only |
-| `report/rederivation.md` | recovered / missed / invented, run against a stripped repo |
-| `report/build-prompt.md` | the spec this was built from |
+| File                     | What it holds                                               |
+| ------------------------ | ----------------------------------------------------------- |
+| `report/findings.md`     | 100 findings, each with `file:line` evidence                |
+| `report/rejected.md`     | what was mined and deliberately not shipped, with reasons   |
+| `report/provenance.md`   | rule → finding map, and why 8 findings ship as routing only |
+| `report/rederivation.md` | recovered / missed / invented, run against a stripped repo  |
+| `report/build-prompt.md` | the spec this was built from                                |
 
 Rules with no evidence did not ship. Where the reference contradicted general
 best-practice advice, the reference won and the disagreement is recorded rather
