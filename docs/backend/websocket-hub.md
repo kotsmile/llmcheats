@@ -5,7 +5,6 @@ theme: backend
 keywords: [websocket, hub, pubsub, subscription, per-user channel, AES-GCM, nonce, ping pong, origin allowlist, send buffer, backpressure, raw broadcast, read loop, normalized pair]
 related:
   - backend/http-endpoints-and-middleware.md
-  - backend/llm-routing-and-tools.md
   - backend/database-and-migrations.md
 ---
 

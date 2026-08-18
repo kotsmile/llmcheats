@@ -107,10 +107,6 @@ Read on a Go + layered-architecture match.
 | `backend/websocket-hub.md` | Hub over pub/sub, encrypted storage, drop-on-overflow | changing the socket or streaming to a client |
 | `backend/code-generation.md` | Which artefacts are generated and why nothing depends on generation | you changed a spec or an annotation |
 | `backend/go-shared-library-layout.md` | What belongs in the shared library and the `<service>x` convention | you need a shared helper or are placing a client |
-| `backend/llm-routing-and-tools.md` | Classifier-not-orchestrator, load-on-demand tools, tool registry | working on model routing or adding a tool |
-| `backend/llm-provider-abstraction.md` | Provider interface, per-flow selection, prompt caching | adding a provider, a model or a prompt change |
-| `backend/llm-memory-and-pipelines.md` | ADD-only typed-fact memory and the trigger/step engine | changing long-term memory or background jobs |
-| `backend/llm-safety-and-tracing.md` | Input safety layers with their structural gaps, and trace identity | touching safety patterns or instrumenting a flow |
 
 ## `frontend/` — React, React Native, shared packages
 

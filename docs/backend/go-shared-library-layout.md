@@ -6,7 +6,7 @@ keywords: [shared library, package naming, x suffix, external client, config str
 related:
   - backend/layered-architecture.md
   - backend/configuration-loading.md
-  - backend/llm-provider-abstraction.md
+  - webapp/ai-features.md
 ---
 
 ## Placement rule
